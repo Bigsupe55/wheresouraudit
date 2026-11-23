@@ -1,0 +1,17 @@
+{
+  "name": "wheresouraudit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Where's Our Audit? See if your town filed its audit. If it didn't, ask for it in one click.",
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "fetch:maine": "node scripts/fetch-maine.mjs",
+    "data:maine": "node scripts/build-maine-data.mjs",
+    "site": "node scripts/build-site.mjs",
+    "build": "node scripts/build-maine-data.mjs && node scripts/build-site.mjs",
+    "check": "node scripts/check.mjs",
+    "serve": "node scripts/serve.mjs"
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "site": "wheresouraudit.pages.dev",
+  "correctionsEmail": "SET-BEFORE-LAUNCH@example.invalid",
+  "note": "correctionsEmail must be a real inbox Nick reads before any public launch. The check script fails launch readiness while it is unset."
+}
