@@ -98,7 +98,7 @@ if (fs.existsSync(p("data", "derived", "us.json"))) {
   const fedDirs = ["me", "fl"].flatMap(st => { const d = p("dist", st, "federal"); return fs.existsSync(d) ? fs.readdirSync(d, { withFileTypes: true }).filter(x => x.isDirectory()).map(x => p("dist", st, "federal", x.name, "index.html")) : []; });
   ok(fedDirs.length > 0 && fedDirs.every(f => readText(f).includes('<div class="grade ng">Status only</div>')), `${fedDirs.length} federal-only pages, none graded`);
   const brun = readText(p("dist", "me", "town", "brunswick", "index.html"));
-  ok(/Federal single audit[\s\S]*Brunswick's federal single audits/.test(brun), "Brunswick: federal flags use the page's own name");
+  ok(/Federal single audit[\s\S]*Brunswick(&#39;|')s federal single audits/.test(brun) && !/Town of Brunswick/.test(brun), "Brunswick: federal flags use the page's own name");
 }
 
 // 5. Known cases from the research (Maine).
