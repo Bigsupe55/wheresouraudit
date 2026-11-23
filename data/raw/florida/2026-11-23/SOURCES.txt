@@ -1,13 +1,13 @@
-publicnoncompliantgovs-2021.xhtml	POST https://logerx.myfloridacfo.gov/api/document/systemReport {"afrYear":2021,"reportFormat":"XHTML","reportName":"PUBLICNONCOMPLIANTGOVS"}	fetched 2026-11-23T17:06:50.879Z
-publiccompliantgovs-2021.xhtml	POST https://logerx.myfloridacfo.gov/api/document/systemReport {"afrYear":2021,"reportFormat":"XHTML","reportName":"PUBLICCOMPLIANTGOVS"}	fetched 2026-11-23T17:06:58.117Z
-publicnoncompliantgovs-2022.xhtml	POST https://logerx.myfloridacfo.gov/api/document/systemReport {"afrYear":2022,"reportFormat":"XHTML","reportName":"PUBLICNONCOMPLIANTGOVS"}	fetched 2026-11-23T17:07:13.869Z
-publiccompliantgovs-2022.xhtml	POST https://logerx.myfloridacfo.gov/api/document/systemReport {"afrYear":2022,"reportFormat":"XHTML","reportName":"PUBLICCOMPLIANTGOVS"}	fetched 2026-11-23T17:07:29.257Z
-publicnoncompliantgovs-2023.xhtml	POST https://logerx.myfloridacfo.gov/api/document/systemReport {"afrYear":2023,"reportFormat":"XHTML","reportName":"PUBLICNONCOMPLIANTGOVS"}	fetched 2026-11-23T17:07:48.055Z
-publiccompliantgovs-2023.xhtml	POST https://logerx.myfloridacfo.gov/api/document/systemReport {"afrYear":2023,"reportFormat":"XHTML","reportName":"PUBLICCOMPLIANTGOVS"}	fetched 2026-11-23T17:08:06.904Z
-publicnoncompliantgovs-2024.xhtml	POST https://logerx.myfloridacfo.gov/api/document/systemReport {"afrYear":2024,"reportFormat":"XHTML","reportName":"PUBLICNONCOMPLIANTGOVS"}	fetched 2026-11-23T17:08:27.264Z
-publiccompliantgovs-2024.xhtml	POST https://logerx.myfloridacfo.gov/api/document/systemReport {"afrYear":2024,"reportFormat":"XHTML","reportName":"PUBLICCOMPLIANTGOVS"}	fetched 2026-11-23T17:08:48.824Z
-publicnoncompliantgovs-2025.xhtml	POST https://logerx.myfloridacfo.gov/api/document/systemReport {"afrYear":2025,"reportFormat":"XHTML","reportName":"PUBLICNONCOMPLIANTGOVS"}	fetched 2026-11-23T17:09:10.588Z
-publiccompliantgovs-2025.xhtml	POST https://logerx.myfloridacfo.gov/api/document/systemReport {"afrYear":2025,"reportFormat":"XHTML","reportName":"PUBLICCOMPLIANTGOVS"}	fetched 2026-11-23T17:09:30.666Z
-jlac-2024.xhtml	POST https://logerx.myfloridacfo.gov/api/document/systemReport {"afrYear":2024,"reportFormat":"XHTML","reportName":"JLAC"}	fetched 2026-11-23T17:09:34.618Z
-jlac-2025.xhtml	POST https://logerx.myfloridacfo.gov/api/document/systemReport {"afrYear":2025,"reportFormat":"XHTML","reportName":"JLAC"}	fetched 2026-11-23T17:09:38.405Z
+publicnoncompliantgovs-2021.xhtml	POST https://logerx.myfloridacfo.gov/api/document/systemReport {"afrYear":2021,"reportFormat":"XHTML","reportName":"PUBLICNONCOMPLIANTGOVS"}	fetched 2026-11-23T17:13:12.260Z
+publiccompliantgovs-2021.xhtml	POST https://logerx.myfloridacfo.gov/api/document/systemReport {"afrYear":2021,"reportFormat":"XHTML","reportName":"PUBLICCOMPLIANTGOVS"}	fetched 2026-11-23T17:13:19.981Z
+publicnoncompliantgovs-2022.xhtml	POST https://logerx.myfloridacfo.gov/api/document/systemReport {"afrYear":2022,"reportFormat":"XHTML","reportName":"PUBLICNONCOMPLIANTGOVS"}	fetched 2026-11-23T17:13:36.683Z
+publiccompliantgovs-2022.xhtml	POST https://logerx.myfloridacfo.gov/api/document/systemReport {"afrYear":2022,"reportFormat":"XHTML","reportName":"PUBLICCOMPLIANTGOVS"}	fetched 2026-11-23T17:13:54.128Z
+publicnoncompliantgovs-2023.xhtml	POST https://logerx.myfloridacfo.gov/api/document/systemReport {"afrYear":2023,"reportFormat":"XHTML","reportName":"PUBLICNONCOMPLIANTGOVS"}	fetched 2026-11-23T17:14:11.670Z
+publiccompliantgovs-2023.xhtml	POST https://logerx.myfloridacfo.gov/api/document/systemReport {"afrYear":2023,"reportFormat":"XHTML","reportName":"PUBLICCOMPLIANTGOVS"}	fetched 2026-11-23T17:14:29.204Z
+publicnoncompliantgovs-2024.xhtml	POST https://logerx.myfloridacfo.gov/api/document/systemReport {"afrYear":2024,"reportFormat":"XHTML","reportName":"PUBLICNONCOMPLIANTGOVS"}	fetched 2026-11-23T17:14:50.496Z
+publiccompliantgovs-2024.xhtml	POST https://logerx.myfloridacfo.gov/api/document/systemReport {"afrYear":2024,"reportFormat":"XHTML","reportName":"PUBLICCOMPLIANTGOVS"}	fetched 2026-11-23T17:15:13.892Z
+publicnoncompliantgovs-2025.xhtml	POST https://logerx.myfloridacfo.gov/api/document/systemReport {"afrYear":2025,"reportFormat":"XHTML","reportName":"PUBLICNONCOMPLIANTGOVS"}	fetched 2026-11-23T17:15:33.518Z
+publiccompliantgovs-2025.xhtml	POST https://logerx.myfloridacfo.gov/api/document/systemReport {"afrYear":2025,"reportFormat":"XHTML","reportName":"PUBLICCOMPLIANTGOVS"}	fetched 2026-11-23T17:15:54.670Z
+jlac-2024.xhtml	POST https://logerx.myfloridacfo.gov/api/document/systemReport {"afrYear":2024,"reportFormat":"XHTML","reportName":"JLAC"}	fetched 2026-11-23T17:15:58.655Z
+jlac-2025.xhtml	POST https://logerx.myfloridacfo.gov/api/document/systemReport {"afrYear":2025,"reportFormat":"XHTML","reportName":"JLAC"}	fetched 2026-11-23T17:16:02.915Z
 Human page: https://logerx.myfloridacfo.gov/LogerX/SystemReports
