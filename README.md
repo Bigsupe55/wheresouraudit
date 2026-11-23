@@ -12,7 +12,7 @@ Stage 1 covers Maine, stage 2 Florida, and stage 3 federal single audit status f
 
 ## Run it
 
-Requires Node 20 or newer. There are no dependencies to install.
+Requires Node 20 or newer. Run `npm ci` once: the only dependency is `@resvg/resvg-js` (development only), which draws the 1200 x 630 share images. Images use the bundled Source Serif 4 font (SIL Open Font License, `assets/fonts/LICENSE.md`) and are generated on every build, not committed.
 
 ```
 npm run fetch:maine   # copy the State Auditor's tables into data/raw/maine/<today>/

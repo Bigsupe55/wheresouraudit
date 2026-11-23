@@ -19,5 +19,8 @@
     "data:florida": "node scripts/build-florida-data.mjs",
     "fetch:us": "node scripts/fetch-us.mjs",
     "data:us": "node scripts/build-us-data.mjs"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "2.6.2"
   }
 }

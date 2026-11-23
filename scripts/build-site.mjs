@@ -3,6 +3,7 @@
 import fs from "node:fs";
 import { p, readJSON, readText, writeFile, esc, fmtDate } from "./lib/util.mjs";
 import { ITEMS, RUBRIC_VERSION } from "./lib/rubric.mjs";
+import { shareSVG, renderPNG } from "./lib/share-image.mjs";
 
 const DIST = p("dist");
 fs.rmSync(DIST, { recursive: true, force: true });
@@ -49,7 +50,16 @@ const ALL = [...ME.entities, ...FL.entities];
 
 // ---------- layout ----------
 const DISCLOSURE = "Built by Nick Hernandez, founder of Civic-Chain, which sells financial transparency software to governments. Every town is graded the same way, customer or not. Civic-Chain never uses this site for sales.";
-function page({ title, description, body, path }) {
+// Share image for a page: written once to dist/share/<name>.png, referenced by og:image.
+let imageCount = 0;
+function shareImage(name, card) {
+  const footerUrl = `${SITE}${card.path || ""}`;
+  const footer = footerUrl.length <= 62 ? `${footerUrl} · sourced to public records` : `${SITE} · sourced to public records`;
+  writeFile(p("dist", "share", `${name}.png`), renderPNG(shareSVG({ ...card, footer })));
+  imageCount++;
+  return `/share/${name}.png`;
+}
+function page({ title, description, body, path, image = "/share/default.png", imageAlt = "Where's Our Audit? See if your town filed its audit." }) {
   const full = title === "Where's Our Audit?" ? title : `${title} | Where's Our Audit?`;
   return `<!doctype html>
 <html lang="en">
@@ -61,7 +71,12 @@ function page({ title, description, body, path }) {
 <meta property="og:title" content="${esc(full)}">
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:url" content="https://${SITE}${path}">
-<meta name="twitter:card" content="summary">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://${SITE}${image}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="${esc(imageAlt)}">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/assets/site.css">
 </head>
@@ -168,7 +183,8 @@ for (const e of ALL) {
     <div class="card small">${esc(e.contact.office)}${e.contact.detail ? `<br>${esc(e.contact.detail)}` : ""}${e.firm ? `<br><span class="muted">Audit firm on record with the State Auditor: ${esc(e.firm)}</span>` : ""}${e.dfsId ? `<br><span class="muted">Florida DFS entity ID: ${esc(e.dfsId)}</span>` : ""}</div>
   </div>
 </div>`;
-  out(e.url, page({ title: `${e.name}, ${e.state}`, description: `${e.name}, ${S.name}: ${e.headline}. See the record and ask for it in one click.`, body, path: e.url }));
+  const image = shareImage(e.url.replace(/^\/|\/$/g, ""), { title: `${e.name}, ${e.state}`, subtitle: e.headline, pill: e.status.label, cls: e.status.cls, path: e.url });
+  out(e.url, page({ title: `${e.name}, ${e.state}`, description: `${e.name}, ${S.name}: ${e.headline}. See the record and ask for it in one click.`, body, path: e.url, image, imageAlt: `${e.name}, ${e.state}: ${e.headline}` }));
 }
 
 // ---------- maps (static SVG) ----------
@@ -244,7 +260,7 @@ ${legendHTML(STATES.ME)}
 <div class="map-wrap">${maineMap()}</div>
 <p class="small muted">Colors show each town's worst status across the years the State Auditor shows (fiscal years ${E[0].years[0].fy} to ${E[0].years.at(-1).fy}). Counties and village corporations are in the lists below. Source: Maine State Auditor, copied ${esc(ME.snapshot)}.</p>
 ${groups.map(([t, label]) => { const l = E.filter(e => e.type === t); return l.length ? `<h2>${label} (${l.length})</h2>${tableOf(l)}` : ""; }).join("\n")}`;
-  out("/me/", page({ title: "Maine", description: `${n("overdue")} Maine governments have an audit not posted more than 12 months after year end. Find yours.`, body, path: "/me/" }));
+  out("/me/", page({ title: "Maine", description: `${n("overdue")} Maine governments have an audit not posted more than 12 months after year end. Find yours.`, body, path: "/me/", image: shareImage("me", { title: "Maine: who posted their audit?", subtitle: `${n("overdue")} of ${E.length} Maine governments have an audit not posted more than 12 months after year end.`, cls: "bad", path: "/me/" }) }));
 }
 {
   const E = FL.entities.filter(e => !e.dissolved), n = k => E.filter(e => e.worst === k).length;
@@ -270,7 +286,7 @@ ${tableOf(overdueDistricts)}
 <p class="small"><a href="/fl/districts/">All ${districts.length} special districts</a> · <a href="/fl/other/">Other local entities (${other.length})</a></p>
 <h2>By county</h2>
 ${[...groups.keys()].sort().map(c => `<h3 id="county-${countySlug(c)}">${esc(c)} County</h3>${tableOf(groups.get(c))}`).join("\n")}`;
-  out("/fl/", page({ title: "Florida", description: `${n("overdue")} Florida local governments have a report not filed past the legal deadline. Find yours.`, body, path: "/fl/" }));
+  out("/fl/", page({ title: "Florida", description: `${n("overdue")} Florida local governments have a report not filed past the legal deadline. Find yours.`, body, path: "/fl/", image: shareImage("fl", { title: "Florida: who filed on time?", subtitle: `${n("overdue")} of ${E.length} Florida local governments have a report not filed past the legal deadline.`, cls: "bad", path: "/fl/" }) }));
   out("/fl/districts/", page({ title: "Florida special districts", path: "/fl/districts/", description: "Every Florida special district and its filing status.", body: `<p class="crumb"><a href="/fl/">Florida</a></p><h1>Florida special districts (${districts.length})</h1>${searchBox}${tableOf(districts)}` }));
   out("/fl/other/", page({ title: "Other Florida local entities", path: "/fl/other/", description: "Other Florida local entities that file annual financial reports.", body: `<p class="crumb"><a href="/fl/">Florida</a></p><h1>Other local entities (${other.length})</h1><p>Planning organizations, workforce boards and similar bodies that file with the state. We show their filing status but don't grade them.</p>${tableOf(other)}` }));
   const gone = FL.entities.filter(e => e.dissolved);
@@ -292,7 +308,7 @@ if (US) {
     const gov = list.filter(e => e.typeLabel !== "Other local entity");
     const withFac = gov.filter(e => e.years.length).length, lateLatest = list.filter(e => e.status.key === "late").length;
     rows.push(`<tr><td><a href="/us/${st.toLowerCase()}/">${esc(name)}</a></td><td>${gov.length.toLocaleString("en-US")}</td><td>${withFac.toLocaleString("en-US")}</td><td>${(list.length - gov.length).toLocaleString("en-US")}</td><td>${lateLatest.toLocaleString("en-US")}</td></tr>`);
-    out(`/us/${st.toLowerCase()}/`, page({ title: `${name}: federal audits`, path: `/us/${st.toLowerCase()}/`, description: `Federal single audit status for every county, city and town in ${name}.`,
+    out(`/us/${st.toLowerCase()}/`, page({ title: `${name}: federal audits`, path: `/us/${st.toLowerCase()}/`, image: shareImage(`us-${st.toLowerCase()}`, { title: `${name}: federal audits`, subtitle: `Did your county, city or town file its federal single audit on time? ${withFac.toLocaleString("en-US")} of ${gov.length.toLocaleString("en-US")} have one on file.`, cls: "none", path: `/us/${st.toLowerCase()}/` }), description: `Federal single audit status for every county, city and town in ${name}.`,
       body: `<p class="crumb"><a href="/us/">Other states</a></p>
 <h1>${esc(name)}: federal audits</h1>
 <p>For ${esc(name)} we show one thing so far: whether each local government filed the <b>federal single audit</b> required when it spends $1 million or more in federal money in a year ($750,000 for years that began before October 1, 2024), and whether it was on time. The federal deadline is 9 months after the fiscal year ends (2 CFR 200.512). Governments are not graded yet in ${esc(name)}.</p>
@@ -333,7 +349,7 @@ ${searchBox}
 <li>If one is missing, we write the public records request for you. You send it.</li>
 </ol>
 <p>Every fact links to its source and to our dated copy. Officials can reply on their page, and we fix mistakes within 5 business days. <a href="/how-we-grade/">How we grade</a>.</p>`;
-  out("/", page({ title: "Where's Our Audit?", description: "See if your town filed its audit. If it didn't, ask for it in one click.", body, path: "/" }));
+  out("/", page({ title: "Where's Our Audit?", description: "See if your town filed its audit. If it didn't, ask for it in one click.", body, path: "/", image: shareImage("home", { title: "See if your town filed its audit.", subtitle: "If it didn't, ask for it in one click. Maine, Florida, and federal audits in every state.", cls: "none", path: "/" }) }));
 }
 
 // ---------- methodology ----------
@@ -410,9 +426,10 @@ for (const [st, dirName] of [["maine", "maine"], ["florida", "florida"]]) {
 }
 writeFile(p("dist", "404.html"), page({ title: "Not found", path: "/404", description: "Page not found.", body: `<h1>We couldn't find that page.</h1><p><a href="/">Find your town</a></p>` }));
 writeFile(p("dist", "robots.txt"), "User-agent: *\nAllow: /\n");
+shareImage("default", { title: "Where's our audit?", subtitle: "See if your town filed its audit. If it didn't, ask for it in one click.", cls: "none" });
 writeFile(p("dist", "favicon.svg"), `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#1b1d21"/><text x="16" y="23" font-family="Georgia,serif" font-size="20" font-weight="700" fill="#fbfaf7" text-anchor="middle">?</text></svg>`);
 
 let count = 0;
 const walk = d => { for (const f of fs.readdirSync(d, { withFileTypes: true })) f.isDirectory() ? walk(`${d}/${f.name}`) : count++; };
 walk(DIST);
-console.log(`built ${count} files into dist/ (${ME.entities.length} Maine + ${FL.entities.length} Florida entity pages), ${BUILT}`);
+console.log(`built ${count} files into dist/ (${ME.entities.length} Maine + ${FL.entities.length} Florida entity pages, ${imageCount} share images), ${BUILT}`);

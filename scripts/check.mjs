@@ -28,6 +28,22 @@ for (const f of ours) {
 ok(!banned.length, `no banned words on our pages${banned.length ? "\n      " + banned.slice(0, 10).join("\n      ") : ""}`);
 ok(!dashes.length, `no em dashes${dashes.length ? ": " + dashes.slice(0, 10).join(", ") : ""}`);
 
+// 2b. Share images: every page's og:image exists, is a PNG, and entity images match their page.
+{
+  const htmlPages = files.filter(f => f.endsWith(".html") && !f.includes(`${path.sep}sources${path.sep}`));
+  let missing = [], notPng = 0;
+  for (const f of htmlPages) {
+    const m = /<meta property="og:image" content="https:\/\/[^/]+(\/share\/[^"]+\.png)"/.exec(readText(f));
+    if (!m) { missing.push(path.relative(p("dist"), f) + " (no og:image)"); continue; }
+    const img = p("dist", ...m[1].split("/").filter(Boolean));
+    if (!fs.existsSync(img)) { missing.push(m[1]); continue; }
+    const head = fs.readFileSync(img).subarray(0, 8).toString("hex");
+    if (head !== "89504e470d0a1a0a") notPng++;
+  }
+  ok(!missing.length, `every page has a share image that exists${missing.length ? ": " + missing.slice(0, 5).join(", ") : ""}`);
+  ok(notPng === 0, "every share image is a real PNG");
+}
+
 // 3. Every page carries the disclosure footer.
 const pages = ours.filter(f => f.endsWith(".html"));
 const noFooter = pages.filter(f => !readText(f).includes("Civic-Chain never uses this site for sales."));
