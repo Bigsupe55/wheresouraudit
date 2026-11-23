@@ -1,0 +1,2 @@
+fac-general-local.csv	filtered from https://app.fac.gov/dissemination/public-data/gsa/full/general.csv (entity_type=local, audit_year>=2021; contact name, email and phone columns dropped)	fetched 2026-11-23T16:59:52.214Z
+Rows in source: 418143. Rows kept: 98030.

@@ -12,6 +12,7 @@ const MAILTO = CONFIG.correctionsEmail;
 const BUILT = new Date().toISOString().slice(0, 10);
 const ME = readJSON(p("data", "derived", "maine.json"));
 const FL = readJSON(p("data", "derived", "florida.json"));
+const US = fs.existsSync(p("data", "derived", "us.json")) ? readJSON(p("data", "derived", "us.json")) : null;
 
 // ---------- per-state settings ----------
 const law = s => `Required by law here (${s})`;
@@ -66,7 +67,7 @@ function page({ title, description, body, path }) {
 </head>
 <body>
 <header class="site"><a class="logo" href="/">Where's Our Audit?</a>
-<nav><a href="/me/">Maine</a><a href="/fl/">Florida</a><a href="/how-we-grade/">How we grade</a><a href="/corrections/">Corrections</a></nav></header>
+<nav><a href="/me/">Maine</a><a href="/fl/">Florida</a><a href="/us/">Other states</a><a href="/how-we-grade/">How we grade</a><a href="/corrections/">Corrections</a></nav></header>
 <main>
 ${body}
 </main>
@@ -276,6 +277,42 @@ ${[...groups.keys()].sort().map(c => `<h3 id="county-${countySlug(c)}">${esc(c)}
   out("/fl/dissolved/", page({ title: "Dissolved Florida entities", path: "/fl/dissolved/", description: "Florida local governments dissolved in the years we show.", body: `<p class="crumb"><a href="/fl/">Florida</a></p><h1>Dissolved (${gone.length})</h1><p>These pages stay up for the record. No new flags appear after the dissolution date.</p>${tableOf(gone)}` }));
 }
 
+// ---------- other states (federal single audit status; one page per state, data loaded in the browser) ----------
+if (US) {
+  const byState = new Map();
+  for (const e of US.entities) { if (!byState.has(e.state)) byState.set(e.state, []); byState.get(e.state).push(e); }
+  const rows = [];
+  for (const [st, list] of [...byState].sort()) {
+    const name = US.stateNames[st];
+    const compact = list.map(e => ({ i: e.id, n: e.name, t: e.typeLabel, c: e.county, p: e.pop, w: e.web, s: e.status.key, h: e.headline, wo: e.worst,
+      f: e.flags.map(f => ({ c: f.cls, l: f.label, x: f.sentence, u: f.source })),
+      y: e.years.map(y => [y.fy, y.fyEnd, y.due, y.accepted, y.status, y.daysLate, y.report, y.spent]) }));
+    const rule = list.flatMap(e => e.flags).find(f => f.rule)?.rule || "";
+    writeFile(p("dist", "data", "us", `${st.toLowerCase()}.json`), JSON.stringify({ st, name, asOf: US.asOf, rule, e: compact }));
+    const gov = list.filter(e => e.typeLabel !== "Other local entity");
+    const withFac = gov.filter(e => e.years.length).length, lateLatest = list.filter(e => e.status.key === "late").length;
+    rows.push(`<tr><td><a href="/us/${st.toLowerCase()}/">${esc(name)}</a></td><td>${gov.length.toLocaleString("en-US")}</td><td>${withFac.toLocaleString("en-US")}</td><td>${(list.length - gov.length).toLocaleString("en-US")}</td><td>${lateLatest.toLocaleString("en-US")}</td></tr>`);
+    out(`/us/${st.toLowerCase()}/`, page({ title: `${name}: federal audits`, path: `/us/${st.toLowerCase()}/`, description: `Federal single audit status for every county, city and town in ${name}.`,
+      body: `<p class="crumb"><a href="/us/">Other states</a></p>
+<h1>${esc(name)}: federal audits</h1>
+<p>For ${esc(name)} we show one thing so far: whether each local government filed the <b>federal single audit</b> required when it spends $1 million or more in federal money in a year ($750,000 for years that began before October 1, 2024), and whether it was on time. The federal deadline is 9 months after the fiscal year ends (2 CFR 200.512). Governments are not graded yet in ${esc(name)}.</p>
+<p class="small muted">"No federal audit on file" is normal for a government that spent less than the threshold. It only matters if it spent more. Source: Federal Audit Clearinghouse (fac.gov), copied ${esc(US.snapshot)}. Lateness is judged from fiscal year ${US.firstJudgedYear}.</p>
+<div data-us="/data/us/${st.toLowerCase()}.json" data-mailto="${esc(MAILTO)}" class="sans">
+  <label for="usq">Find your town, city, county or township</label>
+  <input id="usq" type="search" placeholder="Start typing a name" autocomplete="off">
+  <div data-us-detail class="hidden"></div>
+  <p class="small muted" data-us-count></p>
+  <table><thead><tr><th>Name</th><th>Type</th><th>Federal audit</th><th>Summary</th></tr></thead><tbody data-us-list><tr><td colspan="4" class="muted">Loading...</td></tr></tbody></table>
+</div>
+<noscript><p>This page needs JavaScript to show the list. The data file is at <a href="/data/us/${st.toLowerCase()}.json">/data/us/${st.toLowerCase()}.json</a>.</p></noscript>` }));
+  }
+  out("/us/", page({ title: "Other states", path: "/us/", description: "Federal single audit status for local governments in every state.",
+    body: `<h1>Other states</h1>
+<p>Maine and Florida have full pages, with state filing records and the report card. For every other state we show federal single audit status from the Federal Audit Clearinghouse, for every county, city, town and township in the Census list, plus other local bodies that filed one (school districts, authorities and similar).</p>
+<p><a href="/me/">Maine</a> · <a href="/fl/">Florida</a></p>
+<table><tr><th>State</th><th>Governments</th><th>With a federal audit on file</th><th>Other local filers</th><th>Latest filed late</th></tr>${rows.join("")}</table>` }));
+}
+
 // ---------- home ----------
 {
   const nME = ME.entities.filter(e => e.worst === "overdue").length;
@@ -287,7 +324,7 @@ ${searchBox}
 <div class="stats">
   <div><a href="/me/"><b>Maine</b></a> ${ME.entities.length} governments · <b style="display:inline;font-size:inherit;color:var(--bad)">${nME}</b> with an audit not posted</div>
   <div><a href="/fl/"><b>Florida</b></a> ${FL.entities.filter(e => !e.dissolved).length} local governments · <b style="display:inline;font-size:inherit;color:var(--bad)">${nFL}</b> with a report not filed</div>
-  <div><b>Other states</b> federal audit status coming</div>
+  <div><a href="/us/"><b>Other states</b></a> federal single audit status for ${US ? US.entities.length.toLocaleString("en-US") : "every"} local governments and filers</div>
 </div>
 <h2>How it works</h2>
 <ol>
@@ -341,7 +378,7 @@ ${ITEMS.map(it => `<tr><td>${it.n}</td><td>${esc(it.label)}</td><td>${it.max}</t
 // ---------- trust pages ----------
 out("/corrections/", page({ title: "Corrections log", path: "/corrections/", description: "Every change we make to a flag, with its date.",
   body: `<h1>Corrections log</h1><p>Every change to a flag or grade is listed here with its date and reason.</p><p class="muted">No corrections yet.</p>` }));
-const unmatched = [...ME.unmatched, ...FL.unmatched];
+const unmatched = [...ME.unmatched, ...FL.unmatched, ...(US ? US.unmatched : [])];
 out("/unmatched/", page({ title: "Records we couldn't match", path: "/unmatched/", description: "Source records we could not tie to exactly one government.",
   body: `<h1>Records we couldn't match</h1><p>We only attach a record to a government when the names or IDs match exactly, or a person has confirmed the match. These records didn't, so we show them here instead of guessing.</p>
 <table><tr><th>State</th><th>Source</th><th>Name in the source</th><th>Why</th></tr>${unmatched.map(u => `<tr><td>${u.state}</td><td>${esc(u.source)}</td><td>${esc(u.sourceName)}</td><td>${esc(u.reason)}</td></tr>`).join("") || '<tr><td colspan="4" class="muted">None.</td></tr>'}</table>` }));

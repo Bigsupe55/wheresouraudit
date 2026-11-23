@@ -12,10 +12,12 @@
     "fetch:maine": "node scripts/fetch-maine.mjs",
     "data:maine": "node scripts/build-maine-data.mjs",
     "site": "node scripts/build-site.mjs",
-    "build": "node scripts/build-maine-data.mjs && node scripts/build-florida-data.mjs && node scripts/build-site.mjs",
+    "build": "node scripts/build-maine-data.mjs && node scripts/build-florida-data.mjs && node scripts/build-us-data.mjs && node scripts/build-site.mjs",
     "check": "node scripts/check.mjs",
     "serve": "node scripts/serve.mjs",
     "fetch:florida": "node scripts/fetch-florida.mjs",
-    "data:florida": "node scripts/build-florida-data.mjs"
+    "data:florida": "node scripts/build-florida-data.mjs",
+    "fetch:us": "node scripts/fetch-us.mjs",
+    "data:us": "node scripts/build-us-data.mjs"
   }
 }

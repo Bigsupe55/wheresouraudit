@@ -38,7 +38,7 @@ const ME = readJSON(p("data", "derived", "maine.json"));
 const LABELS = new Set(["Posted", "Posted after 12 months", "Not posted yet, over 12 months", "Not due yet"]);
 const badFlags = ME.entities.flatMap(e => e.flags.filter(f => !(f.label && f.sentence && f.rule && f.source && f.asOf) || (!LABELS.has(f.label) && !f.label.startsWith("Posted on "))).map(f => `${e.id}/${f.key}`));
 ok(!badFlags.length, `every flag has label, sentence, rule, source and as-of date${badFlags.length ? ": " + badFlags.slice(0, 5) : ""}`);
-ok(!ME.entities.some(e => e.flags.some(f => /not filed/i.test(f.label + f.sentence))), `Maine flags never say "not filed"`);
+ok(!ME.entities.some(e => e.flags.some(f => /\bnot filed\b/i.test(f.label + " " + f.sentence))), `Maine flags never say "not filed"`);
 ok(!ME.entities.some(e => e.graded && e.pts.some(v => v === null)), "no grade shown unless all 7 items are checked");
 
 // 4b. Florida data.
@@ -56,6 +56,23 @@ ok(baker && baker.years.find(y => y.fy === "2024")?.daysLate === 171, "Baker Cou
 ok(baker && baker.status.label === "Filed on time" && baker.pts[1] === 0, "Baker County: FY2025 on time, all 3 prior years late (item 2 = 0, rubric test)");
 ok(raiford && raiford.jlac && raiford.worst === "overdue", "Raiford: not filed and on the JLAC enforcement list");
 ok(FL.entities.filter(e => e.type === "city").every(e => e.county), "every Florida city is placed in a county");
+
+// 4c. Nationwide (federal single audits).
+if (fs.existsSync(p("data", "derived", "us.json"))) {
+  const US = readJSON(p("data", "derived", "us.json"));
+  const US_LABELS = new Set(["Filed on time", "Filed late", "No federal audit on file"]);
+  const badUS = US.entities.flatMap(e => e.flags.filter(f => !(f.label && f.sentence && f.source && f.asOf) || !US_LABELS.has(f.label)).map(() => e.id));
+  ok(!badUS.length, `nationwide: every flag has all parts and an allowed label${badUS.length ? ": " + badUS.slice(0, 5) : ""}`);
+  ok(!US.entities.some(e => e.flags.some(f => /\bmissing\b|\bnot filed\b/i.test(f.label + " " + f.sentence))), `nationwide flags never say "missing" or "not filed"`);
+  ok(!US.entities.some(e => e.state === "ME" || e.state === "FL"), "nationwide data skips Maine and Florida (they have full pages)");
+  ok(!US.entities.some(e => e.years.some(y => y.status === "late" && +y.fy < US.firstJudgedYear)), `no lateness judged before fiscal year ${US.firstJudgedYear}`);
+  const ids = new Set(); let dupIds = 0; for (const e of US.entities) { if (ids.has(e.id)) dupIds++; ids.add(e.id); }
+  ok(dupIds === 0, "nationwide: every entity has its own id");
+  const govs = US.entities.filter(e => e.typeLabel !== "Other local entity").length;
+  ok(govs > 37000 && govs < 39000, `nationwide: ${govs} Census general-purpose governments (Census 2022 lists 38,736 including ME and FL)`);
+  const cols = readJSON(p("dist", "data", "us", "oh.json"));
+  ok(cols.e.some(e => e.i === "oh-city-of-columbus" && e.s === "on_time"), "Columbus, OH: federal audit on file, latest on time");
+}
 
 // 5. Known cases from the research (Maine).
 const get = id => ME.entities.find(e => e.id === id);
