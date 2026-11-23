@@ -170,7 +170,7 @@ for (const { state, rows } of facOnly) {
 
 const OUT = p("data", "derived", "us.json");
 // The brake compares per-year statuses; "none" years don't exist, so reuse it with the same shape.
-brakeAndLog({ outFile: OUT, snapshot, entities: entities.map(e => ({ id: e.id, years: e.years })), approve: args.approve, overdueKey: "__never__" });
+brakeAndLog({ scope: "us", snapshot, entities: entities.map(e => ({ id: e.id, years: e.years })), approve: args.approve, overdueKey: "__never__" });
 entities.sort((a, b) => a.state.localeCompare(b.state) || a.name.localeCompare(b.name));
 writeJSON(OUT, { scope: "US", snapshot, asOf, firstJudgedYear: FIRST_JUDGED_YEAR, stateNames: STATE_NAMES, skipped: [...SKIP], entities, unmatched });
 

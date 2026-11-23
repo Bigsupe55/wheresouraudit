@@ -53,3 +53,13 @@ npm run serve         # http://localhost:8790
 ## License
 
 MIT for the code. The source records are public records from the State of Maine and the US Census Bureau.
+
+## Weekly refresh (GitHub Actions)
+
+`.github/workflows/refresh.yml` runs `scripts/refresh.mjs` every Monday at 11:00 UTC. It fetches every source, rebuilds, runs the checks, commits the new dated copies, and deploys to Cloudflare Pages.
+
+- **Safety brake:** if more than 10% of statuses change, nothing is committed or deployed. The job opens an issue with the summary instead. After reviewing, run the workflow by hand with "approve" ticked.
+- **Stored status:** the brake compares against `data/derived/*-status.json`, which are committed, so it works on a fresh checkout.
+- **Storage:** only the newest federal copy (about 17 MB) is kept in git. Every Maine and Florida copy is kept.
+- **Deploys:** they need two repository secrets, `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`, and a Cloudflare Pages project named `wheresouraudit`. Without them, the job still refreshes and commits the data.
+- **Run it locally:** `node scripts/refresh.mjs` (add `--skip-fetch` to rebuild from the copies you already have).

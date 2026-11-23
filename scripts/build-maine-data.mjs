@@ -189,7 +189,8 @@ for (const row of rows) {
 
 // ---------- safety brake: compare with the last published data ----------
 const OUT = p("data", "derived", "maine.json");
-brakeAndLog({ outFile: OUT, snapshot, entities, approve: args.approve });
+const SCOPE = "maine";
+brakeAndLog({ scope: SCOPE, snapshot, entities, approve: args.approve });
 
 entities.sort((a, b) => a.name.localeCompare(b.name));
 writeJSON(OUT, { state: "ME", snapshot, asOf, rubric: RUBRIC_VERSION, sources: SRC, entities, unmatched });

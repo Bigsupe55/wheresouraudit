@@ -171,7 +171,8 @@ for (const raw of byId.values()) {
 }
 
 const OUT = p("data", "derived", "florida.json");
-brakeAndLog({ outFile: OUT, snapshot, entities, approve: args.approve });
+const SCOPE = "florida";
+brakeAndLog({ scope: SCOPE, snapshot, entities, approve: args.approve });
 entities.sort((a, b) => a.name.localeCompare(b.name));
 writeJSON(OUT, { state: "FL", snapshot, asOf, rubric: RUBRIC_VERSION, reportYears, sources: { logerx: HUMAN_PAGE }, entities, unmatched: [] });
 

@@ -1,0 +1,82 @@
+name: Weekly refresh
+
+# Every Monday: copy the sources, rebuild, check, commit the new dated copies and deploy.
+# If the safety brake trips (more than 10% of statuses changed), nothing is committed or deployed:
+# an issue is opened for review. After reviewing, run this workflow by hand with "approve" ticked.
+on:
+  schedule:
+    - cron: "0 11 * * 1" # Mondays 11:00 UTC
+  workflow_dispatch:
+    inputs:
+      approve:
+        description: "Publish even though the safety brake tripped (only after reviewing the change)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      # Set these two repository secrets to turn on deploys. Without them the job still refreshes and commits data.
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Fetch, build and check
+        id: refresh
+        run: |
+          set +e
+          node scripts/refresh.mjs ${{ inputs.approve && '--approve' || '' }}
+          code=$?
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Open a review issue if the safety brake tripped
+        if: steps.refresh.outputs.code == '2'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue create --title "Safety brake tripped: review the weekly refresh" --body-file refresh-summary.md
+          exit 1
+
+      - name: Fail if a step failed
+        if: steps.refresh.outputs.code == '1'
+        run: |
+          cat refresh-summary.md
+          exit 1
+
+      - name: Commit new data
+        id: commit
+        run: |
+          git config user.name "wheresouraudit-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A data
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No data changes."
+          else
+            git commit -F refresh-summary.md
+            git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Deploy to Cloudflare Pages
+        if: (steps.commit.outputs.changed == 'true' || github.event_name == 'workflow_dispatch') && env.CLOUDFLARE_API_TOKEN != ''
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=wheresouraudit --branch=main

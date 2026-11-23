@@ -2,3 +2,4 @@ dist/
 node_modules/
 .DS_Store
 data/derived/us.json
+refresh-summary.md
