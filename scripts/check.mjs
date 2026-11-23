@@ -90,6 +90,17 @@ if (fs.existsSync(p("data", "derived", "us.json"))) {
   ok(cols.e.some(e => e.i === "oh-city-of-columbus" && e.s === "on_time"), "Columbus, OH: federal audit on file, latest on time");
 }
 
+// 4d. Federal single audit sections on Maine and Florida pages.
+{
+  const statePages = [...ME.entities, ...FL.entities].map(e => p("dist", ...e.url.split("/").filter(Boolean), "index.html"));
+  const noFed = statePages.filter(f => !readText(f).includes("<h2>Federal single audit</h2>"));
+  ok(!noFed.length, `every Maine and Florida page has a federal single audit section${noFed.length ? ": " + noFed.slice(0, 3).join(", ") : ""}`);
+  const fedDirs = ["me", "fl"].flatMap(st => { const d = p("dist", st, "federal"); return fs.existsSync(d) ? fs.readdirSync(d, { withFileTypes: true }).filter(x => x.isDirectory()).map(x => p("dist", st, "federal", x.name, "index.html")) : []; });
+  ok(fedDirs.length > 0 && fedDirs.every(f => readText(f).includes('<div class="grade ng">Status only</div>')), `${fedDirs.length} federal-only pages, none graded`);
+  const brun = readText(p("dist", "me", "town", "brunswick", "index.html"));
+  ok(/Federal single audit[\s\S]*Brunswick's federal single audits/.test(brun), "Brunswick: federal flags use the page's own name");
+}
+
 // 5. Known cases from the research (Maine).
 const get = id => ME.entities.find(e => e.id === id);
 if (ME.snapshot >= "2026-11-22" && ME.snapshot <= "2026-12-31") {

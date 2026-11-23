@@ -74,9 +74,10 @@ const placeKey = s => s.toLowerCase().replace(/,\s*(the\s+)?(village|villages|to
 const cityCounty = new Map();
 for (const r of places) {
   const base = r.PLACENAME.replace(/ (city|town|village)$/, ""), county = r.COUNTYNAME.replace(/ County$/, "");
-  for (const k of [placeKey(base), placeKey(base.split(",")[0]), placeKey(r.PLACENAME)]) if (!cityCounty.has(k)) cityCounty.set(k, county);
+  const hit = { county, fips: r.STATEFP + r.COUNTYFP + r.PLACEFP }; // fips matches the Census government list (federal audits)
+  for (const k of [placeKey(base), placeKey(base.split(",")[0]), placeKey(r.PLACENAME)]) if (!cityCounty.has(k)) cityCounty.set(k, hit);
 }
-const placeAliases = new Map(manual("aliases-fl-places.csv").map(r => [placeKey(r.dfs_name), r.county]));
+const placeAliases = new Map(manual("aliases-fl-places.csv").map(r => [placeKey(r.dfs_name), { county: r.county, fips: null }]));
 // Exact key first, then the same name with its type word or ", Village of ..." part dropped. Each step is still an exact match.
 const countyOf = n => placeAliases.get(placeKey(n))
   || cityCounty.get(placeKey(n))
@@ -124,7 +125,7 @@ for (const raw of byId.values()) {
   const push = (status, list, sentence) => flags.push({ key: `${status}-${list.map(y => y.fy).join("-")}`, cls: STATUS_CLASS[status], label: FL_LABELS[status], sentence, rule: RULE, ourRule: false, source: HUMAN_PAGE, sourceCopy: `/sources/florida/${snapshot}/`, asOf, reply: null });
   if (overdue.length) push("overdue", overdue, `The Florida Department of Financial Services has no annual financial report from ${name} for ${yearRange(overdue.map(y => y.fy))}, and the legal deadline has passed (${overdue.map(y => `FY${y.fy} was due ${fmtDate(y.due)}`).join("; ")}).`);
   if (late.length) push("late", late, `${name}'s filings for ${yearRange(late.map(y => y.fy))} reached the Florida Department of Financial Services after the legal deadline (${late.map(y => `FY${y.fy}: ${y.daysLate} days after`).join("; ")}).`);
-  if (latest && latest.status === "on_time") push("on_time", [latest], `${name}'s ${what(latest)} for fiscal year ${latest.fy} reached the Florida Department of Financial Services on ${fmtDate(latest.filed)}, before the ${fmtDate(latest.due)} deadline.`);
+  if (latest && latest.status === "on_time") push("on_time", [latest], `${name}'s ${what(latest)} for fiscal year ${latest.fy} reached the Florida Department of Financial Services on ${fmtDate(latest.filed)}, ${latest.filed === latest.due ? "on the day of" : "before"} the ${fmtDate(latest.due)} deadline.`);
   const J = jlac.filter(j => j.name.toLowerCase() === baseName.toLowerCase() && TYPE[j.type] === type);
   for (const j of J) flags.push({ key: `jlac-${j.fy}`, cls: "bad", label: "On the Legislative Auditing Committee's enforcement list", sentence: `The Joint Legislative Auditing Committee sent ${name} an enforcement letter on ${fmtDate(j.letter)}${j.withholding ? `, and state funds were set to be withheld starting ${fmtDate(j.withholding)}` : ""} (FY${j.fy}).`, rule: "s.11.40(2), Florida Statutes, lets the committee have state funds withheld until reports are filed.", ourRule: false, source: HUMAN_PAGE, sourceCopy: `/sources/florida/${snapshot}/`, asOf, reply: null });
   for (const f of flags) f.reply = replies.find(r => r.entity_id === `fl-${raw.id}` && r.flag_key === f.key) || null;
@@ -155,10 +156,11 @@ for (const raw of byId.values()) {
   const typeSlug = type;
   if (usedSlugs.has(`${typeSlug}/${s}`)) s = `${s}-${raw.id}`;
   usedSlugs.add(`${typeSlug}/${s}`);
-  const county = type === "county" ? baseName : type === "city" ? countyOf(baseName) : null;
+  const place = type === "city" ? countyOf(baseName) : null;
+  const county = type === "county" ? baseName : place?.county || null;
   const letterYear = overdue[overdue.length - 1] || latest || years[years.length - 1];
   entities.push({
-    id, dfsId: raw.id, state: "FL", type, typeLabel: TYPE_LABEL[type], name, sourceName: baseName, county, dissolved,
+    id, dfsId: raw.id, placeFips: place?.fips || null, state: "FL", type, typeLabel: TYPE_LABEL[type], name, sourceName: baseName, county, dissolved,
     url: `/fl/${typeSlug}/${s}/`,
     status: latest ? { key: latest.status, cls: STATUS_CLASS[latest.status], label: FL_LABELS[latest.status] } : { key: "not_due", cls: "none", label: FL_LABELS.not_due },
     worst: overdue.length ? "overdue" : late.length ? "late" : latest ? latest.status : "not_due",

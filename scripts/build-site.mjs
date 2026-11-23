@@ -1,7 +1,7 @@
 // Build the static site into dist/ from data/derived/*.json (Maine and Florida).
 // Usage: node scripts/build-site.mjs
 import fs from "node:fs";
-import { p, readJSON, readText, writeFile, esc, fmtDate } from "./lib/util.mjs";
+import { p, readJSON, readText, writeFile, esc, fmtDate, slug } from "./lib/util.mjs";
 import { ITEMS, RUBRIC_VERSION } from "./lib/rubric.mjs";
 import { shareSVG, renderPNG } from "./lib/share-image.mjs";
 
@@ -46,7 +46,51 @@ const STATES = {
     legend: [["bad", "3 or more governments not filed"], ["warn", "1 or 2 not filed"], ["good", "All filed"]],
   },
 };
-const ALL = [...ME.entities, ...FL.entities];
+// ---------- federal single audits for Maine and Florida (from build-us-data.mjs) ----------
+// Attach each federal record to the matching state page by exact keys only:
+// Maine towns by Census GEOID, Florida cities by Census place code, counties by name,
+// Florida districts by exact name. Filers with no state page get a federal-only page.
+const FED = new Map();
+const fedOnly = [];
+if (US?.mefl) {
+  const norm = s => s.toLowerCase().replace(/[^a-z0-9]/g, "");
+  const countyKey = n => norm(n.replace(/^county of /i, "").replace(/ county$/i, ""));
+  const meByGeoid = new Map(ME.entities.filter(e => e.geoid).map(e => [e.geoid, e]));
+  const counties = { ME: new Map(ME.entities.filter(e => e.type === "county").map(e => [countyKey(e.name), e])), FL: new Map(FL.entities.filter(e => e.type === "county").map(e => [countyKey(e.name), e])) };
+  const flByPlace = new Map(FL.entities.filter(e => e.placeFips).map(e => [e.placeFips, e]));
+  const flByName = new Map();
+  for (const e of FL.entities) { const k = norm(e.sourceName); flByName.set(k, flByName.has(k) ? null : e); } // null marks a duplicate name: never attach
+  const used = new Set();
+  for (const r of US.mefl) {
+    let target = null;
+    if (r.fips) target = r.typeLabel === "County" ? counties[r.state].get(countyKey(r.name)) : r.state === "ME" ? meByGeoid.get(r.fips) : flByPlace.get(r.fips);
+    else if (r.state === "FL") target = flByName.get(norm(r.name)) || null;
+    if (target && !FED.has(target.id)) { if (r.years.length) FED.set(target.id, r); continue; }
+    if (!r.years.length) continue; // Census unit with no filing and no state page: nothing to show
+    const st = r.state.toLowerCase();
+    let s = slug(r.name); while (used.has(`${st}/${s}`)) s += "-x"; used.add(`${st}/${s}`);
+    const latest = r.years.filter(y => y.accepted).at(-1);
+    fedOnly.push({
+      id: `${st}-federal-${s}`, state: r.state, type: "federal", typeLabel: "Local body with a federal audit", name: r.name, county: r.county, url: `/${st}/federal/${s}/`,
+      status: r.status, worst: r.worst, headline: r.headline, gradable: false, graded: false, pts: [], evidence: {},
+      flags: r.flags.map((f, i) => ({ ...f, key: `federal-${i}`, sourceCopy: null })),
+      letter: { fy: latest?.fy || "", fye: latest?.fyEnd || "", due: latest?.due || "", missing: false, generic: true },
+      contact: { office: `Records custodian, ${r.name}`, detail: "Look for its records contact on its official website.", source: null },
+      sourcePage: "https://app.fac.gov/dissemination/search/", fedRecord: r,
+    });
+  }
+}
+const ALL = [...ME.entities, ...FL.entities, ...fedOnly];
+const FED_NOTE = "A federal single audit is required only when a government spends $1 million or more in federal money in a year ($750,000 for years that began before October 1, 2024). It is due 9 months after the year ends (2 CFR 200.512).";
+function federalHTML(e) {
+  const r = e.fedRecord || FED.get(e.id);
+  if (!r) return `<h2>Federal single audit</h2><div class="flag none"><span class="pill s-none">No federal audit on file</span><div class="sentence">We found no federal single audit for ${esc(e.name)} since 2021. That is normal if it spent less than $1 million in federal money in a year.</div><div class="meta"><span>Source: <a href="https://app.fac.gov/dissemination/search/">Federal Audit Clearinghouse</a>, copied ${esc(US?.snapshot || "")}</span></div></div>`;
+  const rows = r.years.map(y => `<tr><td>${y.fy}</td><td>${fmtDate(y.fyEnd)}</td><td>${fmtDate(y.due)}</td><td>${y.accepted ? fmtDate(y.accepted) : ""}${y.status === "late" ? ` <span class="pill s-warn">${y.daysLate} days late</span>` : ""}${y.report ? ` <a class="small" href="https://app.fac.gov/dissemination/summary/${esc(y.report)}">report</a>` : ""}</td><td>$${(+y.spent).toLocaleString("en-US")}</td></tr>`).join("");
+  return `<h2>Federal single audit</h2>
+${e.fedRecord ? "" : r.flags.map((f, i) => flagHTML({ ...f, key: `federal-${i}`, sourceCopy: null, sentence: f.sentence.split(r.name).join(e.name) })).join("\n")}
+<table><tr><th>Fiscal year</th><th>Year ended</th><th>Due</th><th>Filed</th><th>Federal money spent</th></tr>${rows}</table>
+<p class="small muted">${esc(FED_NOTE)} Lateness is judged from fiscal year ${US.firstJudgedYear}; an agency may have granted an extension we can't see. This does not change the grade, which uses ${e.state === "ME" ? "the State Auditor's records" : "Florida's state filing records"}.</p>`;
+}
 
 // ---------- layout ----------
 const DISCLOSURE = "Built by Nick Hernandez, founder of Civic-Chain, which sells financial transparency software to governments. Every town is graded the same way, customer or not. Civic-Chain never uses this site for sales.";
@@ -126,7 +170,7 @@ ${e.graded ? "" : `<p class="small muted">Items 3 to 7 need a person to check ${
 const shareHTML = e => `<div class="share" aria-label="Share card preview"><div class="q">Where's Our Audit?</div><div class="fact"><b>${esc(e.name)}, ${e.state}:</b> ${esc(e.headline)}</div><div class="foot">${SITE}${e.url} · sourced to public records</div></div>`;
 
 function letterHTML(e, S) {
-  const data = { state: e.state, entity: e.name, type: e.type, fy: e.letter.fy, fyeText: fmtDate(e.letter.fye), dueText: fmtDate(e.letter.due), missing: e.letter.missing, sourcePage: e.sourcePage };
+  const data = { state: e.letter.generic ? "GEN" : e.state, stateName: S.name, entity: e.name, type: e.type, fy: e.letter.fy, fyeText: e.letter.fye ? fmtDate(e.letter.fye) : "", dueText: e.letter.due ? fmtDate(e.letter.due) : "", missing: e.letter.missing, sourcePage: e.sourcePage };
   return `<form data-letter class="card" onsubmit="return false">
   <p class="small muted">Send it yourself. We never send anything for you. Copy it into an email or print it for:<br><b>${esc(e.contact.office)}</b>${e.contact.detail ? `<br>${esc(e.contact.detail)}` : ""}${e.contact.source ? `<br><span class="small">Contact from the ${esc(e.contact.source)}.</span>` : ""}</p>
   <div class="letter-grid">
@@ -163,6 +207,7 @@ for (const e of ALL) {
     <span class="pill s-${e.status.cls}">${esc(e.status.label)}</span>
     <p style="margin:10px 0 0">${esc(e.headline)}.</p>
     ${e.type === "village" ? '<p class="small muted">A village corporation is a small local district inside a town, with its own budget.</p>' : ""}
+    ${e.type === "federal" ? `<p class="small muted">We know about ${esc(e.name)} only from its federal single audits. It has no ${e.state === "ME" ? "State Auditor" : "Florida state filing"} record we could match, so it isn't graded.</p>` : ""}
     ${e.type === "district" ? '<p class="small muted">A special district is a local government with one job, such as water, fire, roads or a community development district.</p>' : ""}
     <p class="small muted">${e.graded ? `Score ${e.score} / 100 · ` : ""}As of ${esc(S.data.asOf)} · <a href="/how-we-grade/">How we grade</a></p>
   </div>
@@ -171,6 +216,7 @@ for (const e of ALL) {
   <div>
     <h2>What we found</h2>
     ${e.flags.map(flagHTML).join("\n") || '<p class="muted">Nothing due yet.</p>'}
+    ${US ? federalHTML(e) : ""}
     <h2>Ask for it</h2>
     ${letterHTML(e, S)}
   </div>
@@ -237,8 +283,8 @@ function floridaMap(groups) {
 }
 
 // ---------- state pages ----------
-const ORDER = { overdue: 0, late: 1, on_time: 2, not_due: 3 };
-const rowHTML = e => `<tr><td><a href="${e.url}">${esc(e.name)}</a></td><td><span class="pill s-${e.status.cls}">${esc(e.status.label)}</span></td><td class="small">${esc(e.headline)}</td><td>${e.dissolved ? '<span class="muted small">Dissolved</span>' : e.graded ? e.grade : '<span class="muted small">Not graded yet</span>'}</td></tr>`;
+const ORDER = { overdue: 0, late: 1, on_time: 2, not_due: 3, none: 4 };
+const rowHTML = e => `<tr><td><a href="${e.url}">${esc(e.name)}</a></td><td><span class="pill s-${e.status.cls}">${esc(e.status.label)}</span></td><td class="small">${esc(e.headline)}</td><td>${e.dissolved ? '<span class="muted small">Dissolved</span>' : e.gradable === false ? '<span class="muted small">Status only</span>' : e.graded ? e.grade : '<span class="muted small">Not graded yet</span>'}</td></tr>`;
 const tableOf = list => `<table><tr><th>Name</th><th>Latest due</th><th>Summary</th><th>Grade</th></tr>${list.sort((a, b) => ORDER[a.worst] - ORDER[b.worst] || a.name.localeCompare(b.name)).map(rowHTML).join("")}</table>`;
 const searchBox = `<div class="search sans" data-search="/data/search.json"><label for="q">Find your town</label><input id="q" type="search" placeholder="Start typing a town, county or district" autocomplete="off"><ul class="hidden"></ul></div>`;
 const legendHTML = S => `<div class="legend">${S.legend.map(([c, t]) => `<span style="--c:var(--map-${c})">${esc(t)}</span>`).join("")}</div>`;
@@ -259,7 +305,8 @@ ${searchBox}
 ${legendHTML(STATES.ME)}
 <div class="map-wrap">${maineMap()}</div>
 <p class="small muted">Colors show each town's worst status across the years the State Auditor shows (fiscal years ${E[0].years[0].fy} to ${E[0].years.at(-1).fy}). Counties and village corporations are in the lists below. Source: Maine State Auditor, copied ${esc(ME.snapshot)}.</p>
-${groups.map(([t, label]) => { const l = E.filter(e => e.type === t); return l.length ? `<h2>${label} (${l.length})</h2>${tableOf(l)}` : ""; }).join("\n")}`;
+${groups.map(([t, label]) => { const l = E.filter(e => e.type === t); return l.length ? `<h2>${label} (${l.length})</h2>${tableOf(l)}` : ""; }).join("\n")}
+${fedOnly.some(e => e.state === "ME") ? `<h2>Other local bodies with a federal audit (${fedOnly.filter(e => e.state === "ME").length})</h2><p class="small muted">School units, water and sewer districts and similar bodies we know about only from federal single audits. Status only, no grade.</p>${tableOf(fedOnly.filter(e => e.state === "ME"))}` : ""}`;
   out("/me/", page({ title: "Maine", description: `${n("overdue")} Maine governments have an audit not posted more than 12 months after year end. Find yours.`, body, path: "/me/", image: shareImage("me", { title: "Maine: who posted their audit?", subtitle: `${n("overdue")} of ${E.length} Maine governments have an audit not posted more than 12 months after year end.`, cls: "bad", path: "/me/" }) }));
 }
 {
@@ -283,11 +330,12 @@ ${legendHTML(STATES.FL)}
 <p class="small muted">Each county is colored by how many of its county and city governments have a report not filed. Duval County and Jacksonville are one consolidated government, listed as Jacksonville. Special districts are not on the map yet because the state's public lists don't give their county; they are listed below. Source: Florida DFS LOGERx public reports, copied ${esc(FL.snapshot)}.</p>
 <h2>Special districts with a report not filed (${overdueDistricts.length} of ${districts.length})</h2>
 ${tableOf(overdueDistricts)}
-<p class="small"><a href="/fl/districts/">All ${districts.length} special districts</a> · <a href="/fl/other/">Other local entities (${other.length})</a></p>
+<p class="small"><a href="/fl/districts/">All ${districts.length} special districts</a> · <a href="/fl/other/">Other local entities (${other.length})</a> · <a href="/fl/federal/">Bodies known only from federal audits (${fedOnly.filter(e => e.state === "FL").length})</a></p>
 <h2>By county</h2>
 ${[...groups.keys()].sort().map(c => `<h3 id="county-${countySlug(c)}">${esc(c)} County</h3>${tableOf(groups.get(c))}`).join("\n")}`;
   out("/fl/", page({ title: "Florida", description: `${n("overdue")} Florida local governments have a report not filed past the legal deadline. Find yours.`, body, path: "/fl/", image: shareImage("fl", { title: "Florida: who filed on time?", subtitle: `${n("overdue")} of ${E.length} Florida local governments have a report not filed past the legal deadline.`, cls: "bad", path: "/fl/" }) }));
   out("/fl/districts/", page({ title: "Florida special districts", path: "/fl/districts/", description: "Every Florida special district and its filing status.", body: `<p class="crumb"><a href="/fl/">Florida</a></p><h1>Florida special districts (${districts.length})</h1>${searchBox}${tableOf(districts)}` }));
+  out("/fl/federal/", page({ title: "Florida bodies known from federal audits", path: "/fl/federal/", description: "Florida school districts, housing authorities and similar bodies with federal single audits.", body: `<p class="crumb"><a href="/fl/">Florida</a></p><h1>Bodies known only from federal audits (${fedOnly.filter(e => e.state === "FL").length})</h1><p>School districts, housing authorities, charter schools and similar bodies that filed a federal single audit but have no Florida state filing record we could match. Status only, no grade.</p>${tableOf(fedOnly.filter(e => e.state === "FL"))}` }));
   out("/fl/other/", page({ title: "Other Florida local entities", path: "/fl/other/", description: "Other Florida local entities that file annual financial reports.", body: `<p class="crumb"><a href="/fl/">Florida</a></p><h1>Other local entities (${other.length})</h1><p>Planning organizations, workforce boards and similar bodies that file with the state. We show their filing status but don't grade them.</p>${tableOf(other)}` }));
   const gone = FL.entities.filter(e => e.dissolved);
   out("/fl/dissolved/", page({ title: "Dissolved Florida entities", path: "/fl/dissolved/", description: "Florida local governments dissolved in the years we show.", body: `<p class="crumb"><a href="/fl/">Florida</a></p><h1>Dissolved (${gone.length})</h1><p>These pages stay up for the record. No new flags appear after the dissolution date.</p>${tableOf(gone)}` }));

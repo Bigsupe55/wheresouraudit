@@ -159,7 +159,34 @@
       "",
     ].concat(name ? [name] : []).concat([email, today()]).join("\n");
   }
-  var render = function () { out.value = L.state === "FL" ? florida() : maine(); };
+  function generic() {
+    var name = val("name") || "[YOUR NAME]", email = val("email") || "[YOUR EMAIL]", cap = val("cap") || "25";
+    return [
+      "Subject: Public records request: " + L.entity + " annual audit" + (L.fy ? " for fiscal year " + L.fy : ""),
+      "",
+      "To the Records Custodian of " + L.entity + ",",
+      "",
+      "Under the public records law of " + L.stateName + ", I am asking for copies of these public records:",
+      "",
+      "1. The annual financial audit or annual financial report of " + L.entity + " for the most recent fiscal year that has ended" + (L.fyeText ? " (the year that ended " + L.fyeText + " or later)" : "") + ".",
+      "2. If " + L.entity + " spent $1,000,000 or more in federal awards that year ($750,000 for fiscal years that began before October 1, 2024): the single audit report and the data collection form filed with the Federal Audit Clearinghouse.",
+      "3. If the audit or report is not finished: the engagement letter or contract with the auditor, and any record that gives the expected completion date.",
+      "",
+      "Please send the records electronically, as PDF files by email to " + email + ". If a record is already online, a link is enough.",
+      "",
+      "Please confirm you received this request and tell me when you expect to respond. Please contact me before charging more than $" + cap + "." +
+        (val("waive") ? " I ask that fees be waived because this request serves the public interest and is not for commercial use." : ""),
+      "",
+      "If you withhold any part, please cite the specific exemption you rely on and release all parts that are not exempt.",
+      "",
+      "Thank you,",
+      "",
+      name,
+      email,
+      today(),
+    ].join("\n");
+  }
+  var render = function () { out.value = L.state === "GEN" ? generic() : L.state === "FL" ? florida() : maine(); };
   form.addEventListener("input", render);
   render();
 

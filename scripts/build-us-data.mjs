@@ -42,7 +42,7 @@ function canon(name, state) {
 const zip5 = z => (z || "").replace(/\D/g, "").slice(0, 5);
 
 // ---------- Census list ----------
-const census = csvObjects(readText(p("data", "reference", "census-govt-units-2022.csv"))).filter(c => c.IS_ACTIVE !== "N" && !SKIP.has(c.STATE));
+const census = csvObjects(readText(p("data", "reference", "census-govt-units-2022.csv"))).filter(c => c.IS_ACTIVE !== "N");
 const byKey = new Map();
 for (const c of census) {
   const k = canon(c.UNIT_NAME, c.STATE);
@@ -59,7 +59,7 @@ for (const c of census) {
 }
 
 // ---------- FAC rows, grouped into auditees ----------
-const fac = csvObjects(readText(p("data", "raw", "us", snapshot, "fac-general-local.csv"))).filter(r => STATE_NAMES[r.auditee_state] && !SKIP.has(r.auditee_state));
+const fac = csvObjects(readText(p("data", "raw", "us", snapshot, "fac-general-local.csv"))).filter(r => STATE_NAMES[r.auditee_state]);
 const auditees = new Map(); // key: state|EIN (or UEI) -> rows
 for (const r of fac) {
   const id = r.auditee_ein && r.auditee_ein !== "GSA_MIGRATION" ? `ein${r.auditee_ein}` : `uei${r.auditee_uei}`;
@@ -125,7 +125,7 @@ function flagsFor(name, years) {
   const late = judged.filter(y => y.status === "late");
   const latest = judged[judged.length - 1];
   const RULE = "Federal single audits are due 9 months after the fiscal year ends (2 CFR 200.512). An agency may have granted an extension we can't see.";
-  if (latest && latest.status === "on_time") flags.push({ cls: "good", label: US_LABELS.on_time, sentence: `${name} filed its federal single audit for fiscal year ${latest.fy} on ${fmtDate(latest.accepted)}, before the ${fmtDate(latest.due)} deadline.`, report: latest.report });
+  if (latest && latest.status === "on_time") flags.push({ cls: "good", label: US_LABELS.on_time, sentence: `${name} filed its federal single audit for fiscal year ${latest.fy} on ${fmtDate(latest.accepted)}, ${latest.accepted === latest.due ? "on the day of" : "before"} the ${fmtDate(latest.due)} deadline.`, report: latest.report });
   if (late.length) flags.push({ cls: "warn", label: US_LABELS.late, sentence: `${name}'s federal single ${late.length > 1 ? "audits" : "audit"} for ${yearRange(late.map(y => y.fy))} reached the Federal Audit Clearinghouse after the federal deadline (${late.map(y => `FY${y.fy}: ${y.daysLate} days after`).join("; ")}).`, report: late[late.length - 1].report });
   // "Stopped filing": filed for year N, nothing on file for year N+1, which is past due. A fact, not an accusation.
   if (latest) {
@@ -135,7 +135,7 @@ function flagsFor(name, years) {
   for (const f of flags) Object.assign(f, { rule: RULE, ourRule: false, source: f.report ? `https://app.fac.gov/dissemination/summary/${f.report}` : "https://app.fac.gov/dissemination/search/", asOf });
   return flags;
 }
-function entityFrom({ state, id, name, typeLabel, county, pop, web, years }) {
+function entityFrom({ state, id, name, typeLabel, county, pop, web, years, fips = null, eins = [] }) {
   const judged = years.filter(y => y.judged && y.accepted);
   const latest = judged[judged.length - 1];
   const late = judged.filter(y => y.status === "late");
@@ -147,7 +147,7 @@ function entityFrom({ state, id, name, typeLabel, county, pop, web, years }) {
   else if (latest && late.length) headline = `FY${latest.fy} federal audit filed on time, after ${late.length} late ${late.length > 1 ? "years" : "year"}`;
   else if (latest) headline = `Latest federal audit filed on time (FY${latest.fy})`;
   else headline = "Federal audit on file for 2021 only";
-  return { id, state, name, typeLabel, county, pop, web, status: { key: statusKey, cls: CLS[statusKey], label: US_LABELS[statusKey] }, worst: late.length ? "late" : statusKey, headline, flags,
+  return { id, state, name, typeLabel, county, pop, web, fips, eins, status: { key: statusKey, cls: CLS[statusKey], label: US_LABELS[statusKey] }, worst: late.length ? "late" : statusKey, headline, flags,
     years: years.map(y => ({ fy: y.fy, fyEnd: y.fyEnd, due: y.due, accepted: y.accepted, status: y.status, daysLate: y.daysLate, report: y.report, spent: y.spent })) };
 }
 const entities = [];
@@ -160,19 +160,21 @@ for (const c of census) {
   const rows = matched.get(c.CENSUS_ID_PID6) || [];
   const name = titleCase(c.UNIT_NAME);
   const idName = nameCount.get(`${c.STATE}|${c.UNIT_NAME}`) > 1 && c.COUNTY_AREA_NAME ? `${c.UNIT_NAME} ${c.COUNTY_AREA_NAME} county` : c.UNIT_NAME;
-  entities.push(entityFrom({ state: c.STATE, id: mkId(c.STATE, idName), name, typeLabel: TYPE_LABEL[c.UNIT_TYPE] || "Local government", county: c.COUNTY_AREA_NAME ? titleCase(c.COUNTY_AREA_NAME) : null, pop: +c.POPULATION || null, web: c.WEB_ADDRESS || null, years: yearsOf(rows) }));
+  entities.push(entityFrom({ state: c.STATE, id: mkId(c.STATE, idName), name, typeLabel: TYPE_LABEL[c.UNIT_TYPE] || "Local government", county: c.COUNTY_AREA_NAME ? titleCase(c.COUNTY_AREA_NAME) : null, pop: +c.POPULATION || null, web: c.WEB_ADDRESS || null, years: yearsOf(rows), fips: c.FIPS_STATE + c.FIPS_COUNTY + c.FIPS_PLACE }));
 }
 for (const { state, rows } of facOnly) {
   const latest = rows.slice().sort((a, b) => a.audit_year.localeCompare(b.audit_year)).pop();
   const name = titleCase(latest.auditee_name);
-  entities.push(entityFrom({ state, id: mkId(state, latest.auditee_name), name, typeLabel: "Other local entity", county: null, pop: null, web: null, years: yearsOf(rows) }));
+  entities.push(entityFrom({ state, id: mkId(state, latest.auditee_name), name, typeLabel: "Other local entity", county: null, pop: null, web: null, years: yearsOf(rows), eins: [...new Set(rows.map(r => r.auditee_ein).filter(Boolean))] }));
 }
 
 const OUT = p("data", "derived", "us.json");
 // The brake compares per-year statuses; "none" years don't exist, so reuse it with the same shape.
 brakeAndLog({ scope: "us", snapshot, entities: entities.map(e => ({ id: e.id, years: e.years })), approve: args.approve, overdueKey: "__never__" });
 entities.sort((a, b) => a.state.localeCompare(b.state) || a.name.localeCompare(b.name));
-writeJSON(OUT, { scope: "US", snapshot, asOf, firstJudgedYear: FIRST_JUDGED_YEAR, stateNames: STATE_NAMES, skipped: [...SKIP], entities, unmatched });
+// Maine and Florida have full state pages: their federal records are merged into those pages by build-site.mjs.
+const national = entities.filter(e => !SKIP.has(e.state)), mefl = entities.filter(e => SKIP.has(e.state));
+writeJSON(OUT, { scope: "US", snapshot, asOf, firstJudgedYear: FIRST_JUDGED_YEAR, stateNames: STATE_NAMES, skipped: [...SKIP], entities: national, mefl, unmatched });
 
 const census_n = census.length, withFac = entities.filter(e => e.typeLabel !== "Other local entity" && e.years.length).length;
 console.log(`snapshot ${snapshot}: ${census_n} Census governments (${withFac} with a federal audit on file), ${facOnly.length} other FAC-only entities, ${unmatched.length} FAC auditees unmatched`);
