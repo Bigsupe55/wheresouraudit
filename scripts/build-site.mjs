@@ -260,8 +260,12 @@ out("/sent/", page({ title: "Thank you", path: "/sent/", description: "Thank you
 writeFile(p("dist", "data", "search.json"), JSON.stringify(ME.entities.map(e => ({ n: e.name, s: e.state, t: e.typeLabel, u: e.url }))));
 writeFile(p("dist", "assets", "site.css"), readText(p("src", "site.css")));
 writeFile(p("dist", "assets", "app.js"), readText(p("src", "app.js")));
-for (const [kind, file] of [["municipal", "municipal.html"], ["county", "county.html"]]) {
-  writeFile(p("dist", "sources", "maine", ME.snapshot, `${kind}.html`), readText(p("data", "raw", "maine", ME.snapshot, file)));
+// Publish every dated copy we hold, so older flags and the status log stay checkable.
+for (const day of fs.readdirSync(p("data", "raw", "maine")).filter(d => /^\d{4}-\d{2}-\d{2}$/.test(d))) {
+  for (const kind of ["municipal", "county"]) {
+    const src = p("data", "raw", "maine", day, `${kind}.html`);
+    if (fs.existsSync(src)) fs.copyFileSync(src, (fs.mkdirSync(p("dist", "sources", "maine", day), { recursive: true }), p("dist", "sources", "maine", day, `${kind}.html`)));
+  }
 }
 writeFile(p("dist", "404.html"), page({ title: "Not found", path: "/404", description: "Page not found.", body: `<h1>We couldn't find that page.</h1><p><a href="/">Find your town</a></p>` }));
 writeFile(p("dist", "robots.txt"), "User-agent: *\nAllow: /\n");
