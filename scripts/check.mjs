@@ -41,9 +41,25 @@ ok(!badFlags.length, `every flag has label, sentence, rule, source and as-of dat
 ok(!ME.entities.some(e => e.flags.some(f => /not filed/i.test(f.label + f.sentence))), `Maine flags never say "not filed"`);
 ok(!ME.entities.some(e => e.graded && e.pts.some(v => v === null)), "no grade shown unless all 7 items are checked");
 
-// 5. Known cases from the research (snapshot 2026-11-22).
+// 4b. Florida data.
+const FL = readJSON(p("data", "derived", "florida.json"));
+const FL_LABELS = new Set(["Filed on time", "Filed late", "Not filed, past the legal deadline", "Not due yet", "On the Legislative Auditing Committee's enforcement list"]);
+const badFL = FL.entities.flatMap(e => e.flags.filter(f => !(f.label && f.sentence && f.rule && f.source && f.asOf) || !FL_LABELS.has(f.label)).map(f => `${e.id}/${f.key}`));
+ok(!badFL.length, `Florida: every flag has all parts and an allowed label${badFL.length ? ": " + badFL.slice(0, 5) : ""}`);
+ok(!FL.entities.some(e => (e.gradable === false || e.dissolved) && e.graded), "Florida: 'other' entities and dissolved ones are never graded");
+const urls = ALLURLS();
+function ALLURLS() { const s = new Set(); let dup = 0; for (const e of [...ME.entities, ...FL.entities]) { if (s.has(e.url)) dup++; s.add(e.url); } return dup; }
+ok(urls === 0, "every entity page has its own address");
+const flget = n => FL.entities.find(e => e.name === n);
+const baker = flget("Baker County"), raiford = flget("Raiford");
+ok(baker && baker.years.find(y => y.fy === "2024")?.daysLate === 171, "Baker County FY2024 filed 171 days late (matches research)");
+ok(baker && baker.status.label === "Filed on time" && baker.pts[1] === 0, "Baker County: FY2025 on time, all 3 prior years late (item 2 = 0, rubric test)");
+ok(raiford && raiford.jlac && raiford.worst === "overdue", "Raiford: not filed and on the JLAC enforcement list");
+ok(FL.entities.filter(e => e.type === "city").every(e => e.county), "every Florida city is placed in a county");
+
+// 5. Known cases from the research (Maine).
 const get = id => ME.entities.find(e => e.id === id);
-if (ME.snapshot === "2026-11-22") {
+if (ME.snapshot >= "2026-11-22" && ME.snapshot <= "2026-12-31") {
   const sag = get("me-county-sagadahoc"), all = get("me-town-allagash"), bru = get("me-town-brunswick");
   ok(sag && sag.headline === "4 audits not posted (FY2022 to FY2025)", "Sagadahoc County: 4 audits not posted, FY2022 to FY2025");
   ok(all && all.worst === "overdue", "Allagash: overdue");

@@ -20,7 +20,7 @@
           .slice(0, 12);
         list.innerHTML = hits.length ? hits.map(function (e) {
           return '<li><a href="' + e.u + '">' + e.n.replace(/</g, "&lt;") + ", " + e.s + ' <span class="muted small">' + e.t + "</span></a></li>";
-        }).join("") : '<li><a href="#" onclick="return false">No match yet. We cover Maine today.</a></li>';
+        }).join("") : '<li><a href="#" onclick="return false">No match yet. We cover Maine and Florida today.</a></li>';
         list.classList.remove("hidden");
       });
     });
@@ -67,7 +67,33 @@
       today(),
     ]).join("\n");
   }
-  var render = function () { out.value = L.state === "ME" ? maine() : ""; };
+  function florida() {
+    var name = val("name"), email = val("email") || "[YOUR EMAIL]", cap = val("cap") || "25";
+    return [
+      "Subject: Public records request: " + L.entity + " audit and annual financial report for fiscal year " + L.fy,
+      "",
+      "To the Records Custodian of " + L.entity + ",",
+      "",
+      "Under Article I, Section 24 of the Florida Constitution and Chapter 119, Florida Statutes, I am asking for copies of these public records:",
+      "",
+      "1. The independent annual financial audit report of " + L.entity + " for the fiscal year that ended " + L.fyeText + ", required by section 218.39, Florida Statutes, if an audit was required for that year.",
+      "2. The annual financial report for the same fiscal year submitted to the Florida Department of Financial Services under section 218.32, Florida Statutes.",
+      "3. If either report is not finished: the engagement letter or contract with the auditor, and any letter, email or memo that gives the expected completion date or explains the delay.",
+      "",
+      "Florida law requires these reports within 9 months after the end of the fiscal year (sections 218.39(1) and 218.32(1)). By my count that date was " + L.dueText + ".",
+      "",
+      "Please send the records electronically, as PDF files by email to " + email + ", if you keep them in that form (section 119.01(2)(f)). If a report is already posted online, a link is enough.",
+      "",
+      "Please confirm you received this request. If you expect any charge, tell me the estimate first; please contact me before charging more than $" + cap + "." +
+        (val("waive") ? " Because these reports are already required by law and serve the public, I ask that any fee be waived." : ""),
+      "",
+      "If you withhold any part, please redact only that part, release the rest, and cite the exact statute you rely on (section 119.07(1)(d) and (e)).",
+      "",
+      "Thank you,",
+      "",
+    ].concat(name ? [name] : []).concat([email, today()]).join("\n");
+  }
+  var render = function () { out.value = L.state === "FL" ? florida() : maine(); };
   form.addEventListener("input", render);
   render();
 

@@ -5,6 +5,7 @@
 import fs from "node:fs";
 import { p, readText, readJSON, writeJSON, writeFile, csvObjects, toCSV, slug, lastDayOfMonth, addMonthsEnd, mdyToISO, daysBetween, latestDir, yearRange, fmtDate } from "./lib/util.mjs";
 import { parseFirstTable } from "./lib/html-table.mjs";
+import { brakeAndLog } from "./lib/brake.mjs";
 import { ITEMS, item1Points, item2Points, letterGrade, MAINE_LABELS, STATUS_CLASS, RUBRIC_VERSION } from "./lib/rubric.mjs";
 
 const args = Object.fromEntries(process.argv.slice(2).map(a => a.replace(/^--/, "").split("=")).map(([k, v]) => [k, v ?? true]));
@@ -188,30 +189,7 @@ for (const row of rows) {
 
 // ---------- safety brake: compare with the last published data ----------
 const OUT = p("data", "derived", "maine.json");
-if (fs.existsSync(OUT)) {
-  const prev = readJSON(OUT);
-  if (prev.snapshot !== snapshot) {
-    const before = new Map(prev.entities.map(e => [e.id, e.years.map(y => y.fy + y.status).join()]));
-    const changed = entities.filter(e => before.has(e.id) && before.get(e.id) !== e.years.map(y => y.fy + y.status).join()).length;
-    const share = changed / Math.max(1, entities.length);
-    console.log(`changed since ${prev.snapshot}: ${changed} of ${entities.length} (${(share * 100).toFixed(1)}%)`);
-    if (share > 0.10 && !args.approve) { console.error("SAFETY BRAKE: more than 10% of statuses changed. Review, then rerun with --approve."); process.exit(2); }
-    // status log feeds the "Audits that showed up" page
-    const logFile = p("data", "derived", "status-log.csv");
-    const lines = fs.existsSync(logFile) ? [] : [["date", "entity_id", "fiscal_year", "from", "to"]];
-    const prevYears = new Map(prev.entities.map(e => [e.id, new Map(e.years.map(y => [y.fy, y.status]))]));
-    for (const e of entities) for (const y of e.years) {
-      const was = prevYears.get(e.id)?.get(y.fy);
-      if (was && was !== y.status) lines.push([snapshot, e.id, y.fy, was, y.status]);
-    }
-    if (lines.length) fs.appendFileSync(logFile, toCSV(lines));
-  }
-}
-// first date each entity was seen with an overdue year (for "Audits that showed up")
-const ffFile = p("data", "derived", "first-flagged.json");
-const firstFlagged = fs.existsSync(ffFile) ? readJSON(ffFile) : {};
-for (const e of entities) for (const y of e.years) if (y.status === "overdue") { const k = `${e.id}|${y.fy}`; if (!firstFlagged[k]) firstFlagged[k] = snapshot; }
-writeJSON(ffFile, firstFlagged);
+brakeAndLog({ outFile: OUT, snapshot, entities, approve: args.approve });
 
 entities.sort((a, b) => a.name.localeCompare(b.name));
 writeJSON(OUT, { state: "ME", snapshot, asOf, rubric: RUBRIC_VERSION, sources: SRC, entities, unmatched });

@@ -8,7 +8,7 @@ A free, static website. For every local government it shows:
 - a report card on how much of its money information is online
 - a ready-to-send public records request letter, which the resident sends themselves
 
-Stage 1 covers Maine. Florida and nationwide federal audit status come next. The plan and every decision behind it live in `civic-chain-docs/wayfinder/citizen-watch/` (spec.md is the summary).
+Stage 1 covers Maine and stage 2 covers Florida. Nationwide federal audit status comes next. The plan and every decision behind it live in `civic-chain-docs/wayfinder/citizen-watch/` (spec.md is the summary).
 
 ## Run it
 
@@ -16,7 +16,8 @@ Requires Node 20 or newer. There are no dependencies to install.
 
 ```
 npm run fetch:maine   # copy the State Auditor's tables into data/raw/maine/<today>/
-npm run build         # data/derived/maine.json, then dist/
+npm run fetch:florida # copy 5 years of Florida DFS LOGERx reports into data/raw/florida/<today>/
+npm run build         # data/derived/maine.json and florida.json, then dist/
 npm run check         # rule checks: banned words, em dashes, footer, flag parts, file count
 npm run serve         # http://localhost:8790
 ```
