@@ -85,6 +85,9 @@ const countyOf = n => placeAliases.get(placeKey(n))
   || cityCounty.get(placeKey(n.split(",")[0]))
   || null;
 
+// County records offices (Clerk of Court and Comptroller): Florida Court Clerks and Comptrollers directory.
+// An association list, not a state file; office details only, no personal names.
+const clerks = new Map(csvObjects(readText(p("data", "reference", "fl-county-clerks.csv"))).map(r => [r.county.toLowerCase().replace(/^st\.? /, "st. "), r]));
 const checks = manual("website-checks.csv");
 const replies = manual("replies.csv");
 
@@ -167,7 +170,12 @@ for (const raw of byId.values()) {
     headline, years, latestFy: latest?.fy || null, flags, pts, graded, gradable, score, grade: graded ? letterGrade(score) : null,
     evidence: Object.fromEntries(ITEMS.slice(2).map(it => [it.key, mine.filter(c => c.item === it.key).pop() || null])),
     letter: { fy: letterYear.fy, fye: letterYear.fye, due: letterYear.due, missing: !letterYear.afr },
-    contact: { office: `Records custodian, ${name}`, detail: "Florida asks every agency to post its records contact on its website (s.119.12(2), Florida Statutes). Look there first.", source: null },
+    contact: (() => {
+      const ck = type === "county" ? clerks.get(baseName.toLowerCase().replace(/^st\.? /, "st. ")) : null;
+      return ck
+        ? { office: `${ck.office}, ${name}`, detail: `${ck.address} · ${ck.phone}`, source: "Florida Court Clerks and Comptrollers directory" }
+        : { office: `Records custodian, ${name}`, detail: "Florida asks every agency to post its records contact on its website (s.119.12(2), Florida Statutes). Look there first.", source: null };
+    })(),
     jlac: J.length > 0, sourcePage: HUMAN_PAGE,
   });
 }
