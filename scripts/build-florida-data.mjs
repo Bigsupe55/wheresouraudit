@@ -221,6 +221,16 @@ for (const raw of byId.values()) {
   });
 }
 
+// One spelling per county. Sources disagree ("St Johns"/"St. Johns", "Desoto"/"DeSoto"); use the most common
+// spelling so the county's own page, its cities and its districts land in the same map count and list.
+{
+  const k = s => s.toLowerCase().replace(/[^a-z]/g, "");
+  const tally = new Map();
+  for (const e of entities) if (e.county) { const m = tally.get(k(e.county)) || new Map(); m.set(e.county, (m.get(e.county) || 0) + 1); tally.set(k(e.county), m); }
+  const canon = new Map([...tally].map(([key, m]) => [key, [...m].sort((a, b) => b[1] - a[1])[0][0]]));
+  for (const e of entities) if (e.county) e.county = canon.get(k(e.county));
+}
+
 // Dependent districts: link to the parent government's page when the parent is one county or city we have.
 {
   const byKey = new Map();

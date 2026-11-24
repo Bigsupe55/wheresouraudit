@@ -86560,7 +86560,7 @@
       "typeLabel": "County",
       "name": "Desoto County",
       "sourceName": "Desoto",
-      "county": "Desoto",
+      "county": "DeSoto",
       "dissolved": null,
       "url": "/fl/county/desoto/",
       "status": {
@@ -293782,7 +293782,7 @@
       "typeLabel": "County",
       "name": "St Johns County",
       "sourceName": "St Johns",
-      "county": "St Johns",
+      "county": "St. Johns",
       "dissolved": null,
       "url": "/fl/county/st-johns/",
       "status": {
@@ -294034,7 +294034,7 @@
       "typeLabel": "County",
       "name": "St Lucie County",
       "sourceName": "St Lucie",
-      "county": "St Lucie",
+      "county": "St. Lucie",
       "dissolved": null,
       "url": "/fl/county/st-lucie/",
       "status": {
