@@ -14555,12 +14555,12 @@
       "dissolved": null,
       "url": "/fl/city/bascom/",
       "status": {
-        "key": "overdue",
-        "cls": "bad",
-        "label": "Not filed, past the legal deadline"
+        "key": "late",
+        "cls": "warn",
+        "label": "Filed late"
       },
-      "worst": "overdue",
-      "headline": "1 annual report not filed (FY2025)",
+      "worst": "late",
+      "headline": "Latest report filed 147 days late (FY2025)",
       "years": [
         {
           "fy": "2021",
@@ -14610,33 +14610,21 @@
           "fy": "2025",
           "fye": "2025-09-30",
           "due": "2026-06-30",
-          "afr": null,
+          "afr": "2026-11-24",
           "audit": "2026-11-17",
-          "filed": null,
-          "status": "overdue",
-          "daysLate": null,
+          "filed": "2026-11-24",
+          "status": "late",
+          "daysLate": 147,
           "list": "noncompliant"
         }
       ],
       "latestFy": "2025",
       "flags": [
         {
-          "key": "overdue-2025",
-          "cls": "bad",
-          "label": "Not filed, past the legal deadline",
-          "sentence": "The Florida Department of Financial Services has no annual financial report from Bascom for fiscal year 2025, and the legal deadline has passed (FY2025 was due June 30, 2026).",
-          "rule": "Due 9 months after the end of the fiscal year (s.218.39 and s.218.32, Florida Statutes).",
-          "ourRule": false,
-          "source": "https://logerx.myfloridacfo.gov/LogerX/SystemReports",
-          "sourceCopy": "/sources/florida/2026-11-24/",
-          "asOf": "2026-11-24",
-          "reply": null
-        },
-        {
-          "key": "late-2022-2023-2024",
+          "key": "late-2022-2023-2024-2025",
           "cls": "warn",
           "label": "Filed late",
-          "sentence": "Bascom's filings for fiscal years 2022 to 2024 reached the Florida Department of Financial Services after the legal deadline (FY2022: 186 days after; FY2023: 22 days after; FY2024: 20 days after).",
+          "sentence": "Bascom's filings for fiscal years 2022 to 2025 reached the Florida Department of Financial Services after the legal deadline (FY2022: 186 days after; FY2023: 22 days after; FY2024: 20 days after; FY2025: 147 days after).",
           "rule": "Due 9 months after the end of the fiscal year (s.218.39 and s.218.32, Florida Statutes).",
           "ourRule": false,
           "source": "https://logerx.myfloridacfo.gov/LogerX/SystemReports",
@@ -14646,7 +14634,7 @@
         }
       ],
       "pts": [
-        0,
+        20,
         0,
         null,
         null,
@@ -14669,7 +14657,7 @@
         "fy": "2025",
         "fye": "2025-09-30",
         "due": "2026-06-30",
-        "missing": true
+        "missing": false
       },
       "contact": {
         "office": "Records custodian, Bascom",
