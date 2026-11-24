@@ -1,0 +1,2 @@
+https://www.maine.gov/doe/sites/maine.gov.doe/files/inline-files/School%20Finance%20-%202027%20SAU%20by%20Municipality%20-%207.1.2026.xlsx
+sheet "SAUs Only & Charters", fetched 2026-11-24

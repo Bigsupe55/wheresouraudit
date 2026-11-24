@@ -1,0 +1,262 @@
+year,name,doe_id,type
+2027,Acadia Academy,1765,Charter School
+2027,Acton Public Schools,2,Municipal School Unit
+2027,Airline CSD,1038,Consolidated School District (CSD)
+2027,Alexander Public Schools,4,Municipal School Unit
+2027,Andover Public Schools,1734,Municipal School Unit
+2027,Appleton Public Schools (PK-08),9,Municipal School Unit
+2027,Athens Public Schools,1629,Municipal School Unit
+2027,Auburn Public Schools,14,Municipal School Unit
+2027,Augusta Public Schools,28,Municipal School Unit
+2027,Baileyville Public Schools,38,Municipal School Unit
+2027,Bangor Public Schools,42,Municipal School Unit
+2027,Bar Harbor Public Schools (KG-08),53,Municipal School Unit
+2027,Baring Plt Public Schools,547,Municipal School Unit
+2027,Baxter Academy for Technology and Science,1648,Charter School
+2027,Beals Public Schools (PK-08),62,Municipal School Unit
+2027,Beaver Cove Public Schools,550,Municipal School Unit
+2027,Beddington Public Schools,64,Municipal School Unit
+2027,Biddeford Public Schools,65,Municipal School Unit
+2027,Blue Hill Public Schools,72,Municipal School Unit
+2027,Boothbay-Boothbay Hbr CSD,1031,Consolidated School District (CSD)
+2027,Bowerbank Public Schools,74,Municipal School Unit
+2027,Brewer Public Schools,78,Municipal School Unit
+2027,Bridgewater Public Schools,86,Municipal School Unit
+2027,Brighton Plt School Department,1633,Municipal School Unit
+2027,Bristol Public Schools,88,Municipal School Unit
+2027,Brooklin Public Schools,90,Municipal School Unit
+2027,Brooksville Public Schools,92,Municipal School Unit
+2027,Brunswick Public Schools,94,Municipal School Unit
+2027,Burlington Public Schools,1824,Municipal School Unit
+2027,Byron Public Schools,1825,Municipal School Unit
+2027,Calais Public Schools,108,Municipal School Unit
+2027,Cape Elizabeth Public Schools,113,Municipal School Unit
+2027,Caratunk Public Schools,1402,Municipal School Unit
+2027,Carrabassett Valley Public Schools,549,Municipal School Unit
+2027,Carroll Plt Public Schools,124,Municipal School Unit
+2027,Castine Public Schools,125,Municipal School Unit
+2027,Caswell Public Schools,127,Municipal School Unit
+2027,Charlotte Public Schools,130,Municipal School Unit
+2027,Chebeague Island Public Schools,1433,Municipal School Unit
+2027,Cherryfield Public Schools,1628,Municipal School Unit
+2027,Community Regional Charter School,1829,Charter School
+2027,Cooper Public Schools,137,Municipal School Unit
+2027,Coplin Plt Public Schools,138,Municipal School Unit
+2027,Cranberry Isles Public Schools,139,Municipal School Unit
+2027,Crawford Public Schools,142,Municipal School Unit
+2027,Cutler Public Schools,1411,Municipal School Unit
+2027,Dayton Public Schools,1661,Municipal School Unit
+2027,Deblois Public Schools,147,Municipal School Unit
+2027,Dedham Public Schools,148,Municipal School Unit
+2027,Deer Isle-Stonington CSD,1049,Consolidated School District (CSD)
+2027,Dennistown Plt Public Schools,150,Municipal School Unit
+2027,Dennysville Public Schools,151,Municipal School Unit
+2027,Eagle Lake Public Schools,1998,Municipal School Unit
+2027,East Machias Public Schools,1400,Municipal School Unit
+2027,East Millinocket Public Schools,157,Municipal School Unit
+2027,East Range CSD,1047,Consolidated School District (CSD)
+2027,Easton Public Schools,160,Municipal School Unit
+2027,Eastport Public Schools,163,Municipal School Unit
+2027,Ecology Learning Center,2072,Charter School
+2027,Edgecomb Public Schools,166,Municipal School Unit
+2027,Ellsworth Public Schools,1663,Municipal School Unit
+2027,Eustis Public Schools,1627,Municipal School Unit
+2027,Falmouth Public Schools,174,Municipal School Unit
+2027,Fayette Public Schools,180,Municipal School Unit
+2027,Fiddlehead School of Arts and Sciences,1649,Charter School
+2027,Five Town CSD (09-12),1065,Consolidated School District (CSD)
+2027,Frenchboro Public Schools,275,Municipal School Unit
+2027,Georgetown Public Schools,188,Municipal School Unit
+2027,Gilead Public Schools,190,Municipal School Unit
+2027,Glenburn Public Schools,191,Municipal School Unit
+2027,Glenwood Plt Public Schools,193,Municipal School Unit
+2027,Gorham Public Schools,194,Municipal School Unit
+2027,Grand Isle Public Schools,205,Municipal School Unit
+2027,Grand Lake Stream Plt School Dept,207,Municipal School Unit
+2027,Greenbush Public Schools,208,Municipal School Unit
+2027,Greenville Public Schools,210,Municipal School Unit
+2027,Hancock Public Schools,1664,Municipal School Unit
+2027,Harmony Public Schools,217,Municipal School Unit
+2027,Hermon Public Schools,219,Municipal School Unit
+2027,Highland Plt Public Schools,224,Municipal School Unit
+2027,Hope Public Schools (PK-08),225,Municipal School Unit
+2027,Indian Island,1009,Municipal School Unit
+2027,Indian Township,1011,Municipal School Unit
+2027,Isle Au Haut Public Schools,227,Municipal School Unit
+2027,Islesboro Public Schools,229,Municipal School Unit
+2027,Jefferson Public Schools,235,Municipal School Unit
+2027,Jonesboro Public Schools,237,Municipal School Unit
+2027,Jonesport Public Schools (PK-08),239,Municipal School Unit
+2027,Kingsbury Plt Public Schools,241,Municipal School Unit
+2027,Kittery Public Schools,242,Municipal School Unit
+2027,Lake View Plt. Public Schools,1351,Municipal School Unit
+2027,Lakeville Public Schools,247,Municipal School Unit
+2027,Lamoine Public Schools,1665,Municipal School Unit
+2027,Lewiston Public Schools,250,Municipal School Unit
+2027,Limestone Public Schools,2040,Municipal School Unit
+2027,Lincoln Plt Public Schools,263,Municipal School Unit
+2027,Lincolnville Public Schools (PK-08),264,Municipal School Unit
+2027,Lisbon Public Schools,266,Municipal School Unit
+2027,Long Island Public Schools,387,Municipal School Unit
+2027,Lowell Public Schools,1401,Municipal School Unit
+2027,Machias Public Schools,277,Municipal School Unit
+2027,Machiasport Public Schools,1412,Municipal School Unit
+2027,Macwahoc Plt School Dept,281,Municipal School Unit
+2027,Madawaska Public Schools,282,Municipal School Unit
+2027,Maine Academy of Natural Sciences,1502,Charter School
+2027,Maine Arts Academy,1766,Charter School
+2027,Maine Connections Academy,1673,Charter School
+2027,Maine Virtual Academy,1715,Charter School
+2027,Marshfield Public Schools,290,Municipal School Unit
+2027,Meddybemps Public Schools,293,Municipal School Unit
+2027,Medford Public Schools,548,Municipal School Unit
+2027,Medway Public Schools,294,Municipal School Unit
+2027,Milford Public Schools,296,Municipal School Unit
+2027,Millinocket Public Schools,298,Municipal School Unit
+2027,Monhegan Plt School Dept,304,Municipal School Unit
+2027,Moosabec CSD (09-12),1058,Consolidated School District (CSD)
+2027,Moro Plantation Public Schools,1995,Municipal School Unit
+2027,Mount Desert Public Schools (PK-08),311,Municipal School Unit
+2027,Moxie Public Schools,2253,Charter School
+2027,MSAD 10,616,Maine School Administrative District (SAD)
+2027,MSAD 27,696,Maine School Administrative District (SAD)
+2027,MSAD 46,798,Maine School Administrative District (SAD)
+2027,MSAD 76,994,Maine School Administrative District (SAD)
+2027,Mt Desert CSD (09-12),1036,Consolidated School District (CSD)
+2027,Nashville Plt Public Schools,315,Municipal School Unit
+2027,New Sweden Public Schools,317,Municipal School Unit
+2027,Nobleboro Public Schools,319,Municipal School Unit
+2027,Northfield Public Schools,321,Municipal School Unit
+2027,Northport Public Schools,1735,Municipal School Unit
+2027,Orient Public Schools,335,Municipal School Unit
+2027,Orrington Public Schools,342,Municipal School Unit
+2027,Otis Public Schools,345,Municipal School Unit
+2027,Pembroke Public Schools,349,Municipal School Unit
+2027,Penobscot Public Schools,351,Municipal School Unit
+2027,Perry Public Schools,353,Municipal School Unit
+2027,Pleasant Point,1013,Municipal School Unit
+2027,Pleasant Ridge Plt School Dept,359,Municipal School Unit
+2027,Portage Lake Public Schools,1509,Municipal School Unit
+2027,Portland Public Schools,364,Municipal School Unit
+2027,Princeton Public Schools,389,Municipal School Unit
+2027,Reed Plt Public Schools,399,Municipal School Unit
+2027,Richmond Public Schools,2195,Municipal School Unit
+2027,Robbinston Public Schools,405,Municipal School Unit
+2027,Roque Bluffs Public Schools,408,Municipal School Unit
+2027,RSU 01 - LKRSU,1438,Regional School Unit (RSU)
+2027,RSU 02,1445,Regional School Unit (RSU)
+2027,RSU 03/MSAD 03,561,Regional School Unit (RSU)
+2027,RSU 04,1446,Regional School Unit (RSU)
+2027,RSU 05,1449,Regional School Unit (RSU)
+2027,RSU 06/MSAD 06,587,Regional School Unit (RSU)
+2027,RSU 07/MSAD 07,601,Regional School Unit (RSU)
+2027,RSU 08/MSAD 08,603,Regional School Unit (RSU)
+2027,RSU 09,1508,Regional School Unit (RSU)
+2027,RSU 10,1450,Regional School Unit (RSU)
+2027,RSU 11/MSAD 11,617,Regional School Unit (RSU)
+2027,RSU 12,1451,Regional School Unit (RSU)
+2027,RSU 13,1452,Regional School Unit (RSU)
+2027,RSU 14,1455,Regional School Unit (RSU)
+2027,RSU 15/MSAD 15,635,Regional School Unit (RSU)
+2027,RSU 16,1456,Regional School Unit (RSU)
+2027,RSU 17/MSAD 17,646,Regional School Unit (RSU)
+2027,RSU 18,1457,Regional School Unit (RSU)
+2027,RSU 19,1458,Regional School Unit (RSU)
+2027,RSU 20,1459,Regional School Unit (RSU)
+2027,RSU 21,1460,Regional School Unit (RSU)
+2027,RSU 22,1615,Regional School Unit (RSU)
+2027,RSU 23,1461,Regional School Unit (RSU)
+2027,RSU 24,1462,Regional School Unit (RSU)
+2027,RSU 25,1464,Regional School Unit (RSU)
+2027,RSU 26,1465,Regional School Unit (RSU)
+2027,RSU 28/MSAD 28 (PK-08),703,Regional School Unit (RSU)
+2027,RSU 29/MSAD 29,707,Regional School Unit (RSU)
+2027,RSU 30/MSAD 30,713,Regional School Unit (RSU)
+2027,RSU 31/MSAD 31,718,Regional School Unit (RSU)
+2027,RSU 32/MSAD 32,722,Regional School Unit (RSU)
+2027,RSU 33/MSAD 33,726,Regional School Unit (RSU)
+2027,RSU 34,1466,Regional School Unit (RSU)
+2027,RSU 35/MSAD 35,743,Regional School Unit (RSU)
+2027,RSU 37/MSAD 37,753,Regional School Unit (RSU)
+2027,RSU 38,1467,Regional School Unit (RSU)
+2027,RSU 39,1468,Regional School Unit (RSU)
+2027,RSU 40/MSAD 40,765,Regional School Unit (RSU)
+2027,RSU 41/MSAD 41,774,Regional School Unit (RSU)
+2027,RSU 42/MSAD 42,780,Regional School Unit (RSU)
+2027,RSU 44/MSAD 44,789,Regional School Unit (RSU)
+2027,RSU 45/MSAD 45,795,Regional School Unit (RSU)
+2027,RSU 48,2231,Regional School Unit (RSU)
+2027,RSU 49/MSAD 49,826,Regional School Unit (RSU)
+2027,RSU 50,1500,Regional School Unit (RSU)
+2027,RSU 51/MSAD 51,839,Regional School Unit (RSU)
+2027,RSU 52/MSAD 52,847,Regional School Unit (RSU)
+2027,RSU 53/MSAD 53,854,Regional School Unit (RSU)
+2027,RSU 54/MSAD 54,860,Regional School Unit (RSU)
+2027,RSU 55/MSAD 55,874,Regional School Unit (RSU)
+2027,RSU 56,1826,Regional School Unit (RSU)
+2027,RSU 57/MSAD 57,888,Regional School Unit (RSU)
+2027,RSU 58/MSAD 58,898,Regional School Unit (RSU)
+2027,RSU 60/MSAD 60,913,Regional School Unit (RSU)
+2027,RSU 61/MSAD 61,922,Regional School Unit (RSU)
+2027,RSU 63/MSAD 63,932,Regional School Unit (RSU)
+2027,RSU 64/MSAD 64,936,Regional School Unit (RSU)
+2027,RSU 65/MSAD 65,944,Regional School Unit (RSU)
+2027,RSU 67,1469,Regional School Unit (RSU)
+2027,RSU 68/MSAD 68,951,Regional School Unit (RSU)
+2027,RSU 70/MSAD 70,957,Regional School Unit (RSU)
+2027,RSU 71,1733,Regional School Unit (RSU)
+2027,RSU 72/MSAD 72,969,Regional School Unit (RSU)
+2027,RSU 73,1498,Regional School Unit (RSU)
+2027,RSU 74/MSAD 74,976,Regional School Unit (RSU)
+2027,RSU 75/MSAD 75,984,Regional School Unit (RSU)
+2027,RSU 78,1480,Regional School Unit (RSU)
+2027,RSU 79/MSAD 01,551,Regional School Unit (RSU)
+2027,RSU 80/MSAD 04,570,Regional School Unit (RSU)
+2027,RSU 82/MSAD 12,626,Regional School Unit (RSU)
+2027,RSU 83/MSAD 13,628,Regional School Unit (RSU)
+2027,RSU 84/MSAD 14,633,Regional School Unit (RSU)
+2027,RSU 85/MSAD 19,662,Regional School Unit (RSU)
+2027,RSU 86/MSAD 20,664,Regional School Unit (RSU)
+2027,RSU 87/MSAD 23,681,Regional School Unit (RSU)
+2027,RSU 88/MSAD 24,685,Regional School Unit (RSU)
+2027,RSU 89,1997,Regional School Unit (RSU)
+2027,Saco Public Schools,1662,Municipal School Unit
+2027,Sanford Public Schools,416,Municipal School Unit
+2027,Scarborough Public Schools,427,Municipal School Unit
+2027,Sebago Public Schools,1996,Municipal School Unit
+2027,Seboeis Plt Public Schools,1359,Municipal School Unit
+2027,Sedgwick Public Schools,434,Municipal School Unit
+2027,Shirley Public Schools,436,Municipal School Unit
+2027,South Bristol Public Schools,440,Municipal School Unit
+2027,South Portland Public Schools,444,Municipal School Unit
+2027,Southport Public Schools,442,Municipal School Unit
+2027,Southwest Harbor Public Schools (PK-08),456,Municipal School Unit
+2027,St George Public Schools,1738,Municipal School Unit
+2027,Surry Public Schools,462,Municipal School Unit
+2027,Talmadge Public Schools,464,Municipal School Unit
+2027,The Forks Plt School Dept,465,Municipal School Unit
+2027,Tremont Public Schools (PK-08),466,Municipal School Unit
+2027,Trenton Public Schools,468,Municipal School Unit
+2027,Upton Public Schools,470,Municipal School Unit
+2027,Vanceboro Public Schools,471,Municipal School Unit
+2027,Vassalboro Public Schools,473,Municipal School Unit
+2027,Veazie Public Schools,475,Municipal School Unit
+2027,Waite Public Schools,477,Municipal School Unit
+2027,Waterville Public Schools,480,Municipal School Unit
+2027,Wells-Ogunquit CSD,1060,Consolidated School District (CSD)
+2027,Wesley Public Schools,491,Municipal School Unit
+2027,West Bath Public Schools,1736,Municipal School Unit
+2027,West Forks Plt Public Schools,1354,Municipal School Unit
+2027,Westbrook Public Schools,495,Municipal School Unit
+2027,Westmanland Public Schools,503,Municipal School Unit
+2027,Whiting Public Schools,1413,Municipal School Unit
+2027,Whitneyville Public Schools,508,Municipal School Unit
+2027,Willimantic Public Schools,509,Municipal School Unit
+2027,Winslow Schools,518,Municipal School Unit
+2027,Winterville Plt Public Schools,1737,Municipal School Unit
+2027,Winthrop Public Schools,524,Municipal School Unit
+2027,Wiscasset Public Schools,1671,Municipal School Unit
+2027,Woodland Public Schools,532,Municipal School Unit
+2027,Woodville Public Schools,534,Municipal School Unit
+2027,Yarmouth Schools,537,Municipal School Unit
+2027,York Public Schools,542,Municipal School Unit

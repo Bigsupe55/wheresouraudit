@@ -25,12 +25,26 @@ export function unzip(buf) {
 
 const colIndex = ref => { let n = 0; for (const ch of ref.replace(/\d+/g, "")) n = n * 26 + ch.charCodeAt(0) - 64; return n - 1; };
 
-export function readXlsx(buf) {
+export function sheetNames(buf) {
+  const wb = unzip(buf)["xl/workbook.xml"]?.toString("utf8") || "";
+  return [...wb.matchAll(/<sheet [^>]*name="([^"]+)"/g)].map(m => decodeEntities(m[1]));
+}
+
+// readXlsx(buf) reads the first sheet; readXlsx(buf, "Sheet name") reads that sheet.
+export function readXlsx(buf, wanted) {
   const files = unzip(buf);
   const text = n => files[n] ? files[n].toString("utf8") : "";
+  if (wanted) {
+    const wb = text("xl/workbook.xml"), rels = text("xl/_rels/workbook.xml.rels");
+    const sheet = [...wb.matchAll(/<sheet [^>]*name="([^"]+)"[^>]*r:id="([^"]+)"/g)].find(m => decodeEntities(m[1]) === wanted);
+    if (!sheet) throw new Error(`sheet "${wanted}" not found`);
+    const target = new RegExp(`Id="${sheet[2]}"[^>]*Target="([^"]+)"|Target="([^"]+)"[^>]*Id="${sheet[2]}"`).exec(rels);
+    const path = (target[1] || target[2]).replace(/^\/?(xl\/)?/, "xl/");
+    files.__sheet = path;
+  }
   const shared = [...text("xl/sharedStrings.xml").matchAll(/<si>([\s\S]*?)<\/si>/g)]
     .map(m => decodeEntities([...m[1].matchAll(/<t[^>]*>([\s\S]*?)<\/t>/g)].map(t => t[1]).join("")));
-  const sheetName = Object.keys(files).filter(n => /^xl\/worksheets\/sheet\d+\.xml$/.test(n)).sort()[0];
+  const sheetName = files.__sheet || Object.keys(files).filter(n => /^xl\/worksheets\/sheet\d+\.xml$/.test(n)).sort()[0];
   const rows = [];
   for (const r of text(sheetName).matchAll(/<row[^>]*>([\s\S]*?)<\/row>/g)) {
     const row = [];

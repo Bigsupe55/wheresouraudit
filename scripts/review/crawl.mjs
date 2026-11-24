@@ -46,11 +46,13 @@ function links(html, base) {
   return out;
 }
 const years = s => [...new Set((s.match(/\b20(1[5-9]|2[0-9])\b/g) || []))].sort();
+// A link's path as words; some sites have badly encoded addresses, which must not stop the scan.
+const pathWords = href => { const raw = href.split("?")[0].split("/").slice(3).join("/"); let s; try { s = decodeURIComponent(raw); } catch { s = raw; } return s.replace(/[-_]/g, " "); };
 function suggest(all) {
   const res = {};
   for (const [item, re] of Object.entries(PATTERNS)) {
     const seen = new Set();
-    res[item] = all.filter(l => re.test(l.text) || re.test(decodeURIComponent(l.href.split("?")[0].split("/").slice(3).join("/")).replace(/[-_]/g, " ")))
+    res[item] = all.filter(l => re.test(l.text) || re.test(pathWords(l.href)))
       .filter(l => !seen.has(l.href) && seen.add(l.href))
       .map(l => ({ ...l, years: years(l.text + " " + l.href), score: (re.test(l.text) ? 2 : 0) + (years(l.text + l.href).length ? 1 : 0) + (/\.pdf($|\?)/i.test(l.href) ? 1 : 0)
         - (item !== "minutes" && /agenda|minutes|meeting/i.test(l.text + " " + l.href) ? 3 : 0) })) // a meeting packet is rarely the budget or audit page

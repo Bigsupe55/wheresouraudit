@@ -4,6 +4,7 @@ import fs from "node:fs";
 import { p, readJSON, readText, writeFile, esc, fmtDate, slug } from "./lib/util.mjs";
 import { ITEMS, RUBRIC_VERSION } from "./lib/rubric.mjs";
 import { shareSVG, renderPNG } from "./lib/share-image.mjs";
+import { maineSchools } from "./lib/me-schools.mjs";
 
 const DIST = p("dist");
 fs.rmSync(DIST, { recursive: true, force: true });
@@ -52,6 +53,7 @@ const STATES = {
 // Florida districts by exact name. Filers with no state page get a federal-only page.
 const FED = new Map();
 const fedOnly = [];
+let schoolUnits = [], schoolFed = new Set();
 if (US?.mefl) {
   const norm = s => s.toLowerCase().replace(/[^a-z0-9]/g, "");
   const countyKey = n => norm(n.replace(/^county of /i, "").replace(/ county$/i, ""));
@@ -61,7 +63,10 @@ if (US?.mefl) {
   const flByName = new Map();
   for (const e of FL.entities) { const k = norm(e.sourceName); flByName.set(k, flByName.has(k) ? null : e); } // null marks a duplicate name: never attach
   const used = new Set();
+  // Maine school units take their federal records first (exact RSU/MSAD number or CSD name).
+  ({ units: schoolUnits, usedFed: schoolFed } = maineSchools(US.mefl));
   for (const r of US.mefl) {
+    if (schoolFed.has(r)) continue;
     let target = null;
     if (r.fips) target = r.typeLabel === "County" ? counties[r.state].get(countyKey(r.name)) : r.state === "ME" ? meByGeoid.get(r.fips) : flByPlace.get(r.fips);
     else if (r.state === "FL") target = flByName.get(norm(r.name)) || null;
@@ -80,7 +85,20 @@ if (US?.mefl) {
     });
   }
 }
-const ALL = [...ME.entities, ...FL.entities, ...fedOnly];
+// Maine school units: status-only pages (federal single audit status; the state audit list is not public).
+const schools = schoolUnits.map(({ unit, slug: s, typeLabel, fed }) => {
+  const latest = fed?.years.filter(y => y.accepted).at(-1);
+  return {
+    id: `me-school-${s}`, state: "ME", type: "school", typeLabel, name: unit.name, url: `/me/school/${s}/`, doeId: unit.doe_id,
+    status: fed ? fed.status : { key: "none", cls: "none", label: "No federal audit on file" }, worst: fed ? fed.worst : "none",
+    headline: fed ? fed.headline : "No federal single audit on file since 2021", gradable: false, graded: false, pts: [], evidence: {},
+    flags: fed ? fed.flags.map((f, i) => ({ ...f, key: `federal-${i}`, sourceCopy: null, sentence: f.sentence.split(fed.name).join(unit.name) })) : [],
+    letter: { fy: latest?.fy || "", fye: latest?.fyEnd || "", due: latest?.due || "", missing: false, generic: true },
+    contact: { office: `Superintendent's office, ${unit.name}`, detail: "Look for its records contact on the unit's website.", source: null },
+    sourcePage: "https://app.fac.gov/dissemination/search/", fedRecord: fed,
+  };
+});
+const ALL = [...ME.entities, ...FL.entities, ...fedOnly, ...schools];
 const FED_NOTE = "A federal single audit is required only when a government spends $1 million or more in federal money in a year ($750,000 for years that began before October 1, 2024). It is due 9 months after the year ends (2 CFR 200.512).";
 function federalHTML(e) {
   const r = e.fedRecord || FED.get(e.id);
@@ -217,6 +235,7 @@ for (const e of ALL) {
     <span class="pill s-${e.status.cls}">${esc(e.status.label)}</span>
     <p style="margin:10px 0 0">${esc(e.headline)}.</p>
     ${e.type === "village" ? '<p class="small muted">A village corporation is a small local district inside a town, with its own budget.</p>' : ""}
+    ${e.type === "school" ? `<p class="small muted">Maine school units send their annual audit to the Maine Department of Education by December 30 (20-A M.R.S. s.6051). The department doesn't publish which audits it has received, so this page shows the federal single audit only, and no grade.</p>` : ""}
     ${e.type === "federal" ? `<p class="small muted">We know about ${esc(e.name)} only from its federal single audits. It has no ${e.state === "ME" ? "State Auditor" : "Florida state filing"} record we could match, so it isn't graded.</p>` : ""}
     ${e.type === "district" ? '<p class="small muted">A special district is a local government with one job, such as water, fire, roads or a community development district.</p>' : ""}
     <p class="small muted">${e.graded ? `Score ${e.score} / 100 · ` : ""}As of ${esc(S.data.asOf)} · <a href="/how-we-grade/">How we grade</a></p>
@@ -316,7 +335,8 @@ ${legendHTML(STATES.ME)}
 <div class="map-wrap">${maineMap()}</div>
 <p class="small muted">Colors show each town's worst status across the years the State Auditor shows (fiscal years ${E[0].years[0].fy} to ${E[0].years.at(-1).fy}). Counties and village corporations are in the lists below. Source: Maine State Auditor, copied ${esc(ME.snapshot)}.</p>
 ${groups.map(([t, label]) => { const l = E.filter(e => e.type === t); return l.length ? `<h2>${label} (${l.length})</h2>${tableOf(l)}` : ""; }).join("\n")}
-${fedOnly.some(e => e.state === "ME") ? `<h2>Other local bodies with a federal audit (${fedOnly.filter(e => e.state === "ME").length})</h2><p class="small muted">School units, water and sewer districts and similar bodies we know about only from federal single audits. Status only, no grade.</p>${tableOf(fedOnly.filter(e => e.state === "ME"))}` : ""}`;
+${schools.length ? `<h2>School units (${schools.length})</h2><p class="small muted">Regional school units, school administrative districts and consolidated school districts, from the Maine Department of Education's list. Their state audits go to the department, which doesn't publish them, so we show federal single audit status only. Town-run school departments are part of their town's audit.</p>${tableOf(schools)}` : ""}
+${fedOnly.some(e => e.state === "ME") ? `<h2>Other local bodies with a federal audit (${fedOnly.filter(e => e.state === "ME").length})</h2><p class="small muted">Water and sewer districts, transit districts and similar bodies we know about only from federal single audits. Status only, no grade.</p>${tableOf(fedOnly.filter(e => e.state === "ME"))}` : ""}`;
   out("/me/", page({ title: "Maine", description: `${n("overdue")} Maine governments have an audit not posted more than 12 months after year end. Find yours.`, body, path: "/me/", image: shareImage("me", { title: "Maine: who posted their audit?", subtitle: `${n("overdue")} of ${E.length} Maine governments have an audit not posted more than 12 months after year end.`, cls: "bad", path: "/me/" }) }));
 }
 {
