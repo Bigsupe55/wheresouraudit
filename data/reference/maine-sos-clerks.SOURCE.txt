@@ -1,0 +1,2 @@
+Maine Secretary of State municipal clerk list: https://www.maine.gov/sos/sites/maine.gov.sos/files/inline-files/FULLFILE_CVR_Clerk_Info_1.csv
+fetched 2026-11-23. Clerk and registrar names and the registrar columns are removed on purpose: the site names offices, never people.
