@@ -1,1 +1,148 @@
 state,fac_name,census_id,approved_by,approved_on,evidence
+MD,"PRINCE GEORGE'S COUNTY, MARYLAND",166367,NH,2026-11-24,apostrophe and state suffix only; only Prince Georges county in MD
+IL,CITY OF OTTOWA,194703,NH,2026-11-24,typo Ottowa/Ottawa; same city and ZIP
+CO,CITY OF CANON CITY,207623,NH,2026-11-24,Census drops repeated City; same city and ZIP
+KY,Lexington Fayette Urban County Government,165831,NH,2026-11-24,consolidated urban county government; same city and ZIP
+LA,CITY OF BATON ROUGE AND PARISH OF EAST BATON ROUGE,166054,NH,2026-11-24,consolidated city-parish; same city and ZIP
+NJ,CITY OF SEA ISLE CITY,184036,NH,2026-11-24,Census drops repeated City; same city and ZIP
+AL,DEKALB COUNTY COMMISSION,207499,NH,2026-11-24,county commission naming; DeKalb/De Kalb; same city and ZIP
+FL,MIAMI DADE COUNTY,207649,NH,2026-11-24,hyphen only; same city and ZIP (FL is skipped in national build)
+TN,"Metropolitan Government of Lynchburg, Moore County",175805,NH,2026-11-24,metro government naming; same city and ZIP
+NC,TOWN OF STONVEILLE,171282,NH,2026-11-24,typo Stonveille/Stoneville; same city and ZIP
+NJ,TOWNSHIP OF PARSIPPANY TROY-HILLS,193751,NH,2026-11-24,hyphen placement only; same city and ZIP
+GA,AUGUSTA-RICHMOND COUNTY GOVERNMENT,194679,NH,2026-11-24,consolidated government naming; same city and ZIP
+PA,"City of Dubois, Pennsylvania",133524,NH,2026-11-24,DuBois/Du Bois spacing; same ZIP
+TN,"CITY OF LAVERGNE, TENNESSEE",134916,NH,2026-11-24,LaVergne/La Vergne spacing; same ZIP
+ID,Idaho County,124639,NH,2026-11-24,county name equals state name (canon strips it); Grangeville is county seat
+MD,"THE COUNTY COMMISSIONERS OF KENT COUNTY, MARYLAND",208242,NH,2026-11-24,county commissioners naming; same city and ZIP
+CA,CITY OF CATHEDRAL CITY,203973,NH,2026-11-24,Census drops repeated City; same city and ZIP
+TN,City of Clarskville,184266,NH,2026-11-24,typo Clarskville/Clarksville; same city
+MI,BLACKMAN CHARTER TOWNSHIP,167058,NH,2026-11-24,charter township word order; same city and ZIP
+MD,"COUNTY COMMISSIONERS OF WASHINGTON COUNTY, MARYLAND",208244,NH,2026-11-24,county commissioners naming; same city and ZIP
+ID,CITY OF COEUR DALENE,124666,NH,2026-11-24,Coeur dAlene spacing; same city and ZIP
+MD,"COUNTY COMMISSIONERS OF CALVERT COUNTY, MARYLAND",105976,NH,2026-11-24,county commissioners naming; same city and ZIP
+MD,"Queen Anne's County, Maryland",185797,NH,2026-11-24,apostrophe only; same city and ZIP
+TN,"DeKalb County, Tennessee",175669,NH,2026-11-24,DeKalb/De Kalb spacing; same city and ZIP
+IN,COUNTY OF KNOX GOVERNMENT,125981,NH,2026-11-24,Government suffix; same city and ZIP
+IN,"BOARD OF COUNTY COMMISSIONERS OF NOBLE COUNTY, INDIANA",163447,NH,2026-11-24,board of county commissioners naming; same city and ZIP
+NV,City of Boulder City,130691,NH,2026-11-24,Census drops repeated City; same city and ZIP
+CO,"CITY OF COMMERCE CITY, COLORADO",204113,NH,2026-11-24,Census drops repeated City; same city and ZIP
+MS,CITY OF DIBERVILLE,168636,NH,2026-11-24,apostrophe only; same city and ZIP
+MO,CITY OF OFALLON,208643,NH,2026-11-24,apostrophe only; same city and ZIP
+NM,STATE OF NEW MEXICO SAN MIGUEL COUNTY,170374,NH,2026-11-24,State of New Mexico prefix; same city and ZIP
+MS,COUNTY OF RANKIN BOARD SUPERVISORS,138801,NH,2026-11-24,board of supervisors naming; same city and ZIP
+GA,CITY OF LAFAYETTE,184833,NH,2026-11-24,LaFayette/La Fayette spacing; same city and ZIP
+AR,"CITY OF POCAHONTAS, AR Federal Awards",122923,NH,2026-11-24,Federal Awards suffix; same city and ZIP
+MI,SAGINAW CHARTER TOWNSHIP,167270,NH,2026-11-24,charter township word order; same city
+LA,"CITY OF DEQUINCY, LOUISIANA",127812,NH,2026-11-24,DeQuincy/De Quincy spacing; same city and ZIP
+KY,City of  Central City Kentucky,165952,NH,2026-11-24,Census drops repeated City; same city and ZIP
+WY,"TOWN OF THE CITY OF BUFFALO, WYOMING",177860,NH,2026-11-24,Town of the City of prefix; same city and ZIP
+FL,TOWN OF BAL HARBOUR VILLAGE,161603,NH,2026-11-24,Town/Village prefix redundant; same city and ZIP (FL is skipped in national build)
+NH,COUNTY OF CHESHIRE ADMINISTRATION,169994,NH,2026-11-24,Administration suffix; same city and ZIP
+VA,"Town of Luray, Virgina",176748,NH,2026-11-24,state misspelled Virgina; same city and ZIP
+NM,State of New Mexico Bernalillo County,208788,NH,2026-11-24,State of New Mexico prefix; same city and ZIP
+LA,City of DeRidder,193418,NH,2026-11-24,DeRidder/De Ridder spacing; same city and ZIP
+CA,CITY OF REDWOOD CITY,100736,NH,2026-11-24,Census drops repeated City; same city and ZIP
+KY,"City of Middlesboro, Kentucky",127573,NH,2026-11-24,Middlesboro/Middlesborough spelling variant; same city and ZIP
+UT,UTAH COUNTY GOVERNMENT,135807,NH,2026-11-24,county name equals state name (canon strips it); same city and ZIP
+PA,"County of Monroe, Pennnsylvania",111853,NH,2026-11-24,state misspelled Pennnsylvania; same city and ZIP
+AZ,BOARD OF SUPERVISORS OF GREENLEE COUNTY,160814,NH,2026-11-24,board of supervisors naming; same city and ZIP
+CO,CITY OF WHEATRIDGE,101405,NH,2026-11-24,Wheatridge/Wheat Ridge spacing; same city and ZIP
+FL,CITY OF OPALOCKA,161608,NH,2026-11-24,hyphen only; same city and ZIP (FL is skipped in national build)
+IL,CITY OF LAHARPE,162354,NH,2026-11-24,LaHarpe/La Harpe spacing; City kind and ZIP match
+KY,CITY OF FT. WRIGHT,127622,NH,2026-11-24,Ft/Fort abbreviation; same ZIP
+FL,County of Wakulla Board of County Commissioners,189804,NH,2026-11-24,board of county commissioners naming; same city and ZIP (FL is skipped in national build)
+PA,MUNICIPALITY OF PENN HILLS,174200,NH,2026-11-24,Municipality vs Township type label; same city and ZIP
+FL,"CITY OF DELAND, FLORIDA",102012,NH,2026-11-24,DeLand/De Land spacing; same city and ZIP (FL is skipped in national build)
+CO,COUNTY OF ARAPAHOE IN THE STATE OF COLORADO,161307,NH,2026-11-24,in the State of Colorado suffix; same city and ZIP
+WY,TOWN OF JACKSON_EIN NOTED,183798,NH,2026-11-24,EIN NOTED suffix; same city and ZIP
+MO,"City of Lee's Summit, Missouri",168926,NH,2026-11-24,apostrophe only; same city and ZIP
+TN,CITY OF PARKERS CROSSROADS,175771,NH,2026-11-24,apostrophe only; same ZIP
+ND,CITY OF LAMOURE,205100,NH,2026-11-24,LaMoure/La Moure spacing; City kind; same city and ZIP
+MD,County Commissioners of Charles County,166364,NH,2026-11-24,county commissioners naming; same city and ZIP
+IN,CITY OF LA PORTE,126049,NH,2026-11-24,La Porte/Laporte spacing; City kind; same city and ZIP
+OK,LeFlore County,173337,NH,2026-11-24,LeFlore/Le Flore spacing; same city and ZIP
+TN,"Hartsville/Trousdale County, Tennessee",175834,NH,2026-11-24,metro government naming; same city and ZIP
+TX,"City of Texarkana, Texas",209545,NH,2026-11-24,tie: other candidate has FIPS_STATE 05 (Arkansas); this one is Bowie TX
+NC,"CITY OF BESSEMER CITY , NC",186786,NH,2026-11-24,Census drops repeated City; same city and ZIP
+IL,CITY OF DEKALB,102649,NH,2026-11-24,DeKalb/De Kalb spacing; City kind; same city and ZIP
+GA,"City of Dallas, Gorgia",124502,NH,2026-11-24,state misspelled Gorgia; same city and ZIP
+CA,City of Temple City,193111,NH,2026-11-24,Census drops repeated City; same city and ZIP
+PA,"CITY OF WILKES-BARRE, PENNSYLVANIA",174034,NH,2026-11-24,hyphen only; City kind; same city
+MA,TOWN OF SUDBURY,211227,NH,2026-11-24,"tie: other candidate has FIPS_STATE 50 (Vermont, Rutland County)"
+GA,"Athens-Clarke County, Georgia",161834,NH,2026-11-24,unified government naming; same city and ZIP
+TX,Town of Pecos City,113699,NH,2026-11-24,Town of Pecos City vs City of Pecos; same city and ZIP
+FL,DeSoto County Board of County Commissioners,161550,NH,2026-11-24,DeSoto/De Soto; board of county commissioners; same city and ZIP (FL is skipped in national build)
+PA,"Township of Frankin, Pennsylvania",205316,NH,2026-11-24,typo Frankin/Franklin; same city and ZIP
+IL,DeWitt County,162129,NH,2026-11-24,DeWitt/De Witt spacing; same city and ZIP
+WA,City of Sedro-Woolley,202759,NH,2026-11-24,hyphen only; same city and ZIP
+ME,Town of Kenebunkport,127971,NH,2026-11-24,typo Kenebunkport/Kennebunkport; same city and ZIP (ME is skipped in national build)
+AL,CITY OF PHENIX CITY,122582,NH,2026-11-24,Census drops repeated City; same city and ZIP
+TX,"City of Dension, TExas",176149,NH,2026-11-24,typo Dension/Denison; same city
+MI,Coloma Charter Township,225587,NH,2026-11-24,charter township word order; same city and ZIP
+AR,"CITY OF HASKELL, ARKANSAS - FEDERAL PROGRAMS",161060,NH,2026-11-24,Federal Programs suffix; same city and ZIP
+MI,HOLLAND CHARTER TOWNSHIP,204703,NH,2026-11-24,charter township word order; same city and ZIP
+MD,"ST. MARY'S COUNTY, MARYLAND",208243,NH,2026-11-24,St. Mary's punctuation; same city and ZIP
+MI,"Benton Charter Township, MI",166885,NH,2026-11-24,charter township word order; same city and ZIP
+GA,City of McRae Helena,211992,NH,2026-11-24,hyphen only; same ZIP
+MI,OSCODA TOWNSHIP,208374,NH,2026-11-24,Census lists it as charter township; same city and ZIP
+MI,Pittsfield Charter Township,225632,NH,2026-11-24,charter township word order; same city and ZIP
+CA,CITY OF KING CITY,189639,NH,2026-11-24,Census drops repeated City; same city and ZIP
+NE,CITY OF LA VISTA,208724,NH,2026-11-24,La Vista/LaVista spacing; same city and ZIP
+IL,"CITY OF GENESEO, ILLINIOS",162369,NH,2026-11-24,state misspelled Illinios; City kind; same city and ZIP
+TN,CITY OF LAFOLLETTE,175715,NH,2026-11-24,LaFollette/La Follette spacing; same ZIP
+PA,MUNICIPALITY OF MT. LEBANON,133655,NH,2026-11-24,Municipality vs Township type label; Mt/Mount; same city and ZIP
+MI,EAST BAY CHARTER TOWNSHIP,190492,NH,2026-11-24,charter township word order; same city and ZIP
+AR,CITY OF OCEOLA ARKANSAS,189609,NH,2026-11-24,typo Oceola/Osceola; same city and ZIP
+GA,"Unified Government of Cusseta - Chattahoochee County, Georgia",161828,NH,2026-11-24,unified government naming; same city and ZIP
+IA,City of Rusell,164483,NH,2026-11-24,typo Rusell/Russell; same city and ZIP
+NY,"Village of Wellsvile, New York",170448,NH,2026-11-24,typo Wellsvile/Wellsville; Village kind; same city and ZIP
+IL,Village of LaGrange,211680,NH,2026-11-24,LaGrange/La Grange spacing; Village kind; same city and ZIP
+MI,Village of LAnse,166629,NH,2026-11-24,apostrophe only; Village kind; same city and ZIP
+VA,"Town of LaCrosse, VA",114548,NH,2026-11-24,LaCrosse/La Crosse spacing; same ZIP
+NY,VILLAGE OF HASTINGS-ON-HUDSON,193775,NH,2026-11-24,hyphens only; same city and ZIP
+LA,Town of Madisionville,166126,NH,2026-11-24,typo Madisionville/Madisonville; same city and ZIP
+IA,"City of LeClaire, Iowa",208061,NH,2026-11-24,LeClaire/Le Claire spacing; same ZIP
+MA,COUNTY OF DUKES COUNTY,212030,NH,2026-11-24,County of Dukes County is the legal name; same county
+TN,City of Lafollette,175715,NH,2026-11-24,Lafollette/La Follette spacing; same ZIP
+FL,Town of Lauderdale-by-the-Sea,161587,NH,2026-11-24,hyphens only; same city and ZIP (FL is skipped in national build)
+FL,CITY OF BELLLEVIEW,101971,NH,2026-11-24,typo Bellleview/Belleview; same city and ZIP (FL is skipped in national build)
+CA,City of La Cañada Flintridge,161199,NH,2026-11-24,accent only; same ZIP
+LA,Town of Jean Lafitte,127833,NH,2026-11-24,Lafitte/La Fitte spacing; same ZIP
+TX,City of Piney Point Village,176174,NH,2026-11-24,City of X Village vs Village of X; same city and ZIP
+MI,OSHTEMO TOWNSHIP,183998,NH,2026-11-24,Census lists it as charter township; same city and ZIP
+TX,"City of Taylor Lake Village, Texas",135180,NH,2026-11-24,City of X Village vs Village of X; same city and ZIP
+MI,Bangor Charter Township,185932,NH,2026-11-24,charter township word order; same city and ZIP
+MO,"City of LaPlata, Missouri",168986,NH,2026-11-24,LaPlata/La Plata spacing; same ZIP
+TX,"City of Dension, Texas",176149,NH,2026-11-24,typo Dension/Denison; same city
+SD,CITY OF NORTH SIOUX CITY,209492,NH,2026-11-24,Census drops repeated City; same city and ZIP
+MI,Oronoko Charter Township,166890,NH,2026-11-24,charter township word order; same city and ZIP
+PA,Township of Wilkes-Barre,174577,NH,2026-11-24,hyphen only; Township kind; same city and ZIP
+AR,"City of Wynne, AR Federal Awards",211976,NH,2026-11-24,Federal Awards suffix; same city and ZIP
+IN,Town of LaFontaine,103879,NH,2026-11-24,LaFontaine/La Fontaine spacing; same ZIP
+MT,CITY OF COLUMBIA FALLS INC,169446,NH,2026-11-24,INC suffix; same city and ZIP
+MI,Bedford Charter Township,166904,NH,2026-11-24,charter township word order; same city and ZIP
+TX,City of Panorama Village,176303,NH,2026-11-24,City of X Village vs Village of X; same city and ZIP
+TN,Metropolitan Government of Lynchburg Moore County,175805,NH,2026-11-24,metro government naming; same city and ZIP
+MI,City of Maryville,166791,NH,2026-11-24,typo Maryville/Marysville; same city and ZIP
+WY,"Town of Encampment, Wyoming",177850,NH,2026-11-24,Census legal name Grand Encampment; same city and ZIP
+IL,City of LaSalle,204289,NH,2026-11-24,LaSalle/La Salle spacing; City kind; same ZIP
+TN,"City of Soddy-Daisy, Tennessee",175762,NH,2026-11-24,hyphen only; same city and ZIP
+VT,"Village of Enosburg Falls, Inc.",135932,NH,2026-11-24,Inc suffix; same city and ZIP
+TN,Town of Thomspon's Station,175845,NH,2026-11-24,typo Thomspon's/Thompsons; same ZIP
+MI,Allendale Charter Township,167247,NH,2026-11-24,charter township word order; same city and ZIP
+WV,CITY OF RANSON,225857,NH,2026-11-24,Census uses Corporation of Ranson; same city and ZIP
+MI,Independence Charter Township,128510,NH,2026-11-24,charter township word order; same ZIP
+VT,"Town of Fairlee, Veromont",114421,NH,2026-11-24,state misspelled Veromont; same city and ZIP
+TX,"CITY OF LAWARD, TEXAS",211867,NH,2026-11-24,LaWard/La Ward spacing; same ZIP
+MI,Buena Vista Charter Township,208423,NH,2026-11-24,charter township word order; same city and ZIP
+KY,CITY OF FLEMING NEON,127627,NH,2026-11-24,hyphen only; same city and ZIP
+ND,LaMoure County,110188,NH,2026-11-24,LaMoure/La Moure spacing; County kind; same city and ZIP
+AR,"City of Hughes, AR Federal Awards",161056,NH,2026-11-24,Federal Awards suffix; same city and ZIP
+AR,City of Mena Federal Funds,203954,NH,2026-11-24,Federal Funds suffix; same city and ZIP
+TX,City of Bruceville-Eddy,176290,NH,2026-11-24,hyphen only; same city and ZIP
+MI,GREEN OAK CHARTER TOWNSHIP,201941,NH,2026-11-24,charter township word order; same city and ZIP
+FL,City of LaBelle,161632,NH,2026-11-24,LaBelle/La Belle spacing; same city and ZIP (FL is skipped in national build)
+NY,"Town of DeWitt, New York",186686,NH,2026-11-24,DeWitt/De Witt spacing; same city and ZIP
+MI,Haring Charter Township,106603,NH,2026-11-24,charter township word order; same city and ZIP
+IL,CITY OF CARTERSVILLE,162698,NH,2026-11-24,typo Cartersville/Carterville; same city and ZIP
