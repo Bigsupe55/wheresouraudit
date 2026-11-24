@@ -91,6 +91,12 @@ const clerks = new Map(csvObjects(readText(p("data", "reference", "fl-county-cle
 const checks = manual("website-checks.csv");
 
 // Auditor General late-filer exhibits (yearly, data/reference/fl-auditor-general-*.csv), matched by type and exact name.
+// FloridaCommerce Official List of Special Districts (county, dependent or independent, parent government).
+const districtList = new Map();
+if (fs.existsSync(p("data", "reference", "fl-district-list.csv"))) for (const r of csvObjects(readText(p("data", "reference", "fl-district-list.csv")))) {
+  const k = placeKey(r.district); districtList.set(k, districtList.has(k) ? null : r); // null marks a duplicate name: never attach
+}
+
 const agRows = fs.readdirSync(p("data", "reference")).filter(f => /^fl-auditor-general-[\d-]+\.csv$/.test(f)).flatMap(f => csvObjects(readText(p("data", "reference", f))));
 const agKey = s => String(s).toLowerCase().replace(/,\s*(the\s+)?(town|city|village|villages)\s+of\b.*$/, "").replace(/[^a-z0-9]/g, "");
 const AG_TYPE = { county: ["county"], municipality: ["city"], special_district: ["district", "other"] };
@@ -191,10 +197,14 @@ for (const raw of byId.values()) {
   if (usedSlugs.has(`${typeSlug}/${s}`)) s = `${s}-${raw.id}`;
   usedSlugs.add(`${typeSlug}/${s}`);
   const place = type === "city" ? countyOf(baseName) : null;
-  const county = type === "county" ? baseName : place?.county || null;
+  // Districts: county and dependent status from FloridaCommerce's official list, matched by exact name.
+  const dl = (type === "district" || type === "other") ? districtList.get(placeKey(baseName)) : null;
+  const dCounties = dl ? dl.counties.split(/,\s*/).filter(Boolean) : [];
+  const county = type === "county" ? baseName : place?.county || (dCounties.length === 1 ? dCounties[0].replace(/^St\.? /, "St. ") : null);
+  const district = dl ? { commerceId: dl.commerce_id, dependent: dl.status === "Dependent", counties: dCounties, parentName: dl.status === "Dependent" ? dl.local_governing_authority : null, purpose: dl.special_purpose } : null;
   const letterYear = overdue[overdue.length - 1] || latest || years[years.length - 1];
   entities.push({
-    id, dfsId: raw.id, placeFips: place?.fips || null, state: "FL", type, typeLabel: TYPE_LABEL[type], name, sourceName: baseName, county, dissolved,
+    id, dfsId: raw.id, placeFips: place?.fips || null, district, state: "FL", type, typeLabel: TYPE_LABEL[type], name, sourceName: baseName, county, dissolved,
     url: `/fl/${typeSlug}/${s}/`,
     status: latest ? { key: latest.status, cls: STATUS_CLASS[latest.status], label: FL_LABELS[latest.status] } : { key: "not_due", cls: "none", label: FL_LABELS.not_due },
     worst: overdue.length ? "overdue" : late.length ? "late" : latest ? latest.status : "not_due",
@@ -209,6 +219,19 @@ for (const raw of byId.values()) {
     })(),
     jlac: J.length > 0, sourcePage: HUMAN_PAGE,
   });
+}
+
+// Dependent districts: link to the parent government's page when the parent is one county or city we have.
+{
+  const byKey = new Map();
+  for (const e of entities) if (e.type === "county" || e.type === "city") byKey.set(`${e.type}|${placeKey(e.type === "county" ? e.name : e.sourceName.replace(/,? (Town|City|Village) of$/i, ""))}`, e);
+  for (const e of entities) {
+    const pn = e.district?.parentName;
+    if (!pn) continue;
+    const m = /^(?:City|Town|Village)(?: of)? (.+)$/i.exec(pn), c = /^(.+ County)$/i.exec(pn);
+    const parent = / and /i.test(pn) ? null : m ? byKey.get(`city|${placeKey(m[1])}`) : c ? byKey.get(`county|${placeKey(c[1])}`) : null;
+    if (parent) { e.district.parentId = parent.id; e.district.parentUrl = parent.url; e.district.parentLabel = parent.name; }
+  }
 }
 
 const OUT = p("data", "derived", "florida.json");

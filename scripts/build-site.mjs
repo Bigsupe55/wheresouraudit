@@ -204,7 +204,10 @@ for (const e of ALL) {
   const gradeBox = e.dissolved ? '<div class="grade ng">Dissolved</div>'
     : e.gradable === false ? '<div class="grade ng">Status only</div>'
     : `<div class="grade ${e.graded ? "" : "ng"}">${e.graded ? e.grade : "Not graded yet"}</div>`;
-  const where = e.state === "FL" && e.county && e.type !== "county" ? ` · ${esc(e.county)} County` : "";
+  const d = e.district;
+  const where = (e.state === "FL" && e.county && e.type !== "county" ? ` · ${esc(e.county)} County` : "")
+    + (d && !e.county && d.counties.length > 1 ? ` · ${esc(d.counties.join(", "))} counties` : "")
+    + (d?.dependent ? ` · Part of ${d.parentUrl ? `<a href="${d.parentUrl}">${esc(d.parentLabel)}</a>` : esc(d.parentName)}` : "");
   const body = `
 <p class="crumb"><a href="/${S.slug}/">${S.name}</a> › ${esc(e.typeLabel)}${where}</p>
 <div class="top">
@@ -285,7 +288,7 @@ function floridaMap(groups) {
     label: "Map of Florida counties colored by how many local governments have not filed",
     fillFor: f => { const g = byName.get(key(f.properties.NAME)) || []; const n = g.filter(e => e.worst === "overdue").length; return n >= 3 ? "bad" : n >= 1 ? "warn" : g.length ? "good" : "none"; },
     hrefFor: f => byName.has(key(f.properties.NAME)) ? `#county-${countySlug(f.properties.NAME)}` : null,
-    titleFor: f => { const g = byName.get(key(f.properties.NAME)) || []; return `${f.properties.NAME} County: ${g.filter(e => e.worst === "overdue").length} of ${g.length} county and city governments not filed`; },
+    titleFor: f => { const g = byName.get(key(f.properties.NAME)) || []; return `${f.properties.NAME} County: ${g.filter(e => e.worst === "overdue").length} of ${g.length} local governments (county, cities and special districts) with a report not filed`; },
   });
 }
 
@@ -331,15 +334,19 @@ ${fedOnly.some(e => e.state === "ME") ? `<h2>Other local bodies with a federal a
   <div><b style="color:var(--good)">${n("on_time")}</b> filed every recent report on time</div>
 </div>
 ${searchBox}
-<h2>Map: counties and cities</h2>
+<h2>Map: counties, cities and special districts</h2>
 ${legendHTML(STATES.FL)}
 <div class="map-wrap">${floridaMap(groups)}</div>
-<p class="small muted">Each county is colored by how many of its county and city governments have a report not filed. Duval County and Jacksonville are one consolidated government, listed as Jacksonville. Special districts are not on the map yet because the state's public lists don't give their county; they are listed below. Source: Florida DFS LOGERx public reports, copied ${esc(FL.snapshot)}.</p>
+<p class="small muted">Each county is colored by how many of its local governments (the county, its cities and its special districts) have a report not filed. Districts that span several counties are not counted on the map. Duval County and Jacksonville are one consolidated government, listed as Jacksonville. Sources: Florida DFS LOGERx public reports, copied ${esc(FL.snapshot)}; district counties from FloridaCommerce's Official List of Special Districts.</p>
 <h2>Special districts with a report not filed (${overdueDistricts.length} of ${districts.length})</h2>
 ${tableOf(overdueDistricts)}
 <p class="small"><a href="/fl/districts/">All ${districts.length} special districts</a> · <a href="/fl/other/">Other local entities (${other.length})</a> · <a href="/fl/federal/">Bodies known only from federal audits (${fedOnly.filter(e => e.state === "FL").length})</a></p>
 <h2>By county</h2>
-${[...groups.keys()].sort().map(c => `<h3 id="county-${countySlug(c)}">${esc(c)} County</h3>${tableOf(groups.get(c))}`).join("\n")}`;
+${[...groups.keys()].sort().map(c => {
+    const g = groups.get(c), gov = g.filter(e => e.type !== "district" && e.type !== "other"), dist = g.filter(e => e.type === "district" || e.type === "other");
+    const od = dist.filter(e => e.worst === "overdue").length;
+    return `<h3 id="county-${countySlug(c)}">${esc(c)} County</h3>${tableOf(gov)}${dist.length ? `<details><summary class="small">Special districts in ${esc(c)} County (${dist.length}${od ? `, ${od} with a report not filed` : ""})</summary>${tableOf(dist)}</details>` : ""}`;
+  }).join("\n")}`;
   out("/fl/", page({ title: "Florida", description: `${n("overdue")} Florida local governments have a report not filed past the legal deadline. Find yours.`, body, path: "/fl/", image: shareImage("fl", { title: "Florida: who filed on time?", subtitle: `${n("overdue")} of ${E.length} Florida local governments have a report not filed past the legal deadline.`, cls: "bad", path: "/fl/" }) }));
   out("/fl/districts/", page({ title: "Florida special districts", path: "/fl/districts/", description: "Every Florida special district and its filing status.", body: `<p class="crumb"><a href="/fl/">Florida</a></p><h1>Florida special districts (${districts.length})</h1>${searchBox}${tableOf(districts)}` }));
   out("/fl/federal/", page({ title: "Florida bodies known from federal audits", path: "/fl/federal/", description: "Florida school districts, housing authorities and similar bodies with federal single audits.", body: `<p class="crumb"><a href="/fl/">Florida</a></p><h1>Bodies known only from federal audits (${fedOnly.filter(e => e.state === "FL").length})</h1><p>School districts, housing authorities, charter schools and similar bodies that filed a federal single audit but have no Florida state filing record we could match. Status only, no grade.</p>${tableOf(fedOnly.filter(e => e.state === "FL"))}` }));
