@@ -1,7 +1,7 @@
 // Build the static site into dist/ from data/derived/*.json (Maine and Florida).
 // Usage: node scripts/build-site.mjs
 import fs from "node:fs";
-import { p, readJSON, readText, writeFile, esc, fmtDate, slug } from "./lib/util.mjs";
+import { p, readJSON, readText, writeFile, esc, fmtDate, slug, csvObjects } from "./lib/util.mjs";
 import { ITEMS, RUBRIC_VERSION } from "./lib/rubric.mjs";
 import { shareSVG, renderPNG } from "./lib/share-image.mjs";
 import { maineSchools } from "./lib/me-schools.mjs";
@@ -216,6 +216,23 @@ function letterHTML(e, S) {
 </form>`;
 }
 
+// ---------- "Who's responsible": elected county boards (names and roles only, from public directories) ----------
+const BOARDS = new Map();
+if (fs.existsSync(p("data", "reference", "county-commissioners.csv"))) {
+  for (const r of csvObjects(readText(p("data", "reference", "county-commissioners.csv")))) {
+    const k = `${r.state}|${r.county.toLowerCase().replace(/^st\.? /, "st ")}`;
+    if (!BOARDS.has(k)) BOARDS.set(k, []);
+    BOARDS.get(k).push(r);
+  }
+}
+const SOURCE_NAME = { ME: "Maine County Commissioners Association directory", FL: "Florida Association of Counties directory" };
+function responsibleHTML(e) {
+  const list = e.type === "county" ? BOARDS.get(`${e.state}|${e.name.replace(/ County$/, "").toLowerCase().replace(/^st\.? /, "st ")}`) : null;
+  if (!list) return `<span class="muted">Not listed yet. We list elected county boards so far; town, city and district boards are coming.</span>`;
+  const people = list.map(r => `<li>${esc(r.name)}, ${esc(r.role)}${r.district ? `, ${/^district|^at.large|^seat/i.test(r.district) ? "" : "District "}${esc(r.district)}` : ""}</li>`).join("");
+  return `<p style="margin:0 0 6px">The elected board that oversees ${esc(e.name)}'s finances:</p><ul style="margin:0;padding-left:18px">${people}</ul><p class="muted" style="margin:6px 0 0">As listed in the <a href="${esc(list[0].source)}">${SOURCE_NAME[e.state]}</a> (${esc(list[0].source_date)}). Boards change after elections; if this is out of date, report a correction.</p>`;
+}
+
 // ---------- entity pages ----------
 for (const e of ALL) {
   const S = STATES[e.state];
@@ -254,6 +271,8 @@ for (const e of ALL) {
     <div class="card">${checklistHTML(e, S)}</div>
     <h2>Share</h2>
     ${shareHTML(e)}
+    <h2>Who's responsible</h2>
+    <div class="card small">${responsibleHTML(e)}</div>
     <h2>Who to ask</h2>
     <div class="card small">${esc(e.contact.office)}${e.contact.detail ? `<br>${esc(e.contact.detail)}` : ""}${e.firm ? `<br><span class="muted">Audit firm on record with the State Auditor: ${esc(e.firm)}</span>` : ""}${e.dfsId ? `<br><span class="muted">Florida DFS entity ID: ${esc(e.dfsId)}</span>` : ""}</div>
   </div>

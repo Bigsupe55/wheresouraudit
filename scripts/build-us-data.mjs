@@ -26,7 +26,11 @@ const clean = s => s.toUpperCase().replace(/&/g, " AND ").replace(/[.,'"()]/g, "
 const NOT_GENERAL = /\b(SCHOOL|SCHOOLS|DISTRICT|HEALTH|CENTER|CENTERS|AUTHORITY|BOARD OF (?!COMMISSIONERS|COUNTY COMMISSIONERS|SUPERVISORS)|SERVICES?|ACADEMY|COLLEGE|HOUSING|LIBRARY|PARK|WATER|SEWER|FIRE|DEPARTMENT|COUNCIL|AGENCY|HOSPITAL|UTILIT(Y|IES)|TRANSIT|AIRPORT|PORT|CONSORTIUM|COOPERATIVE|FOUNDATION|ASSOCIATION|PREPARATORY|HALL|COURT(?! FISCAL)|SHERIFF|PROGRAM|PARTNERSHIP|ALLIANCE|INSTITUTE|UNIVERSITY|COMMUNITY)\b/;
 function canon(name, state) {
   if (NOT_GENERAL.test(clean(name).replace(/ FISCAL COURT$/, ""))) return null;
-  let s = clean(name).replace(new RegExp(`\\s+(STATE OF )?(${state}|${(STATE_NAMES[state] || "").toUpperCase()})$`), "").replace(/^THE /, "");
+  // Drop a trailing state name ("CITY OF AGAWAM MASSACHUSETTS"), but not when it IS the place name
+  // ("COUNTY OF IDAHO", "COUNTY OF UTAH"): only strip if a name is left after "OF".
+  const full = clean(name);
+  const stripped = full.replace(new RegExp(`\\s+(STATE OF )?(${state}|${(STATE_NAMES[state] || "").toUpperCase()})$`), "");
+  let s = (/ OF$/.test(stripped) || KINDS.includes(stripped) ? full : stripped).replace(/^THE /, "");
   s = s.replace(/^(CORPORATION|INCORPORATED|INC) OF THE /, "").replace(/^INCORPORATED (VILLAGE|CITY|TOWN) OF /, "$1 OF ");
   // "MIAMI TOWNSHIP, CLERMONT COUNTY" / "MADISON TOWNSHIP - FRANKLIN COUNTY": keep the county as a tie-breaker.
   let countyHint = null;
@@ -89,11 +93,22 @@ function yearsOf(rows) {
 
 // ---------- match auditees to Census units (exact canonical name in the same state; ties broken by ZIP or city) ----------
 const matched = new Map(); // census id -> auditee rows
+const byCensusId = new Map(census.map(c => [c.CENSUS_ID_PID6, c]));
+// Matches a person confirmed (state, FAC name, Census id). Proposals in data/review/alias-proposals.csv go here only after review.
+const aliasFile = p("data", "manual", "aliases-us.csv");
+const aliasUS = new Map(fs.existsSync(aliasFile) ? csvObjects(readText(aliasFile)).map(r => [`${r.state}|${r.fac_name.trim().toUpperCase()}`, r.census_id]) : []);
 const facOnly = [];
 const unmatched = [];
 for (const [k, rows] of auditees) {
   const state = k.split("|")[0];
   const latest = rows.slice().sort((a, b) => a.audit_year.localeCompare(b.audit_year)).pop();
+  // A person-approved alias (data/manual/aliases-us.csv) wins over the name rules.
+  const alias = aliasUS.get(`${state}|${latest.auditee_name.trim().toUpperCase()}`);
+  if (alias && byCensusId.has(alias)) {
+    if (!matched.has(alias)) matched.set(alias, []);
+    matched.get(alias).push(...rows);
+    continue;
+  }
   const c = canon(latest.auditee_name, state);
   if (!c) { facOnly.push({ state, rows }); continue; }
   let cands = byKey.get(`${state}|${c.cls}|${c.kind}|${c.core}`) || [];

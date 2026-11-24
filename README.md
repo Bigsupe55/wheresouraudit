@@ -52,7 +52,7 @@ npm run serve         # http://localhost:8790
 
 ## License
 
-MIT for the code. The source records are public records from the State of Maine and the US Census Bureau.
+MIT for the code. The data comes from public sources: the Maine State Auditor, Maine Department of Education and Maine Secretary of State; the Florida Department of Financial Services, Florida Auditor General and FloridaCommerce; the Federal Audit Clearinghouse; and the US Census Bureau. Three association directories (Florida Court Clerks and Comptrollers, Maine County Commissioners Association and Florida Association of Counties) supply office contacts and county board names. The Source Serif 4 font is under the SIL Open Font License (`assets/fonts/LICENSE.md`).
 
 ## Weekly refresh (GitHub Actions)
 
