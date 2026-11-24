@@ -113,6 +113,29 @@ if (fs.existsSync(p("data", "derived", "us.json"))) {
   ok(/Federal single audit[\s\S]*Brunswick(&#39;|')s federal single audits/.test(brun) && !/Town of Brunswick/.test(brun), "Brunswick: federal flags use the page's own name");
 }
 
+// 4e. Features added before launch: county boards, school units, district links, no personal contact data.
+{
+  const page = url => p("dist", ...url.split("/").filter(Boolean), "index.html");
+  const counties = [...ME.entities, ...FL.entities].filter(e => e.type === "county");
+  const noBoard = counties.filter(e => !readText(page(e.url)).includes("elected board that oversees"));
+  ok(!noBoard.length, `every county page lists its elected board (${counties.length})${noBoard.length ? ": missing " + noBoard.map(e => e.name).join(", ") : ""}`);
+  const board = readText(p("data", "reference", "county-commissioners.csv"));
+  ok(!/@|\(\d{3}\)\s*\d{3}-\d{4}|\d{3}-\d{3}-\d{4}/.test(board), "county board list has names and roles only (no emails or phone numbers)");
+  const schools = fs.existsSync(p("dist", "me", "school")) ? fs.readdirSync(p("dist", "me", "school")).length : 0;
+  ok(schools >= 80, `Maine school unit pages built (${schools})`);
+  const districtList = readText(p("data", "reference", "fl-district-list.csv"));
+  ok(!/@/.test(districtList) && !/First Name|Last Name|Telephone|Email/i.test(districtList.split("\n")[0]), "Florida district list keeps no registered-agent names, emails or phones");
+  const deps = FL.entities.filter(e => e.district?.parentUrl);
+  const brokenParent = deps.filter(e => !fs.existsSync(page(e.district.parentUrl)));
+  ok(deps.length > 500 && !brokenParent.length, `dependent districts link to existing parent pages (${deps.length})${brokenParent.length ? ": broken " + brokenParent.slice(0, 3).map(e => e.name).join(", ") : ""}`);
+  // One flag per matched report row (an entity can be in two exhibits, e.g. late and slow to the board).
+  const agFlags = FL.entities.reduce((n, e) => n + e.flags.filter(f => f.key.startsWith("ag-")).length, 0);
+  const agRows = fs.readdirSync(p("data", "reference")).filter(f => /^fl-auditor-general-[\d-]+\.csv$/.test(f)).reduce((n, f) => n + readText(p("data", "reference", f)).trim().split("\n").length - 1, 0);
+  ok(agFlags === agRows - FL.unmatched.filter(u => /Auditor General/.test(u.source)).length, `every matched Auditor General row is a flag (${agFlags} of ${agRows} rows)`);
+  const aliasRows = readText(p("data", "manual", "aliases-us.csv")).trim().split("\n").slice(1);
+  ok(aliasRows.every(l => l.split(",").length >= 5), `approved federal aliases are well formed (${aliasRows.length})`);
+}
+
 // 5. Known cases from the research (Maine).
 const get = id => ME.entities.find(e => e.id === id);
 if (ME.snapshot >= "2026-11-22" && ME.snapshot <= "2026-12-31") {
