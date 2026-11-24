@@ -28,7 +28,9 @@ const queue = () => {
   if (fs.existsSync(OVERRIDES)) { const ov = new Map(csvObjects(readText(OVERRIDES)).map(r => [r.entity_id, r.website])); for (const e of q) if (ov.has(e.id)) { e.website = ov.get(e.id) || null; e.websiteSource = "entered by reviewer"; } }
   return q;
 };
-const suggestions = () => fs.existsSync(p("data", "review", "suggestions.json")) ? readJSON(p("data", "review", "suggestions.json")) : {};
+// The crawler may be writing this file at the same moment; if a read catches it half-written, use the last good copy.
+let lastSuggestions = {};
+const suggestions = () => { try { if (fs.existsSync(p("data", "review", "suggestions.json"))) lastSuggestions = readJSON(p("data", "review", "suggestions.json")); } catch {} return lastSuggestions; };
 const body = req => new Promise(r => { let s = ""; req.on("data", c => s += c); req.on("end", () => { try { r(JSON.parse(s || "{}")); } catch { r({}); } }); });
 const send = (res, code, obj, type = "application/json") => { res.writeHead(code, { "content-type": type, "cache-control": "no-store" }); res.end(type === "application/json" ? JSON.stringify(obj) : obj); };
 
