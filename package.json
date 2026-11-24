@@ -18,7 +18,10 @@
     "fetch:florida": "node scripts/fetch-florida.mjs",
     "data:florida": "node scripts/build-florida-data.mjs",
     "fetch:us": "node scripts/fetch-us.mjs",
-    "data:us": "node scripts/build-us-data.mjs"
+    "data:us": "node scripts/build-us-data.mjs",
+    "review:queue": "node scripts/review/queue.mjs",
+    "review:crawl": "node scripts/review/crawl.mjs",
+    "review": "node scripts/review/server.mjs"
   },
   "devDependencies": {
     "@resvg/resvg-js": "2.6.2"

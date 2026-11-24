@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Website review | Where's Our Audit?</title>
+<style>
+  :root { --ink:#1b1d21; --muted:#5d6470; --line:#dcd8cf; --paper:#fbfaf7; --bad:#a3261b; --good:#1d6b3a; --warn:#8a5200; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--ink); background: var(--paper); display: grid; grid-template-columns: 320px 1fr; height: 100vh; }
+  aside { border-right: 1px solid var(--line); overflow: auto; background: #fff; }
+  aside header { position: sticky; top: 0; background: #fff; padding: 10px; border-bottom: 1px solid var(--line); }
+  aside select, aside input { width: 100%; padding: 6px; margin-top: 6px; font: inherit; }
+  .row { padding: 6px 10px; border-bottom: 1px solid #f0ede6; cursor: pointer; display: flex; justify-content: space-between; gap: 8px; }
+  .row:hover, .row.sel { background: #f3f1ec; }
+  .tag { font-size: 12px; color: var(--muted); white-space: nowrap; }
+  .done { color: var(--good); font-weight: 600; }
+  main { overflow: auto; padding: 16px 24px 80px; }
+  h1 { margin: 0 0 4px; font-size: 24px; }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; margin: 12px 0; }
+  .warn { background: #fdf3e3; color: var(--warn); border-radius: 6px; padding: 6px 10px; margin: 6px 0; font-size: 14px; }
+  .hint { color: var(--muted); font-size: 13px; margin: 2px 0 8px; }
+  .sugg label { display: block; padding: 3px 0; font-size: 14px; word-break: break-all; }
+  .saved { font-size: 13px; margin-top: 6px; }
+  .saved.pass { color: var(--good); } .saved.fail { color: var(--bad); }
+  button { font: 600 14px system-ui, sans-serif; border: 2px solid var(--ink); background: var(--ink); color: #fff; padding: 6px 12px; border-radius: 6px; cursor: pointer; }
+  button.ghost { background: #fff; color: var(--ink); }
+  button.bad { background: #fff; color: var(--bad); border-color: var(--bad); }
+  input[type=url], input[type=text] { padding: 6px; font: inherit; width: 100%; border: 1px solid var(--line); border-radius: 6px; }
+  .flexrow { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 6px; }
+  .muted { color: var(--muted); }
+  kbd { border: 1px solid var(--line); border-radius: 3px; padding: 0 4px; font-size: 12px; }
+</style>
+</head>
+<body>
+<aside>
+  <header>
+    <b>Website review</b> <span class="muted" id="progress"></span>
+    <select id="group"><option value="1">1. Maine (all)</option><option value="2">2. Florida counties and cities</option><option value="3">3. Florida districts</option><option value="">All</option></select>
+    <select id="show"><option value="todo">Not finished</option><option value="all">All</option><option value="done">Finished</option></select>
+    <input id="filter" placeholder="Filter by name">
+    <input id="who" placeholder="Your initials (saved with each check)">
+  </header>
+  <div id="list"></div>
+</aside>
+<main id="main"><p class="muted">Pick a government on the left. Each item needs a person to confirm it; suggestions are only hints.</p></main>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+let Q = [], current = null;
+try { $("#who").value = localStorage.getItem("who") || "NH"; } catch { $("#who").value = "NH"; }
+$("#who").addEventListener("input", () => { try { localStorage.setItem("who", $("#who").value); } catch {} });
+
+async function loadQueue() { Q = await (await fetch("/api/queue")).json(); drawList(); }
+function drawList() {
+  const g = $("#group").value, show = $("#show").value, f = $("#filter").value.toLowerCase();
+  const list = Q.filter(e => (!g || e.group === +g) && (!f || e.name.toLowerCase().includes(f)) && (show === "all" || (show === "done" ? e.checked >= 5 : e.checked < 5)));
+  const inGroup = Q.filter(e => !g || e.group === +g);
+  $("#progress").textContent = `${inGroup.filter(e => e.checked >= 5).length} of ${inGroup.length} finished`;
+  $("#list").innerHTML = list.slice(0, 400).map(e => `<div class="row ${current === e.id ? "sel" : ""}" data-id="${e.id}"><span>${esc(e.name)}, ${e.state}</span><span class="tag ${e.checked >= 5 ? "done" : ""}">${e.checked}/5${!e.website ? " · no site" : e.blocked ? " · blocked" : e.crawled ? "" : " · not scanned"}</span></div>`).join("") || '<p class="muted" style="padding:10px">Nothing here.</p>';
+  for (const r of document.querySelectorAll(".row")) r.onclick = () => open(r.dataset.id);
+}
+for (const id of ["#group", "#show", "#filter"]) $(id).addEventListener("input", drawList);
+
+async function open(id) {
+  current = id; drawList();
+  const d = await (await fetch(`/api/entity/${encodeURIComponent(id)}`)).json();
+  const e = d.entity, c = d.crawl;
+  const latest = key => d.checks.filter(x => x.item === key).at(-1);
+  const site = c?.finalUrl || e.website;
+  $("#main").innerHTML = `
+  <h1>${esc(e.name)}, ${e.state}</h1>
+  <div class="muted">${esc(e.typeLabel)} · ${esc(e.status)} · <a href="http://localhost:8790${e.url}" target="_blank">our page</a> · archive queue: ${d.archiveQueue}</div>
+  <div class="card">
+    <b>Website:</b> ${e.website ? `<a href="${esc(e.website)}" target="_blank" rel="noopener">${esc(e.website)}</a>` : '<span class="muted">none listed</span>'}
+    ${e.websiteSource ? `<span class="muted"> (from ${esc(e.websiteSource)})</span>` : ""}
+    ${c?.finalUrl && c.finalUrl !== e.website ? `<div class="muted">Loads as: <a href="${esc(c.finalUrl)}" target="_blank" rel="noopener">${esc(c.finalUrl)}</a></div>` : ""}
+    ${c?.title ? `<div class="muted">Page title: ${esc(c.title)}</div>` : ""}
+    ${(c?.warnings || []).map(w => `<div class="warn">${esc(w)}</div>`).join("")}
+    ${c?.blocked ? '<div class="warn">Our scanner was blocked or got an error. Open the site in your own browser and check by hand.</div>' : ""}
+    ${!c && e.website ? '<div class="warn">Not scanned yet. Run: node scripts/review/crawl.mjs --ids=' + esc(e.id) + '</div>' : ""}
+    <div class="flexrow"><input type="url" id="newsite" placeholder="Paste the correct official website, then rescan"><button class="ghost" id="rescan">Save and rescan</button></div>
+    <div class="flexrow"><button class="bad" id="nosite">No official website: fail items 3 to 7</button><span class="muted">(Facebook-only? Use this, then mark item 6 pass with the Facebook link.)</span></div>
+  </div>
+  ${d.items.map(it => {
+    const sg = it.key === "website" ? (site ? [{ href: site, text: c?.title || "homepage", years: [] }] : []) : (c?.suggestions?.[it.key] || []);
+    const s = latest(it.key);
+    return `<div class="card" data-item="${it.key}">
+      <b>${it.n}. ${esc(it.label)}</b>
+      <div class="hint">${esc(it.hint)}</div>
+      <div class="sugg">${sg.map((x, i) => `<label><input type="radio" name="r-${it.key}" value="${esc(x.href)}" ${i === 0 ? "checked" : ""}> <a href="${esc(x.href)}" target="_blank" rel="noopener">${esc(x.text || x.href)}</a> <span class="muted">${esc(x.href.replace(/^https?:\/\//, "").slice(0, 90))}${x.years?.length ? " · years " + x.years.join(", ") : ""}</span></label>`).join("") || '<span class="muted">No suggestions. Look on the site and paste the link.</span>'}</div>
+      <div class="flexrow"><input type="url" class="paste" placeholder="Or paste the link that shows it"><input type="text" class="note" placeholder="Note (optional)" style="max-width:240px"></div>
+      <div class="flexrow"><button class="pass">Pass</button><button class="bad fail">Fail</button></div>
+      ${s ? `<div class="saved ${s.result}">Saved: ${s.result} ${s.url ? `· <a href="${esc(s.url)}" target="_blank">${esc(s.url.slice(0, 80))}</a>` : ""} · ${s.checked_on} by ${esc(s.checked_by)}${s.archive_url ? ` · <a href="${esc(s.archive_url)}" target="_blank">archived</a>` : s.result === "pass" ? " · archive pending" : ""}${s.note ? ` · ${esc(s.note)}` : ""}</div>` : ""}
+    </div>`;
+  }).join("")}
+  <div class="flexrow"><button id="next">Next government <kbd>n</kbd></button></div>`;
+
+  for (const card of document.querySelectorAll("[data-item]")) {
+    const item = card.dataset.item;
+    const link = () => card.querySelector(".paste").value.trim() || card.querySelector(`input[name="r-${item}"]:checked`)?.value || "";
+    const save = async result => {
+      const r = await fetch("/api/check", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ entity_id: id, item, result, url: result === "pass" ? link() : link() || "", note: card.querySelector(".note").value, checked_by: $("#who").value }) });
+      const j = await r.json(); if (!r.ok) { alert(j.error); return; }
+      await loadQueue(); open(id);
+    };
+    card.querySelector(".pass").onclick = () => save("pass");
+    card.querySelector(".fail").onclick = () => save("fail");
+  }
+  $("#rescan").onclick = async () => { const w = $("#newsite").value.trim(); if (!/^https?:\/\//.test(w)) { alert("Paste a full web address starting with http"); return; } $("#rescan").textContent = "Scanning..."; await fetch("/api/website", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ entity_id: id, website: w }) }); await loadQueue(); open(id); };
+  $("#nosite").onclick = async () => {
+    if (!confirm("Mark items 3 to 7 as fail because there is no official website?")) return;
+    for (const item of ["website", "budget", "audit_online", "minutes", "records_contact"]) await fetch("/api/check", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ entity_id: id, item, result: "fail", url: "", note: "no official website", checked_by: $("#who").value }) });
+    await loadQueue(); open(id);
+  };
+  $("#next").onclick = next;
+}
+function next() { const g = $("#group").value; const n = Q.find(e => (!g || e.group === +g) && e.checked < 5 && e.id !== current); if (n) open(n.id); }
+document.addEventListener("keydown", ev => { if (ev.key === "n" && !ev.target.closest("input,textarea")) next(); });
+loadQueue();
+</script>
+</body>
+</html>

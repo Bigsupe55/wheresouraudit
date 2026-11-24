@@ -63,3 +63,18 @@ MIT for the code. The source records are public records from the State of Maine 
 - **Storage:** only the newest federal copy (about 17 MB) is kept in git. Every Maine and Florida copy is kept.
 - **Deploys:** they need two repository secrets, `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`, and a Cloudflare Pages project named `wheresouraudit`. Without them, the job still refreshes and commits the data.
 - **Run it locally:** `node scripts/refresh.mjs` (add `--skip-fetch` to rebuild from the copies you already have).
+
+## Website review tool (local only)
+
+Grades need a person to check rubric items 3 to 7 (website, budget, audit online, minutes, records contact) on each government's live website. The review tool makes that quick. It is never deployed.
+
+```
+npm run review:queue                 # order: all of Maine, then Florida counties and cities, then Florida districts
+npm run review:crawl -- --group=1    # suggest links (slow and polite, about 1 request every 2 seconds; resumable)
+npm run review                       # open http://localhost:8791
+```
+
+- **Websites:** from the Census of Governments 2022 list and FloridaCommerce's district list. Many are stale, so the crawler warns on errors, on redirects to another domain, and on pages that don't mention the government's name. Paste the right address and rescan.
+- **Suggestions are only hints.** Every Pass needs the link that shows it.
+- **Saving:** checks go to `data/manual/website-checks.csv`, with the date and the reviewer's initials. A government is graded on the next build, once all 5 items are checked.
+- **Archive copies:** each passed link is sent to the Internet Archive's Save Page Now, one every 20 seconds, and the snapshot address is saved. Set `REVIEW_NO_ARCHIVE=1` to turn this off while testing.

@@ -41,6 +41,8 @@ export function readXlsx(buf) {
       let v = /<v>([\s\S]*?)<\/v>/.exec(body)?.[1] ?? /<t[^>]*>([\s\S]*?)<\/t>/.exec(body)?.[1] ?? "";
       if (type === "s") v = shared[+v] ?? "";
       else v = decodeEntities(v);
+      // A cell holding only =HYPERLINK("url", "label") with no cached value: return the url.
+      if (!v) { const f = /<f>([\s\S]*?)<\/f>/.exec(body)?.[1]; const h = f && /HYPERLINK\(\s*"([^"]+)"/i.exec(decodeEntities(f)); if (h) v = h[1]; }
       row[ref ? colIndex(ref) : row.length] = v.trim();
     }
     rows.push(Array.from(row, x => x ?? ""));
