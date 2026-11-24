@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Confirm Maine boards | Where's Our Audit? review</title>
+<style>
+  :root { --ink:#1b1d21; --muted:#5d6470; --line:#dcd8cf; --paper:#fbfaf7; --bad:#a3261b; --good:#1d6b3a; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 16px 24px 60px; font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--ink); background: var(--paper); max-width: 980px; }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; margin: 10px 0; }
+  .muted { color: var(--muted); }
+  .done { color: var(--good); } .rej { color: var(--bad); }
+  input, textarea, select { padding: 6px; font: inherit; border: 1px solid var(--line); border-radius: 6px; }
+  textarea { width: 100%; min-height: 110px; }
+  button { font: 600 14px system-ui, sans-serif; border: 2px solid var(--ink); background: var(--ink); color: #fff; padding: 5px 10px; border-radius: 6px; cursor: pointer; }
+  button.bad { background: #fff; color: var(--bad); border-color: var(--bad); }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 6px; }
+  ul { margin: 4px 0; padding-left: 18px; }
+</style>
+</head>
+<body>
+<p><a href="/">Back to website review</a> · <a href="/mayors">Florida mayors</a></p>
+<h1 style="margin:0">Confirm Maine town boards</h1>
+<p class="muted">For each town, open its own website and find the select board, town council or city council as it is today (and the mayor, if there is one). Type one person per line as <b>Name, Title</b>, then paste the town page that lists them. Suggested names come from a computer scan or Wikidata and can be wrong or out of date. Names and titles only: no emails, phone numbers or addresses. Only saved boards appear on the public site. Your initials: <input id="who" size="4"></p>
+<div class="row">
+  <select id="show">
+    <option value="todo">Not decided yet</option>
+    <option value="names">Has suggested names</option>
+    <option value="links">Has a board page link</option>
+    <option value="done">Decided</option>
+    <option value="all">All</option>
+  </select>
+  <input id="q" placeholder="Find a town" size="18">
+  <span id="progress" class="muted"></span>
+</div>
+<div id="list"></div>
+<p id="more" class="muted"></p>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const host = u => { try { return new URL(u).hostname.replace(/^www\./, ""); } catch { return ""; } };
+const SHOW = 50;
+try { $("#who").value = localStorage.getItem("who") || "NH"; } catch { $("#who").value = "NH"; }
+$("#who").addEventListener("input", () => { try { localStorage.setItem("who", $("#who").value); } catch {} });
+let C = [];
+async function load() { C = await (await fetch("/api/boards")).json(); render(); }
+function render() {
+  const decided = C.filter(c => c.decision).length;
+  $("#progress").textContent = `${decided} of ${C.length} towns decided`;
+  const show = $("#show").value, q = $("#q").value.trim().toLowerCase();
+  const rank = c => (c.candidates.length ? 0 : c.links.length ? 1 : c.website ? 2 : 3);
+  const L = C.filter(c => (show === "all" || (show === "todo" && !c.decision) || (show === "done" && c.decision) || (show === "names" && c.candidates.length) || (show === "links" && c.links.length)) && (!q || c.name.toLowerCase().includes(q)))
+    .sort((a, b) => rank(a) - rank(b) || a.name.localeCompare(b.name));
+  $("#more").textContent = L.length > SHOW ? `Showing ${SHOW} of ${L.length}. Save some or search to see the rest.` : "";
+  $("#list").innerHTML = L.slice(0, SHOW).map(c => {
+    const d = c.decision, rej = d && d[0].decision === "rejected";
+    const lines = (d && !rej ? d : c.candidates).map(m => `${m.name}, ${m.role}`).join("\n");
+    const search = c.website ? `https://duckduckgo.com/?q=${encodeURIComponent(`site:${host(c.website)} select board OR council`)}` : `https://duckduckgo.com/?q=${encodeURIComponent(`${c.name} Maine select board`)}`;
+    return `<div class="card" data-id="${esc(c.entity_id)}">
+    <b>${esc(c.name)}</b> <span class="muted">${esc(c.typeLabel)} · ${c.website ? `<a href="${esc(c.website)}" target="_blank" rel="noopener">town website</a>` : "no website listed"} · <a href="${esc(search)}" target="_blank" rel="noopener">search</a> · <a href="http://localhost:8790${esc(c.page)}" target="_blank">our page</a></span>
+    ${c.links.length ? `<div class="muted">Board pages found: ${c.links.map((l, i) => `<a href="${esc(l)}" target="_blank" rel="noopener">${i + 1}</a>`).join(" ")}</div>` : ""}
+    ${c.candidates.length ? `<div class="muted">Suggested (unchecked): ${c.candidates.map(m => `${esc(m.name)} (${esc(m.role)}, <a href="${esc(m.source_url)}" target="_blank" rel="noopener">${esc(m.source)}</a>)`).join("; ")}</div>` : ""}
+    ${d ? `<div class="${rej ? "rej" : "done"}">Saved: ${rej ? "can't confirm" : `${d.length} ${d.length === 1 ? "person" : "people"} · <a href="${esc(d[0].url)}" target="_blank">page</a>`} · ${esc(d[0].checked_on)} by ${esc(d[0].checked_by)}</div>` : ""}
+    <textarea class="members" placeholder="Jane Smith, Select Board Chair&#10;John Doe, Select Board Member">${esc(lines)}</textarea>
+    <div class="row"><input class="url" type="url" placeholder="Town page that lists the board" size="48" value="${esc(d && !rej ? d[0].url : "")}">
+      <button class="ok">Save board</button> <button class="bad no">Can't confirm</button></div>
+  </div>`;
+  }).join("");
+  for (const card of document.querySelectorAll(".card")) {
+    const id = card.dataset.id;
+    const post = async payload => {
+      const r = await fetch("/api/board", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ entity_id: id, checked_by: $("#who").value, ...payload }) });
+      const j = await r.json(); if (!r.ok) { alert(j.error); return; } load();
+    };
+    card.querySelector(".ok").onclick = () => {
+      const members = card.querySelector(".members").value.split("\n").map(s => s.trim()).filter(Boolean).map(s => { const m = /^(.+?(?:,s*(?:Jr|Sr).?)?)s*,s*(.+)$/.exec(s); return m ? { name: m[1], role: m[2] } : { name: s, role: "" }; }); // "John Smith, Jr., Chair" keeps Jr. with the name
+      post({ decision: "confirmed", members, url: card.querySelector(".url").value.trim() });
+    };
+    card.querySelector(".no").onclick = () => post({ decision: "rejected" });
+  }
+}
+$("#show").onchange = render;
+$("#q").oninput = render;
+load();
+</script>
+</body>
+</html>

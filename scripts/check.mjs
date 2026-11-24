@@ -138,6 +138,10 @@ if (fs.existsSync(p("data", "derived", "us.json"))) {
     const { csvObjects } = await import("./lib/util.mjs");
     const off = csvObjects(readText(offFile)).filter(r => r.decision !== "rejected");
     ok(off.every(r => r.name && r.role && /^https?:\/\//.test(r.url) && r.checked_on && r.checked_by), `every published official has a name, role, source page, date and reviewer (${off.length})`);
+    ok(off.every(r => !/[@\d]/.test(r.name) && !/@|\d{3}/.test(r.role)), "published officials carry no emails or phone numbers");
+    const byEnt = new Map(); for (const r of off) byEnt.set(r.entity_id, [...(byEnt.get(r.entity_id) || []), r]);
+    const odd = [...byEnt].filter(([, rs]) => rs.length > 15 || (rs.length > 1 && (rs[0].state !== "ME" || rs.some(r => r.url !== rs[0].url || r.checked_on !== rs[0].checked_on))));
+    ok(!odd.length, `each confirmed board is one Maine page check of 15 or fewer people (${byEnt.size} governments)${odd.length ? ": " + odd.slice(0, 3).map(([id]) => id).join(", ") : ""}`);
   }
   const aliasRows = readText(p("data", "manual", "aliases-us.csv")).trim().split("\n").slice(1);
   ok(aliasRows.every(l => l.split(",").length >= 5), `approved federal aliases are well formed (${aliasRows.length})`);

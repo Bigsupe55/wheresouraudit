@@ -13,6 +13,7 @@
 //      lists at least 2 such pairs.
 // Not used: Maine Municipal Association directory (member/paid product, no reuse terms), SOS clerk list
 // and MRS municipal listing (clerks and office contacts only, no board members).
+// Also writes data/review/me-board-links.csv (board pages found per town, for the /boards review page).
 // Usage: node scripts/reference/make-me-officials.mjs [--limit=60] [--ids=me-town-brunswick,...] [--no-web]
 //   --limit picks an even spread across the website list (pilot); --limit=0 means all.
 import { p, readJSON, writeFile, toCSV, iso, decodeEntities } from "../lib/util.mjs";
@@ -22,6 +23,9 @@ const UA = "WheresOurAudit-review/0.1 (+https://wheresouraudit.pages.dev)";
 const PAUSE = 2000, TIMEOUT = 15000, MAX_PAGES = 3;
 const TODAY = iso(new Date());
 const OUT = p("data", "review", "me-officials-candidates.csv");
+// Board pages found on each town's website, so a reviewer can open them in the /boards page of the review tool.
+const LINKS_OUT = p("data", "review", "me-board-links.csv");
+const boardPages = [];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 const me = readJSON(p("data", "derived", "maine.json"));
@@ -160,7 +164,10 @@ if (!args["no-web"]) {
     if (!home.ok || !home.html) { stats.unreachable++; console.log(`  ${e.id}: unreachable (${home.status || home.error})`); continue; }
     const cands = [];
     if (isBoardPage(home.html, home.url)) cands.push(home);
-    const links = boardLinks(home.html, home.url).filter(l => l.href !== home.url).slice(0, MAX_PAGES - 1);
+    const allLinks = boardLinks(home.html, home.url).filter(l => l.href !== home.url);
+    if (cands.length) boardPages.push([e.id, home.url]);
+    for (const l of allLinks.slice(0, 4)) boardPages.push([e.id, l.href]);
+    const links = allLinks.slice(0, MAX_PAGES - 1);
     if (!links.length && !cands.length) { stats.noBoardPage++; console.log(`  ${e.id}: no board page`); continue; }
     let got = null;
     for (const l of links) {
@@ -176,6 +183,8 @@ if (!args["no-web"]) {
     console.log(`  ${e.id}: ${got.res.length} names from ${got.url}`);
   }
   console.log(`web: ${JSON.stringify(stats)}`);
+  writeFile(LINKS_OUT, toCSV([["entity_id", "url"], ...boardPages]));
+  console.log(`${boardPages.length} board page links, ${new Set(boardPages.map(r => r[0])).size} towns -> ${LINKS_OUT}`);
 }
 
 rows.sort((a, b) => a[1].localeCompare(b[1]) || a[2].localeCompare(b[2]) || a[3].localeCompare(b[3]));

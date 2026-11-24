@@ -84,6 +84,40 @@ http.createServer(async (req, res) => {
     if (b.decision !== "rejected") enqueueArchive(b.url);
     return send(res, 200, { ok: true });
   }
+  // ---------- Maine town boards: a person confirms the whole board on the town's own website ----------
+  if (u.pathname === "/boards") return send(res, 200, readText(p("scripts", "review", "boards.html")), "text/html; charset=utf-8");
+  if (u.pathname === "/api/boards") {
+    const group = (file, key = "entity_id") => { const m = new Map(); if (fs.existsSync(file)) for (const r of csvObjects(readText(file))) m.set(r[key], [...(m.get(r[key]) || []), r]); return m; };
+    const cand = group(p("data", "review", "me-officials-candidates.csv"));
+    const links = group(p("data", "review", "me-board-links.csv"));
+    const done = group(OFFICIALS);
+    return send(res, 200, queue().filter(e => e.state === "ME" && e.type !== "county").map(e => ({
+      entity_id: e.id, name: e.name, typeLabel: e.typeLabel, website: e.website, page: e.url,
+      candidates: (cand.get(e.id) || []).map(r => ({ name: r.name, role: r.role, source: r.source, source_url: r.source_url })),
+      links: [...new Set((links.get(e.id) || []).map(r => r.url))],
+      decision: done.get(e.id) || null,
+    })));
+  }
+  if (u.pathname === "/api/board" && req.method === "POST") {
+    const b = await body(req);
+    if (!queue().some(e => e.id === b.entity_id && e.state === "ME" && e.type !== "county")) return send(res, 400, { error: "unknown Maine town" });
+    if (!["confirmed", "rejected"].includes(b.decision)) return send(res, 400, { error: "decision must be confirmed or rejected" });
+    const stamp = { state: "ME", entity_id: b.entity_id, archive_url: "", checked_on: localDate(), checked_by: String(b.checked_by || "NH").slice(0, 20) };
+    let add;
+    if (b.decision === "rejected") add = [{ ...stamp, role: "", name: "", decision: "rejected", url: "" }];
+    else {
+      const m = Array.isArray(b.members) ? b.members.map(x => ({ name: String(x.name || "").trim(), role: String(x.role || "").trim() })) : [];
+      if (!/^https?:\/\//.test(b.url || "")) return send(res, 400, { error: "paste the town's own page that lists the board" });
+      if (m.length < 1 || m.length > 15) return send(res, 400, { error: "a board needs 1 to 15 members" });
+      // Names and titles only: nothing that looks like an email, phone number or address.
+      const bad = m.find(x => x.name.length < 3 || x.name.length > 60 || /[@\d]/.test(x.name) || !x.role || x.role.length > 60 || /@|\d{3}/.test(x.role));
+      if (bad) return send(res, 400, { error: `check this line: "${bad.name}, ${bad.role}" (each line is Name, Title; no emails or phone numbers)` });
+      add = m.map(x => ({ ...stamp, ...x, decision: "confirmed", url: b.url }));
+      enqueueArchive(b.url);
+    }
+    writeOfficials([...readOfficials().filter(r => r.entity_id !== b.entity_id), ...add]);
+    return send(res, 200, { ok: true });
+  }
   if (u.pathname === "/api/queue") {
     const done = new Map(); for (const c of readChecks()) done.set(c.entity_id, (done.get(c.entity_id) || new Set()).add(c.item));
     const s = suggestions();
