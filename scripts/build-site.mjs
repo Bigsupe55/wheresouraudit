@@ -44,7 +44,7 @@ const STATES = {
     },
     ombudsman: "Florida's Office of the Attorney General publishes the Government-in-the-Sunshine Manual, which explains your rights.",
     sentNote: "Florida law requires a prompt, good faith response. Keep your dated copy: the 5-business-day notice in s.119.12 counts from when the office receives it.",
-    legend: [["bad", "3 or more governments not filed"], ["warn", "1 or 2 not filed"], ["good", "All filed"]],
+    legend: [["bad", "10% or more not filed (at least 2)"], ["warn", "Some not filed"], ["good", "All filed"]],
   },
 };
 // ---------- federal single audits for Maine and Florida (from build-us-data.mjs) ----------
@@ -324,7 +324,9 @@ function floridaMap(groups) {
   const byName = new Map([...groups].map(([k, v]) => [key(k), v]));
   return geoSVG(geo.features, {
     label: "Map of Florida counties colored by how many local governments have not filed",
-    fillFor: f => { const g = byName.get(key(f.properties.NAME)) || []; const n = g.filter(e => e.worst === "overdue").length; return n >= 3 ? "bad" : n >= 1 ? "warn" : g.length ? "good" : "none"; },
+    // Share, not count: a county with 170 governments shouldn't turn red for 3 misses (1.8%). The minimum of 2
+    // keeps one late district from turning a small county red. Decided 2026-11-24.
+    fillFor: f => { const g = byName.get(key(f.properties.NAME)) || []; const n = g.filter(e => e.worst === "overdue").length; return n >= 2 && n / g.length >= 0.10 ? "bad" : n >= 1 ? "warn" : g.length ? "good" : "none"; },
     hrefFor: f => byName.has(key(f.properties.NAME)) ? `#county-${countySlug(f.properties.NAME)}` : null,
     titleFor: f => { const g = byName.get(key(f.properties.NAME)) || []; return `${f.properties.NAME} County: ${g.filter(e => e.worst === "overdue").length} of ${g.length} local governments (county, cities and special districts) with a report not filed`; },
   });
@@ -376,7 +378,7 @@ ${searchBox}
 <h2>Map: counties, cities and special districts</h2>
 ${legendHTML(STATES.FL)}
 <div class="map-wrap">${floridaMap(groups)}</div>
-<p class="small muted">Each county is colored by how many of its local governments (the county, its cities and its special districts) have a report not filed. Districts that span several counties are not counted on the map. Duval County and Jacksonville are one consolidated government, listed as Jacksonville. Sources: Florida DFS LOGERx public reports, copied ${esc(FL.snapshot)}; district counties from FloridaCommerce's Official List of Special Districts.</p>
+<p class="small muted">Each county is colored by the share of its local governments (the county, its cities and its special districts) that have a report not filed: red when it's 10% or more and at least 2 governments, amber when any have not filed. Hover or tap a county for the exact count. Districts that span several counties are not counted on the map. Duval County and Jacksonville are one consolidated government, listed as Jacksonville. Sources: Florida DFS LOGERx public reports, copied ${esc(FL.snapshot)}; district counties from FloridaCommerce's Official List of Special Districts.</p>
 <h2>Special districts with a report not filed (${overdueDistricts.length} of ${districts.length})</h2>
 ${tableOf(overdueDistricts)}
 <p class="small"><a href="/fl/districts/">All ${districts.length} special districts</a> · <a href="/fl/other/">Other local entities (${other.length})</a> · <a href="/fl/federal/">Bodies known only from federal audits (${fedOnly.filter(e => e.state === "FL").length})</a></p>
