@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Confirm mayors | Where's Our Audit? review</title>
+<style>
+  :root { --ink:#1b1d21; --muted:#5d6470; --line:#dcd8cf; --paper:#fbfaf7; --bad:#a3261b; --good:#1d6b3a; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 16px 24px 60px; font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--ink); background: var(--paper); max-width: 980px; }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; margin: 10px 0; }
+  .muted { color: var(--muted); }
+  .done { color: var(--good); } .rej { color: var(--bad); }
+  input { padding: 6px; font: inherit; border: 1px solid var(--line); border-radius: 6px; }
+  button { font: 600 14px system-ui, sans-serif; border: 2px solid var(--ink); background: var(--ink); color: #fff; padding: 5px 10px; border-radius: 6px; cursor: pointer; }
+  button.ghost { background: #fff; color: var(--ink); } button.bad { background: #fff; color: var(--bad); border-color: var(--bad); }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 6px; }
+</style>
+</head>
+<body>
+<p><a href="/">Back to website review</a></p>
+<h1 style="margin:0">Confirm Florida mayors</h1>
+<p class="muted">Candidates come from Wikidata and Open States, which can be out of date. Open the city's own website, find who the mayor is today, and paste the page that shows it. Only confirmed or corrected names appear on the public site. Your initials: <input id="who" size="4"></p>
+<p id="progress" class="muted"></p>
+<div id="list"></div>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+try { $("#who").value = localStorage.getItem("who") || "NH"; } catch { $("#who").value = "NH"; }
+$("#who").addEventListener("input", () => { try { localStorage.setItem("who", $("#who").value); } catch {} });
+async function load() {
+  const C = await (await fetch("/api/mayors")).json();
+  const done = C.filter(c => c.decision).length;
+  $("#progress").textContent = `${done} of ${C.length} decided. Undecided first.`;
+  C.sort((a, b) => (!!a.decision - !!b.decision) || a.city.localeCompare(b.city));
+  $("#list").innerHTML = C.map(c => `<div class="card" data-id="${esc(c.entity_id)}">
+    <b>${esc(c.city)}</b> <span class="muted">${c.website ? `· <a href="${esc(c.website)}" target="_blank" rel="noopener">city website</a>` : "· no website listed"} · <a href="http://localhost:8790${esc(c.page || "")}" target="_blank">our page</a></span><br>
+    Candidate: <b>${esc(c.name)}</b>, ${esc(c.role)} <span class="muted">(since ${esc(c.start_date || "unknown")}, <a href="${esc(c.source_url)}" target="_blank" rel="noopener">${esc(c.source)}</a>)</span>
+    ${c.decision ? `<div class="${c.decision.decision === "rejected" ? "rej" : "done"}">Saved: ${esc(c.decision.decision)}${c.decision.name ? ` · ${esc(c.decision.name)}, ${esc(c.decision.role)}` : ""}${c.decision.url ? ` · <a href="${esc(c.decision.url)}" target="_blank">page</a>` : ""} · ${esc(c.decision.checked_on)} by ${esc(c.decision.checked_by)}</div>` : ""}
+    <div class="row"><input class="url" type="url" placeholder="Official page that shows the mayor" size="48"></div>
+    <div class="row"><button class="ok">Confirm candidate</button>
+      <input class="name" placeholder="Or the correct name" size="22"><input class="role" placeholder="Title" value="${esc(c.role === "Burgomaster" ? "Mayor" : c.role)}" size="10"><button class="ghost fix">Save correction</button>
+      <button class="bad no">Can't confirm</button></div>
+  </div>`).join("");
+  for (const card of document.querySelectorAll(".card")) {
+    const c = C.find(x => x.entity_id === card.dataset.id);
+    const post = async (decision, name, role) => {
+      const r = await fetch("/api/official", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ entity_id: c.entity_id, decision, name, role, url: card.querySelector(".url").value.trim(), checked_by: $("#who").value }) });
+      const j = await r.json(); if (!r.ok) { alert(j.error); return; } load();
+    };
+    card.querySelector(".ok").onclick = () => post("confirmed", c.name, card.querySelector(".role").value.trim() || c.role);
+    card.querySelector(".fix").onclick = () => post("corrected", card.querySelector(".name").value.trim(), card.querySelector(".role").value.trim());
+    card.querySelector(".no").onclick = () => post("rejected", "", "");
+  }
+}
+load();
+</script>
+</body>
+</html>

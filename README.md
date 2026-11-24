@@ -71,7 +71,7 @@ Grades need a person to check rubric items 3 to 7 (website, budget, audit online
 ```
 npm run review:queue                 # order: all of Maine, then Florida counties and cities, then Florida districts
 npm run review:crawl -- --group=1    # suggest links (slow and polite, about 1 request every 2 seconds; resumable)
-npm run review                       # open http://localhost:8791
+npm run review                       # open http://localhost:8791 (and /mayors to confirm Florida mayors)
 ```
 
 - **Websites:** from the Census of Governments 2022 list and FloridaCommerce's district list. Many are stale, so the crawler warns on errors, on redirects to another domain, and on pages that don't mention the government's name. Paste the right address and rescan.
@@ -88,3 +88,7 @@ node scripts/reference/make-fl-auditor-general.mjs <report number> <status date>
 ```
 
 The script refuses to write the CSV unless every exhibit's count matches the report's own totals. Add the new report's totals to `EXPECT` in the script first. Each matched entry becomes a dated flag on the Florida page. When the report and the state finance department disagree, both dates are shown. Names that match nothing go on the "Records we couldn't match" page.
+
+## Confirming officials
+
+City mayors are never published straight from a dataset. `node scripts/reference/make-fl-mayors.mjs` builds candidates from Wikidata and Open States into `data/review/` (not committed). Then a person opens `http://localhost:8791/mayors`, checks each one on the city's own website, and confirms it, corrects it, or rejects it. Only confirmed and corrected names, each with the page that shows it, go in `data/manual/officials-confirmed.csv` and on the site.

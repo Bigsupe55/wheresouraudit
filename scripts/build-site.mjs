@@ -226,9 +226,16 @@ if (fs.existsSync(p("data", "reference", "county-commissioners.csv"))) {
   }
 }
 const SOURCE_NAME = { ME: "Maine County Commissioners Association directory", FL: "Florida Association of Counties directory" };
+// City officials a person confirmed on the government's own website (data/manual/officials-confirmed.csv).
+const CONFIRMED = new Map();
+if (fs.existsSync(p("data", "manual", "officials-confirmed.csv"))) {
+  for (const r of csvObjects(readText(p("data", "manual", "officials-confirmed.csv")))) if (r.decision === "confirmed" || r.decision === "corrected") CONFIRMED.set(r.entity_id, r);
+}
 function responsibleHTML(e) {
+  const off = CONFIRMED.get(e.id);
+  if (off) return `<p style="margin:0">${esc(off.name)}, ${esc(off.role)}</p><p class="muted" style="margin:6px 0 0">Checked on <a href="${esc(off.url)}" rel="noopener">${esc(e.name)}'s own website</a> on ${esc(off.checked_on)}${off.archive_url ? ` (<a href="${esc(off.archive_url)}" rel="noopener">archived copy</a>)` : ""}. If this is out of date, report a correction.</p>`;
   const list = e.type === "county" ? BOARDS.get(`${e.state}|${e.name.replace(/ County$/, "").toLowerCase().replace(/^st\.? /, "st ")}`) : null;
-  if (!list) return `<span class="muted">Not listed yet. We list elected county boards so far; town, city and district boards are coming.</span>`;
+  if (!list) return `<span class="muted">Not listed yet. We list elected county boards, and mayors once a person has confirmed them on the city's own website.</span>`;
   const people = list.map(r => `<li>${esc(r.name)}, ${esc(r.role)}${r.district ? `, ${/^district|^at.large|^seat/i.test(r.district) ? "" : "District "}${esc(r.district)}` : ""}</li>`).join("");
   return `<p style="margin:0 0 6px">The elected board that oversees ${esc(e.name)}'s finances:</p><ul style="margin:0;padding-left:18px">${people}</ul><p class="muted" style="margin:6px 0 0">As listed in the <a href="${esc(list[0].source)}">${SOURCE_NAME[e.state]}</a> (${esc(list[0].source_date)}). Boards change after elections; if this is out of date, report a correction.</p>`;
 }

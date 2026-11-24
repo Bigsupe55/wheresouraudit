@@ -132,6 +132,13 @@ if (fs.existsSync(p("data", "derived", "us.json"))) {
   const agFlags = FL.entities.reduce((n, e) => n + e.flags.filter(f => f.key.startsWith("ag-")).length, 0);
   const agRows = fs.readdirSync(p("data", "reference")).filter(f => /^fl-auditor-general-[\d-]+\.csv$/.test(f)).reduce((n, f) => n + readText(p("data", "reference", f)).trim().split("\n").length - 1, 0);
   ok(agFlags === agRows - FL.unmatched.filter(u => /Auditor General/.test(u.source)).length, `every matched Auditor General row is a flag (${agFlags} of ${agRows} rows)`);
+  // City officials: only person-confirmed names are published, each with the official page that shows it.
+  const offFile = p("data", "manual", "officials-confirmed.csv");
+  if (fs.existsSync(offFile)) {
+    const { csvObjects } = await import("./lib/util.mjs");
+    const off = csvObjects(readText(offFile)).filter(r => r.decision !== "rejected");
+    ok(off.every(r => r.name && r.role && /^https?:\/\//.test(r.url) && r.checked_on && r.checked_by), `every published official has a name, role, source page, date and reviewer (${off.length})`);
+  }
   const aliasRows = readText(p("data", "manual", "aliases-us.csv")).trim().split("\n").slice(1);
   ok(aliasRows.every(l => l.split(",").length >= 5), `approved federal aliases are well formed (${aliasRows.length})`);
 }

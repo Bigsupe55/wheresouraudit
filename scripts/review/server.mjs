@@ -21,6 +21,10 @@ const ITEMS = [
   { key: "records_contact", n: 7, label: "Records-request contact online", hint: "Who to ask for public records: an office, email or form. Maine: public access officer. Florida: records custodian." },
 ];
 
+const OFFICIALS = p("data", "manual", "officials-confirmed.csv");
+const OFF_HEAD = ["state", "entity_id", "role", "name", "decision", "url", "archive_url", "checked_on", "checked_by"];
+const readOfficials = () => fs.existsSync(OFFICIALS) ? csvObjects(readText(OFFICIALS)) : [];
+const writeOfficials = rows => fs.writeFileSync(OFFICIALS, toCSV([OFF_HEAD, ...rows.map(r => OFF_HEAD.map(h => r[h] ?? ""))]));
 const readChecks = () => fs.existsSync(CHECKS) ? csvObjects(readText(CHECKS)) : [];
 const writeChecks = rows => fs.writeFileSync(CHECKS, toCSV([HEAD, ...rows.map(r => HEAD.map(h => r[h] ?? ""))]));
 const queue = () => {
@@ -47,6 +51,8 @@ async function archiveOne() {
       const rows = readChecks();
       for (const r of rows) if (r.url === url && !r.archive_url) r.archive_url = snap;
       writeChecks(rows);
+      const off = readOfficials();
+      if (off.some(r => r.url === url && !r.archive_url)) { for (const r of off) if (r.url === url && !r.archive_url) r.archive_url = snap; writeOfficials(off); }
       writeJSON(ARCHIVE_Q, aq().filter(u => u !== url));
       console.log(`archived ${url} -> ${snap}`);
     } else if (res.status === 429) console.log("archive: rate limited, will retry");
@@ -59,6 +65,25 @@ else setInterval(archiveOne, 20000);
 http.createServer(async (req, res) => {
   const u = new URL(req.url, `http://localhost:${PORT}`);
   if (u.pathname === "/") return send(res, 200, readText(p("scripts", "review", "ui.html")), "text/html; charset=utf-8");
+
+  // ---------- elected officials: a person confirms each candidate on the government's own website ----------
+  if (u.pathname === "/mayors") return send(res, 200, readText(p("scripts", "review", "mayors.html")), "text/html; charset=utf-8");
+  if (u.pathname === "/api/mayors") {
+    const cand = fs.existsSync(p("data", "review", "fl-mayors-candidates.csv")) ? csvObjects(readText(p("data", "review", "fl-mayors-candidates.csv"))) : [];
+    const done = new Map(readOfficials().map(r => [r.entity_id, r]));
+    const q = new Map(queue().map(e => [e.id, e]));
+    return send(res, 200, cand.map(c => { const id = `fl-${c.dfs_id}`; return { ...c, entity_id: id, website: q.get(id)?.website || null, page: q.get(id)?.url || null, decision: done.get(id) || null }; }));
+  }
+  if (u.pathname === "/api/official" && req.method === "POST") {
+    const b = await body(req);
+    if (!b.entity_id || !["confirmed", "corrected", "rejected"].includes(b.decision)) return send(res, 400, { error: "entity_id and decision are required" });
+    if (b.decision !== "rejected" && (!/^https?:\/\//.test(b.url || "") || !b.name || !b.role)) return send(res, 400, { error: "a confirmed or corrected official needs a name, role and the official page that shows it" });
+    const rows = readOfficials().filter(r => r.entity_id !== b.entity_id);
+    rows.push({ state: "FL", entity_id: b.entity_id, role: b.role || "", name: (b.name || "").trim(), decision: b.decision, url: b.url || "", archive_url: "", checked_on: localDate(), checked_by: (b.checked_by || "NH").slice(0, 20) });
+    writeOfficials(rows);
+    if (b.decision !== "rejected") enqueueArchive(b.url);
+    return send(res, 200, { ok: true });
+  }
   if (u.pathname === "/api/queue") {
     const done = new Map(); for (const c of readChecks()) done.set(c.entity_id, (done.get(c.entity_id) || new Set()).add(c.item));
     const s = suggestions();
