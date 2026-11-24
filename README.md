@@ -78,3 +78,13 @@ npm run review                       # open http://localhost:8791
 - **Suggestions are only hints.** Every Pass needs the link that shows it.
 - **Saving:** checks go to `data/manual/website-checks.csv`, with the date and the reviewer's initials. A government is graded on the next build, once all 5 items are checked.
 - **Archive copies:** each passed link is sent to the Internet Archive's Save Page Now, one every 20 seconds, and the snapshot address is saved. Set `REVIEW_NO_ARCHIVE=1` to turn this off while testing.
+
+## Yearly: Florida Auditor General late-filer report
+
+Each November or December the Florida Auditor General publishes a report listing local governments whose audits were missing or late. After it comes out, run once (needs `pdftotext` from poppler):
+
+```
+node scripts/reference/make-fl-auditor-general.mjs <report number> <status date>   # e.g. 2026-049 2025-10-10
+```
+
+The script refuses to write the CSV unless every exhibit's count matches the report's own totals. Add the new report's totals to `EXPECT` in the script first. Each matched entry becomes a dated flag on the Florida page. When the report and the state finance department disagree, both dates are shown. Names that match nothing go on the "Records we couldn't match" page.

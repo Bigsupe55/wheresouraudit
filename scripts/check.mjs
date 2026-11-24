@@ -71,7 +71,7 @@ ok(!ME.entities.some(e => e.graded && e.pts.some(v => v === null)), "no grade sh
 
 // 4b. Florida data.
 const FL = readJSON(p("data", "derived", "florida.json"));
-const FL_LABELS = new Set(["Filed on time", "Filed late", "Not filed, past the legal deadline", "Not due yet", "On the Legislative Auditing Committee's enforcement list"]);
+const FL_LABELS = new Set(["Filed on time", "Filed late", "Not filed, past the legal deadline", "Not due yet", "On the Legislative Auditing Committee's enforcement list", "On the Auditor General's late-filer list"]);
 const badFL = FL.entities.flatMap(e => e.flags.filter(f => !(f.label && f.sentence && f.rule && f.source && f.asOf) || !FL_LABELS.has(f.label)).map(f => `${e.id}/${f.key}`));
 ok(!badFL.length, `Florida: every flag has all parts and an allowed label${badFL.length ? ": " + badFL.slice(0, 5) : ""}`);
 ok(!FL.entities.some(e => (e.gradable === false || e.dissolved) && e.graded), "Florida: 'other' entities and dissolved ones are never graded");

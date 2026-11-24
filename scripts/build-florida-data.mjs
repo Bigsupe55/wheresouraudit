@@ -89,6 +89,18 @@ const countyOf = n => placeAliases.get(placeKey(n))
 // An association list, not a state file; office details only, no personal names.
 const clerks = new Map(csvObjects(readText(p("data", "reference", "fl-county-clerks.csv"))).map(r => [r.county.toLowerCase().replace(/^st\.? /, "st. "), r]));
 const checks = manual("website-checks.csv");
+
+// Auditor General late-filer exhibits (yearly, data/reference/fl-auditor-general-*.csv), matched by type and exact name.
+const agRows = fs.readdirSync(p("data", "reference")).filter(f => /^fl-auditor-general-[\d-]+\.csv$/.test(f)).flatMap(f => csvObjects(readText(p("data", "reference", f))));
+const agKey = s => String(s).toLowerCase().replace(/,\s*(the\s+)?(town|city|village|villages)\s+of\b.*$/, "").replace(/[^a-z0-9]/g, "");
+const AG_TYPE = { county: ["county"], municipality: ["city"], special_district: ["district", "other"] };
+const agIndex = new Map();
+for (const a of agRows) for (const t of AG_TYPE[a.entity_type] || []) { const k = `${t}|${agKey(a.name)}`; if (!agIndex.has(k)) agIndex.set(k, []); agIndex.get(k).push(a); }
+const agFor = (type, baseName, name) => {
+  const keys = new Set([agKey(name), agKey(baseName), agKey(baseName.replace(/ (City|Town|Village)$/i, ""))]);
+  return [...new Set([...keys].flatMap(k => agIndex.get(`${type}|${k}`) || []))];
+};
+const agDisagree = [];
 const replies = manual("replies.csv");
 
 // ---------- statuses ----------
@@ -131,6 +143,25 @@ for (const raw of byId.values()) {
   if (latest && latest.status === "on_time") push("on_time", [latest], `${name}'s ${what(latest)} for fiscal year ${latest.fy} reached the Florida Department of Financial Services on ${fmtDate(latest.filed)}, ${latest.filed === latest.due ? "on the day of" : "before"} the ${fmtDate(latest.due)} deadline.`);
   const J = jlac.filter(j => j.name.toLowerCase() === baseName.toLowerCase() && TYPE[j.type] === type);
   for (const j of J) flags.push({ key: `jlac-${j.fy}`, cls: "bad", label: "On the Legislative Auditing Committee's enforcement list", sentence: `The Joint Legislative Auditing Committee sent ${name} an enforcement letter on ${fmtDate(j.letter)}${j.withholding ? `, and state funds were set to be withheld starting ${fmtDate(j.withholding)}` : ""} (FY${j.fy}).`, rule: "s.11.40(2), Florida Statutes, lets the committee have state funds withheld until reports are filed.", ourRule: false, source: HUMAN_PAGE, sourceCopy: `/sources/florida/${snapshot}/`, asOf, reply: null });
+  // Auditor General late-filer reports: a dated cross-check from a second state office.
+  for (const a of agFor(type, baseName, name)) {
+    a.matched = true;
+    const fy = String(2000 + +a.report.slice(2, 4) - 2); // report 2026-049 covers FY2023-24 = DFS fiscal year 2024
+    const dfs = years.find(y => y.fy === fy);
+    const later = dfs?.filed ? ` Florida's Department of Financial Services shows its reports for that year arriving on ${fmtDate(dfs.filed)}.` : "";
+    const repeat = a.footnote.includes("a") ? (a.exhibit === "C" ? " It was also on the late list the year before." : " It was also on the not-filed list the year before.") : "";
+    const fyText = `fiscal year ${+fy - 1}-${fy.slice(2)}`;
+    const sentence = {
+      A: `The Auditor General's Report No. ${a.report} lists ${name} as required to file a ${fyText} audit and not having filed it as of ${fmtDate(a.as_of)}.${repeat}${later}`,
+      B: `The Auditor General's Report No. ${a.report} lists ${name} as possibly required to file a ${fyText} audit and not having filed one as of ${fmtDate(a.as_of)}.${later}`,
+      C: `The Auditor General's Report No. ${a.report} lists ${name}'s ${fyText} audit as filed on ${a.date_filed ? fmtDate(a.date_filed) : "a later date"}, ${a.days_late} days after the 9-month deadline.${repeat}`,
+      D: `The Auditor General's Report No. ${a.report} lists ${name}'s ${fyText} audit as filed ${a.days_after_delivery} days after it was delivered to the governing body; the law allows 45 days.`,
+    }[a.exhibit];
+    flags.push({ key: `ag-${a.report}-${a.exhibit}`, cls: (a.exhibit === "A" || a.exhibit === "B") && !dfs?.filed ? "bad" : "warn", label: "On the Auditor General's late-filer list", sentence,
+      rule: "Audits are due 9 months after fiscal year end, and within 45 days of delivery to the governing body (s.218.39, Florida Statutes).", ourRule: false,
+      source: `https://flauditor.gov/pages/pdf_files/${a.report}.pdf`, sourceCopy: null, asOf: a.as_of, reply: null });
+    if (a.exhibit === "A" && dfs?.filed && dfs.filed <= a.as_of) agDisagree.push(`${name}: AG says not filed as of ${a.as_of}, DFS shows ${dfs.filed}`);
+  }
   for (const f of flags) f.reply = replies.find(r => r.entity_id === `fl-${raw.id}` && r.flag_key === f.key) || null;
 
   let headline;
@@ -184,7 +215,11 @@ const OUT = p("data", "derived", "florida.json");
 const SCOPE = "florida";
 brakeAndLog({ scope: SCOPE, snapshot, entities, approve: args.approve });
 entities.sort((a, b) => a.name.localeCompare(b.name));
-writeJSON(OUT, { state: "FL", snapshot, asOf, rubric: RUBRIC_VERSION, reportYears, sources: { logerx: HUMAN_PAGE }, entities, unmatched: [] });
+// Auditor General rows that matched no Florida entity go on the public "couldn't match" page.
+const agUnmatched = agRows.filter(r => !r.matched).map(r => ({ state: "FL", source: `Florida Auditor General Report No. ${r.report}, exhibit ${r.exhibit}`, sourceName: r.name, reason: "no exact match in the state finance department list" }));
+writeJSON(OUT, { state: "FL", snapshot, asOf, rubric: RUBRIC_VERSION, reportYears, sources: { logerx: HUMAN_PAGE }, entities, unmatched: agUnmatched });
+console.log(`Auditor General rows: ${agRows.length}, matched ${agRows.filter(r => r.matched).length}, unmatched ${agUnmatched.length}; not-filed rows the state finance data contradicts: ${agDisagree.length}`);
+for (const d of agDisagree.slice(0, 10)) console.log("  " + d);
 
 const n = k => entities.filter(e => e.worst === k && !e.dissolved).length;
 const byType = Object.fromEntries(Object.values(TYPE).map(t => [t, entities.filter(e => e.type === t).length]));

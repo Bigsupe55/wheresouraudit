@@ -423,6 +423,7 @@ ${ITEMS.map(it => `<tr><td>${it.n}</td><td>${esc(it.label)}</td><td>${it.max}</t
 <ul>
 <li>Maine State Auditor, municipal audit reports: <a href="${ME.sources.municipal}">${ME.sources.municipal}</a>, and county audit reports: <a href="${ME.sources.county}">${ME.sources.county}</a>. Last copied ${esc(ME.snapshot)}.</li>
 <li>Florida Department of Financial Services, LOGERx public Compliant and Non-Compliant reports, fiscal years ${FL.reportYears[0]} to ${FL.reportYears.at(-1)}: <a href="${FL.sources.logerx}">${FL.sources.logerx}</a>. Last copied ${esc(FL.snapshot)}.</li>
+<li>Florida Auditor General, yearly report on local governments' late and missing audits (Report No. 2026-049, status as of October 10, 2025): <a href="https://flauditor.gov/pages/pdf_files/2026-049.pdf">https://flauditor.gov/pages/pdf_files/2026-049.pdf</a>. Shown as a dated second source. Where it disagrees with the state finance department, both dates are shown.</li>
 <li>Names, IDs and map shapes: US Census Bureau (2024 Gazetteer, 2020 place-by-county file, TIGER/Line and cartographic boundary files). Maine clerk contacts: Maine Secretary of State clerk list.</li>
 </ul>
 <p>We copy these sources weekly and keep every dated copy, so each fact can be checked against what the source showed that day.</p>
