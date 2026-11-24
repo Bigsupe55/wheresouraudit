@@ -85,7 +85,7 @@ const FED_NOTE = "A federal single audit is required only when a government spen
 function federalHTML(e) {
   const r = e.fedRecord || FED.get(e.id);
   if (!r) return `<h2>Federal single audit</h2><div class="flag none"><span class="pill s-none">No federal audit on file</span><div class="sentence">We found no federal single audit for ${esc(e.name)} since 2021. That is normal if it spent less than $1 million in federal money in a year.</div><div class="meta"><span>Source: <a href="https://app.fac.gov/dissemination/search/">Federal Audit Clearinghouse</a>, copied ${esc(US?.snapshot || "")}</span></div></div>`;
-  const rows = r.years.map(y => `<tr><td>${y.fy}</td><td>${fmtDate(y.fyEnd)}</td><td>${fmtDate(y.due)}</td><td>${y.accepted ? fmtDate(y.accepted) : ""}${y.status === "late" ? ` <span class="pill s-warn">${y.daysLate} days late</span>` : ""}${y.report ? ` <a class="small" href="https://app.fac.gov/dissemination/summary/${esc(y.report)}">report</a>` : ""}</td><td>$${(+y.spent).toLocaleString("en-US")}</td></tr>`).join("");
+  const rows = r.years.map(y => `<tr><td>${y.fy}</td><td>${fmtDate(y.fyEnd)}</td><td>${fmtDate(y.due)}</td><td>${y.accepted ? fmtDate(y.accepted) : ""}${y.status === "late" ? ` <span class="pill s-warn">${y.daysLate} days late</span>` : ""}${y.report ? ` <a class="small" href="https://app.fac.gov/dissemination/summary/${esc(y.report)}" aria-label="Federal audit report for fiscal year ${y.fy}">report</a>` : ""}</td><td>$${(+y.spent).toLocaleString("en-US")}</td></tr>`).join("");
   return `<h2>Federal single audit</h2>
 ${e.fedRecord ? "" : r.flags.map((f, i) => flagHTML({ ...f, key: `federal-${i}`, sourceCopy: null, sentence: f.sentence.split(r.name).join(e.name) })).join("\n")}
 <table><tr><th>Fiscal year</th><th>Year ended</th><th>Due</th><th>Filed</th><th>Federal money spent</th></tr>${rows}</table>
@@ -121,13 +121,15 @@ function page({ title, description, body, path, image = "/share/default.png", im
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="${esc(imageAlt)}">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://${SITE}${path}">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/assets/site.css">
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 <header class="site"><a class="logo" href="/">Where's Our Audit?</a>
 <nav><a href="/me/">Maine</a><a href="/fl/">Florida</a><a href="/us/">Other states</a><a href="/how-we-grade/">How we grade</a><a href="/corrections/">Corrections</a></nav></header>
-<main>
+<main id="main" tabindex="-1">
 ${body}
 </main>
 <footer class="disclosure">${esc(DISCLOSURE)} · <a href="/how-we-grade/">How we grade</a> · <a href="/corrections/">Corrections log</a> · <a href="/unmatched/">Records we couldn't match</a> · <a href="/audits-that-showed-up/">Audits that showed up</a></footer>
@@ -136,7 +138,12 @@ ${body}
 </html>
 `;
 }
-const out = (path, html) => writeFile(p("dist", ...path.split("/").filter(Boolean), "index.html"), html);
+// Every public page goes into sitemap.xml, except utility pages search engines shouldn't list.
+const SITEMAP = [];
+const out = (path, html) => {
+  if (!/^\/(sent|sources)\//.test(path)) SITEMAP.push(path);
+  writeFile(p("dist", ...path.split("/").filter(Boolean), "index.html"), html);
+};
 
 // ---------- pieces ----------
 function flagHTML(f) {
@@ -145,8 +152,8 @@ function flagHTML(f) {
   <div class="sentence">${esc(f.sentence)}</div>
   <div class="meta">
     <span>Rule: ${esc(f.rule)} ${f.ourRule ? '<span class="badge">Our rule</span>' : ""}</span>
-    <a href="${esc(f.source)}" rel="noopener">Source</a>
-    ${f.sourceCopy ? `<a href="${esc(f.sourceCopy)}">Our dated copy</a>` : ""}
+    <a href="${esc(f.source)}" rel="noopener" aria-label="Source for: ${esc(f.label)}">Source</a>
+    ${f.sourceCopy ? `<a href="${esc(f.sourceCopy)}" aria-label="Our dated copy of the source for: ${esc(f.label)}">Our dated copy</a>` : ""}
     <span>As of ${esc(f.asOf)}</span>
     <a href="mailto:${MAILTO}?subject=${encodeURIComponent("Correction: " + f.key)}">Something wrong? Report a correction</a>
   </div>
@@ -161,7 +168,7 @@ function checklistHTML(e, S) {
 ${ITEMS.map((it, i) => {
     const v = e.pts[i];
     const ev = e.evidence[it.key];
-    return `<tr><td>${it.n}</td><td>${esc(it.label)}${ev?.url ? ` <a class="small" href="${esc(ev.url)}">evidence</a>` : ""}</td><td>${v === null ? '<span class="muted">Not checked yet</span>' : `${v} / ${it.max}`}</td><td class="small muted">${esc(S.basis(e, it.n))}</td></tr>`;
+    return `<tr><td>${it.n}</td><td>${esc(it.label)}${ev?.url ? ` <a class="small" href="${esc(ev.url)}" aria-label="Evidence for: ${esc(it.label)}">evidence</a>` : ""}</td><td>${v === null ? '<span class="muted">Not checked yet</span>' : `${v} / ${it.max}`}</td><td class="small muted">${esc(S.basis(e, it.n))}</td></tr>`;
   }).join("\n")}
 <tr><th></th><th>Total</th><th>${e.graded ? `${e.score} / 100` : "Not graded yet"}</th><th class="small muted">Rubric v${RUBRIC_VERSION}</th></tr>
 </table>
@@ -473,7 +480,8 @@ for (const [st, dirName] of [["maine", "maine"], ["florida", "florida"]]) {
   }
 }
 writeFile(p("dist", "404.html"), page({ title: "Not found", path: "/404", description: "Page not found.", body: `<h1>We couldn't find that page.</h1><p><a href="/">Find your town</a></p>` }));
-writeFile(p("dist", "robots.txt"), "User-agent: *\nAllow: /\n");
+writeFile(p("dist", "robots.txt"), `User-agent: *\nAllow: /\nDisallow: /sent/\nSitemap: https://${SITE}/sitemap.xml\n`);
+writeFile(p("dist", "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${SITEMAP.map(u => `<url><loc>https://${SITE}${esc(u)}</loc><lastmod>${BUILT}</lastmod></url>`).join("\n")}\n</urlset>\n`);
 shareImage("default", { title: "Where's our audit?", subtitle: "See if your town filed its audit. If it didn't, ask for it in one click.", cls: "none" });
 writeFile(p("dist", "favicon.svg"), `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#1b1d21"/><text x="16" y="23" font-family="Georgia,serif" font-size="20" font-weight="700" fill="#fbfaf7" text-anchor="middle">?</text></svg>`);
 

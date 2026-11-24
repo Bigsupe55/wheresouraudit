@@ -44,6 +44,18 @@ ok(!dashes.length, `no em dashes${dashes.length ? ": " + dashes.slice(0, 10).joi
   ok(notPng === 0, "every share image is a real PNG");
 }
 
+// 2c. No email address published as a website link; every page has a canonical address and a skip link.
+{
+  const usFiles = fs.existsSync(p("dist", "data", "us")) ? fs.readdirSync(p("dist", "data", "us")).map(f => p("dist", "data", "us", f)) : [];
+  const emailSites = usFiles.flatMap(f => readJSON(f).e.filter(e => e.w && /@/.test(e.w)).map(e => e.i));
+  ok(!emailSites.length, `no email address shown as a website${emailSites.length ? ": " + emailSites.slice(0, 5).join(", ") : ""}`);
+  const htmlPages = files.filter(f => f.endsWith(".html") && !f.includes(`${path.sep}sources${path.sep}`));
+  const noCanon = htmlPages.filter(f => !/<link rel="canonical" href="https:\/\//.test(readText(f)));
+  ok(!noCanon.length, `canonical address on every page${noCanon.length ? ": " + noCanon.length + " missing" : ""}`);
+  ok(htmlPages.every(f => readText(f).includes('class="skip" href="#main"')), "skip-to-content link on every page");
+  ok(fs.existsSync(p("dist", "sitemap.xml")) && /<loc>https:\/\/[^<]+\/me\/town\/brunswick\/<\/loc>/.test(readText(p("dist", "sitemap.xml"))), "sitemap.xml lists the entity pages");
+}
+
 // 3. Every page carries the disclosure footer.
 const pages = ours.filter(f => f.endsWith(".html"));
 const noFooter = pages.filter(f => !readText(f).includes("Civic-Chain never uses this site for sales."));

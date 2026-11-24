@@ -13,7 +13,11 @@ export function brakeAndLog({ scope, snapshot, entities, approve, overdueKey = "
   const prev = fs.existsSync(statusFile) ? readJSON(statusFile) : null;
   if (prev && prev.snapshot !== snapshot) {
     const before = prev.status;
-    const changed = entities.filter(e => before[e.id] !== undefined && before[e.id] !== sig(e)).length;
+    // Compare only fiscal years present in both runs. Once a year a source adds a new year and drops the
+    // oldest one; that changes every entity's list of years but is not a change in anyone's status.
+    const parse = s => Object.fromEntries(String(s || "").split(",").filter(Boolean).map(x => x.split(":")));
+    const differs = e => { const was = parse(before[e.id]); return e.years.some(y => was[y.fy] !== undefined && was[y.fy] !== y.status); };
+    const changed = entities.filter(e => before[e.id] !== undefined && differs(e)).length;
     const share = changed / Math.max(1, entities.length);
     console.log(`[${scope}] changed since ${prev.snapshot}: ${changed} of ${entities.length} (${(share * 100).toFixed(1)}%)`);
     if (share > 0.10 && !approve) {

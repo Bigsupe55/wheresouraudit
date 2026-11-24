@@ -45,6 +45,14 @@ export const decodeEntities = s => s
   .replace(/&quot;/g, '"').replace(/&#0?39;|&apos;/g, "'").replace(/&#(\d+);/g, (_, n) => String.fromCharCode(+n));
 export const stripTags = s => decodeEntities(s.replace(/<[^>]+>/g, "")).replace(/\s+/g, " ").trim();
 
+// A website value from a source list, or null. Source lists sometimes hold an email address
+// in the website field; never publish those (privacy) or link to them (broken).
+export function cleanWebsite(u) {
+  u = String(u ?? "").trim();
+  if (!u || u.includes("@") || /\s/.test(u) || !/\.[a-z]{2,}/i.test(u)) return null;
+  return /^https?:\/\//i.test(u) ? u : `http://${u}`;
+}
+
 export const slug = s => s.toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g, "")
   .replace(/&/g, " and ").replace(/['.]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 

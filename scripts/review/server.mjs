@@ -92,4 +92,4 @@ http.createServer(async (req, res) => {
     return;
   }
   send(res, 404, { error: "not found" });
-}).listen(PORT, () => console.log(`review tool on http://localhost:${PORT} (archive queue: ${aq().length})`));
+}).listen(PORT, "127.0.0.1", () => console.log(`review tool (this PC only) on http://localhost:${PORT} (archive queue: ${aq().length})`));

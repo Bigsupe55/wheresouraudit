@@ -8,11 +8,11 @@ A free, static website. For every local government it shows:
 - a report card on how much of its money information is online
 - a ready-to-send public records request letter, which the resident sends themselves
 
-Stage 1 covers Maine, stage 2 Florida, and stage 3 federal single audit status for local governments in every other state. The plan and every decision behind it live in `civic-chain-docs/wayfinder/citizen-watch/` (spec.md is the summary).
+Stage 1 covers Maine, stage 2 Florida, and stage 3 federal single audit status for local governments in every other state. How every status and grade is worked out is on the site's "How we grade" page (`/how-we-grade/`), and `scripts/check.mjs` enforces the main wording and data rules on every build.
 
 ## Run it
 
-Requires Node 20 or newer. Run `npm ci` once: the only dependency is `@resvg/resvg-js` (development only), which draws the 1200 x 630 share images. Images use the bundled Source Serif 4 font (SIL Open Font License, `assets/fonts/LICENSE.md`) and are generated on every build, not committed.
+Requires Node 22 or newer (the weekly job uses Node 24). Run `npm ci` once: the only dependency is `@resvg/resvg-js` (development only), which draws the 1200 x 630 share images. Images use the bundled Source Serif 4 font (SIL Open Font License, `assets/fonts/LICENSE.md`) and are generated on every build, not committed.
 
 ```
 npm run fetch:maine   # copy the State Auditor's tables into data/raw/maine/<today>/

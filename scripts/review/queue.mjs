@@ -1,14 +1,14 @@
 // Build the website-review queue: every Maine and Florida government in review order, with its website.
 // Order: all of Maine, then Florida counties and cities, then Florida districts. Writes data/review/queue.json.
 // Usage: node scripts/review/queue.mjs
-import { p, readJSON, readText, writeJSON, csvObjects } from "../lib/util.mjs";
+import { p, readJSON, readText, writeJSON, csvObjects, cleanWebsite } from "../lib/util.mjs";
 
 const ME = readJSON(p("data", "derived", "maine.json"));
 const FL = readJSON(p("data", "derived", "florida.json"));
 const census = csvObjects(readText(p("data", "reference", "census-govt-units-2022.csv"))).filter(c => c.STATE === "ME" || c.STATE === "FL");
 const norm = s => String(s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
 const countyKey = n => norm(String(n).replace(/^county of /i, "").replace(/ county$/i, ""));
-const web = u => { u = String(u || "").trim(); if (!u) return null; return /^https?:\/\//i.test(u) ? u : `http://${u}`; };
+const web = cleanWebsite;
 
 const byFips = new Map(census.map(c => [c.FIPS_STATE + c.FIPS_COUNTY + c.FIPS_PLACE, c]));
 const counties = new Map(census.filter(c => c.UNIT_TYPE.startsWith("1")).map(c => [`${c.STATE}|${countyKey(c.UNIT_NAME)}`, c]));

@@ -15,4 +15,4 @@ http.createServer((req, res) => {
   if (!fs.existsSync(file)) { res.writeHead(404, { "content-type": TYPES[".html"] }); res.end(fs.existsSync(p("dist", "404.html")) ? fs.readFileSync(p("dist", "404.html")) : "Not found"); return; }
   res.writeHead(200, { "content-type": TYPES[path.extname(file)] || "application/octet-stream" });
   fs.createReadStream(file).pipe(res);
-}).listen(port, () => console.log(`serving dist/ on http://localhost:${port}`));
+}).listen(port, "127.0.0.1", () => console.log(`serving dist/ on http://localhost:${port} (this PC only)`));

@@ -4,7 +4,7 @@
 // FAC can show "filed on time" and "filed late", never "missing" (an entity under the federal threshold files nothing).
 // Usage: node scripts/build-us-data.mjs [--snapshot=YYYY-MM-DD] [--approve]
 import fs from "node:fs";
-import { p, readText, writeJSON, csvObjects, slug, addMonthsEnd, daysBetween, latestDir, fmtDate, yearRange } from "./lib/util.mjs";
+import { p, readText, writeJSON, csvObjects, slug, cleanWebsite, addMonthsEnd, daysBetween, latestDir, fmtDate, yearRange } from "./lib/util.mjs";
 import { brakeAndLog } from "./lib/brake.mjs";
 
 const args = Object.fromEntries(process.argv.slice(2).map(a => a.replace(/^--/, "").split("=")).map(([k, v]) => [k, v ?? true]));
@@ -160,7 +160,7 @@ for (const c of census) {
   const rows = matched.get(c.CENSUS_ID_PID6) || [];
   const name = titleCase(c.UNIT_NAME);
   const idName = nameCount.get(`${c.STATE}|${c.UNIT_NAME}`) > 1 && c.COUNTY_AREA_NAME ? `${c.UNIT_NAME} ${c.COUNTY_AREA_NAME} county` : c.UNIT_NAME;
-  entities.push(entityFrom({ state: c.STATE, id: mkId(c.STATE, idName), name, typeLabel: TYPE_LABEL[c.UNIT_TYPE] || "Local government", county: c.COUNTY_AREA_NAME ? titleCase(c.COUNTY_AREA_NAME) : null, pop: +c.POPULATION || null, web: c.WEB_ADDRESS || null, years: yearsOf(rows), fips: c.FIPS_STATE + c.FIPS_COUNTY + c.FIPS_PLACE }));
+  entities.push(entityFrom({ state: c.STATE, id: mkId(c.STATE, idName), name, typeLabel: TYPE_LABEL[c.UNIT_TYPE] || "Local government", county: c.COUNTY_AREA_NAME ? titleCase(c.COUNTY_AREA_NAME) : null, pop: +c.POPULATION || null, web: cleanWebsite(c.WEB_ADDRESS), years: yearsOf(rows), fips: c.FIPS_STATE + c.FIPS_COUNTY + c.FIPS_PLACE }));
 }
 for (const { state, rows } of facOnly) {
   const latest = rows.slice().sort((a, b) => a.audit_year.localeCompare(b.audit_year)).pop();
