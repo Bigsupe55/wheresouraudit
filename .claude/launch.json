@@ -6,6 +6,12 @@
       "runtimeExecutable": "node",
       "runtimeArgs": ["scripts/serve.mjs", "8790"],
       "port": 8790
+    },
+    {
+      "name": "review",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["scripts/review/server.mjs"],
+      "port": 8791
     }
   ]
 }
