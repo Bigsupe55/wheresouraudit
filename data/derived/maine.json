@@ -2935,21 +2935,66 @@
       "pts": [
         0,
         20,
-        null,
-        null,
-        null,
-        null,
-        null
+        10,
+        0,
+        0,
+        5,
+        0
       ],
-      "graded": false,
-      "score": null,
-      "grade": null,
+      "graded": true,
+      "score": 35,
+      "grade": "F",
       "evidence": {
-        "website": null,
-        "budget": null,
-        "audit_online": null,
-        "minutes": null,
-        "records_contact": null
+        "website": {
+          "entity_id": "me-town-ashland",
+          "item": "website",
+          "result": "pass",
+          "url": "https://townofashland.org/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Town of Ashland official site"
+        },
+        "budget": {
+          "entity_id": "me-town-ashland",
+          "item": "budget",
+          "result": "fail",
+          "url": "https://townofashland.org/pdfs/02-05-2026/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Council approved the 2026 budget as proposed with no amounts; 2026 amounts appear only in the March 2026 town meeting warrant; no results posted"
+        },
+        "audit_online": {
+          "entity_id": "me-town-ashland",
+          "item": "audit_online",
+          "result": "fail",
+          "url": "https://townofashland.org/pdfs/2025-ashland-town-report/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "2025 town report p32: FY2024 audit still in progress; newest audit on the site is 2023"
+        },
+        "minutes": {
+          "entity_id": "me-town-ashland",
+          "item": "minutes",
+          "result": "pass",
+          "url": "https://townofashland.org/town-government/minutes/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Town Council minutes to 10-19-2026"
+        },
+        "records_contact": {
+          "entity_id": "me-town-ashland",
+          "item": "records_contact",
+          "result": "fail",
+          "url": "https://townofashland.org/contact/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "No records or FOAA contact on the contact page or menus"
+        }
       },
       "letter": {
         "fy": "2024",
@@ -3053,21 +3098,66 @@
       "pts": [
         40,
         20,
-        null,
-        null,
-        null,
-        null,
-        null
+        10,
+        0,
+        10,
+        5,
+        0
       ],
-      "graded": false,
-      "score": null,
-      "grade": null,
+      "graded": true,
+      "score": 85,
+      "grade": "B",
       "evidence": {
-        "website": null,
-        "budget": null,
-        "audit_online": null,
-        "minutes": null,
-        "records_contact": null
+        "website": {
+          "entity_id": "me-town-athens",
+          "item": "website",
+          "result": "pass",
+          "url": "https://www.athens.maine.gov/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Town of Athens official site"
+        },
+        "budget": {
+          "entity_id": "me-town-athens",
+          "item": "budget",
+          "result": "fail",
+          "url": "https://www.athens.maine.gov/wp-content/uploads/2026/03/2025TownReport.pdf",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Only the 2026 town meeting warrant (proposal) in the 2025 town report; no results or adopted budget"
+        },
+        "audit_online": {
+          "entity_id": "me-town-athens",
+          "item": "audit_online",
+          "result": "pass",
+          "url": "https://www.athens.maine.gov/wp-content/uploads/2026/03/2025TownReport.pdf",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Dec 31 2024 audit in the 2025 town report p50; Dec 31 2023 and 2022 audits in the 2024 and 2023 reports"
+        },
+        "minutes": {
+          "entity_id": "me-town-athens",
+          "item": "minutes",
+          "result": "pass",
+          "url": "https://www.athens.maine.gov/resources/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Selectmen agendas to November 24, 2026"
+        },
+        "records_contact": {
+          "entity_id": "me-town-athens",
+          "item": "records_contact",
+          "result": "fail",
+          "url": "https://www.athens.maine.gov/contact/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Contact page lists town office phone and email only"
+        }
       },
       "letter": {
         "fy": "2025",
@@ -3183,21 +3273,66 @@
       "pts": [
         0,
         0,
-        null,
-        null,
-        null,
-        null,
-        null
+        10,
+        10,
+        0,
+        5,
+        5
       ],
-      "graded": false,
-      "score": null,
-      "grade": null,
+      "graded": true,
+      "score": 30,
+      "grade": "F",
       "evidence": {
-        "website": null,
-        "budget": null,
-        "audit_online": null,
-        "minutes": null,
-        "records_contact": null
+        "website": {
+          "entity_id": "me-city-auburn",
+          "item": "website",
+          "result": "pass",
+          "url": "https://www.auburnmaine.gov/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "City of Auburn official site"
+        },
+        "budget": {
+          "entity_id": "me-city-auburn",
+          "item": "budget",
+          "result": "pass",
+          "url": "https://www.auburnmaine.gov/RESOLVE%2002%20-%20FY27%20Budget.pdf",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "FY27 Appropriation Resolve with amounts, passed second reading 5/18/26; linked from the Finance budget page"
+        },
+        "audit_online": {
+          "entity_id": "me-city-auburn",
+          "item": "audit_online",
+          "result": "fail",
+          "url": "https://www.auburnmaine.gov/departments/finance/financial_reports.php",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Newest posted is the 2024 AFR; no FY2025 audit"
+        },
+        "minutes": {
+          "entity_id": "me-city-auburn",
+          "item": "minutes",
+          "result": "pass",
+          "url": "https://www.auburnmaine.gov/government/city_council/agendas_minutes.php",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "City Council minutes to 10/19/2026"
+        },
+        "records_contact": {
+          "entity_id": "me-city-auburn",
+          "item": "records_contact",
+          "result": "pass",
+          "url": "https://www.auburnmaine.gov/government/city_manager/foaa_requests.php",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "FOAA page names the FOAA officer and email"
+        }
       },
       "letter": {
         "fy": "2025",
@@ -3313,21 +3448,66 @@
       "pts": [
         0,
         0,
-        null,
-        null,
-        null,
-        null,
-        null
+        10,
+        10,
+        10,
+        5,
+        5
       ],
-      "graded": false,
-      "score": null,
-      "grade": null,
+      "graded": true,
+      "score": 40,
+      "grade": "F",
       "evidence": {
-        "website": null,
-        "budget": null,
-        "audit_online": null,
-        "minutes": null,
-        "records_contact": null
+        "website": {
+          "entity_id": "me-city-augusta",
+          "item": "website",
+          "result": "pass",
+          "url": "http://www.augustamaine.gov",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "City of Augusta official site"
+        },
+        "budget": {
+          "entity_id": "me-city-augusta",
+          "item": "budget",
+          "result": "pass",
+          "url": "https://www.augustamaine.gov/AgendaCenter/ViewFile/Minutes/_04302026-101",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "April 30, 2026 council minutes with the FY2027 Appropriations Resolve and amounts; budget page also links the FY2027 ClearGov book"
+        },
+        "audit_online": {
+          "entity_id": "me-city-augusta",
+          "item": "audit_online",
+          "result": "pass",
+          "url": "https://www.augustamaine.gov/Archive.aspx?ADID=409",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Audit for the year ended June 30, 2025; FY2024 and FY2023 also posted"
+        },
+        "minutes": {
+          "entity_id": "me-city-augusta",
+          "item": "minutes",
+          "result": "pass",
+          "url": "https://www.augustamaine.gov/agendacenter",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Council agendas and minutes in the Agenda Center"
+        },
+        "records_contact": {
+          "entity_id": "me-city-augusta",
+          "item": "records_contact",
+          "result": "pass",
+          "url": "https://www.augustamaine.gov/201/Communications-Marketing",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Public Records Requests (FOAA) section with a request form"
+        }
       },
       "letter": {
         "fy": "2025",
@@ -3679,21 +3859,66 @@
       "pts": [
         40,
         0,
-        null,
-        null,
-        null,
-        null,
-        null
+        10,
+        0,
+        0,
+        5,
+        0
       ],
-      "graded": false,
-      "score": null,
-      "grade": null,
+      "graded": true,
+      "score": 55,
+      "grade": "F",
       "evidence": {
-        "website": null,
-        "budget": null,
-        "audit_online": null,
-        "minutes": null,
-        "records_contact": null
+        "website": {
+          "entity_id": "me-town-baileyville",
+          "item": "website",
+          "result": "pass",
+          "url": "https://www.baileyville.org/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Town of Baileyville official site"
+        },
+        "budget": {
+          "entity_id": "me-town-baileyville",
+          "item": "budget",
+          "result": "fail",
+          "url": "https://www.baileyville.org/AgendaCenter",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "No budget on the site; 2026 agendas list only warrants and a town meeting warrant discussion"
+        },
+        "audit_online": {
+          "entity_id": "me-town-baileyville",
+          "item": "audit_online",
+          "result": "fail",
+          "url": "https://www.baileyville.org/DocumentCenter/View/237/Annual-Report-PDF",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Only report posted is FY2022-23; no FY2025 audit"
+        },
+        "minutes": {
+          "entity_id": "me-town-baileyville",
+          "item": "minutes",
+          "result": "pass",
+          "url": "https://www.baileyville.org/AgendaCenter",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Town Council agendas to 11/23/2026"
+        },
+        "records_contact": {
+          "entity_id": "me-town-baileyville",
+          "item": "records_contact",
+          "result": "fail",
+          "url": "https://www.baileyville.org/27/Government",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "No records or FOAA contact on Government, Administration or Documents pages"
+        }
       },
       "letter": {
         "fy": "2025",

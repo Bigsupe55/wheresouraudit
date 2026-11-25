@@ -70,3 +70,28 @@ me-town-arundel,budget,fail,,,2026-11-25,NH,Budget summaries stop at 2024
 me-town-arundel,audit_online,fail,,,2026-11-25,NH,FY2024-25 report says the FY2023-24 audit was not returned by publish date; no FY2025 audit
 me-town-arundel,minutes,pass,https://arundelmaine.org/index.asp?SEC=51D92B84-710F-4290-868E-2015F224312E,,2026-11-25,NH,Select board minutes to 2026-10-26
 me-town-arundel,records_contact,fail,,,2026-11-25,NH,No records or FOAA contact stated
+me-town-ashland,website,pass,https://townofashland.org/,,2026-11-25,NH,Town of Ashland official site
+me-town-ashland,budget,fail,https://townofashland.org/pdfs/02-05-2026/,,2026-11-25,NH,Council approved the 2026 budget as proposed with no amounts; 2026 amounts appear only in the March 2026 town meeting warrant; no results posted
+me-town-ashland,audit_online,fail,https://townofashland.org/pdfs/2025-ashland-town-report/,,2026-11-25,NH,2025 town report p32: FY2024 audit still in progress; newest audit on the site is 2023
+me-town-ashland,minutes,pass,https://townofashland.org/town-government/minutes/,,2026-11-25,NH,Town Council minutes to 10-19-2026
+me-town-ashland,records_contact,fail,https://townofashland.org/contact/,,2026-11-25,NH,No records or FOAA contact on the contact page or menus
+me-town-athens,website,pass,https://www.athens.maine.gov/,,2026-11-25,NH,Town of Athens official site
+me-town-athens,budget,fail,https://www.athens.maine.gov/wp-content/uploads/2026/03/2025TownReport.pdf,,2026-11-25,NH,Only the 2026 town meeting warrant (proposal) in the 2025 town report; no results or adopted budget
+me-town-athens,audit_online,pass,https://www.athens.maine.gov/wp-content/uploads/2026/03/2025TownReport.pdf,,2026-11-25,NH,Dec 31 2024 audit in the 2025 town report p50; Dec 31 2023 and 2022 audits in the 2024 and 2023 reports
+me-town-athens,minutes,pass,https://www.athens.maine.gov/resources/,,2026-11-25,NH,"Selectmen agendas to November 24, 2026"
+me-town-athens,records_contact,fail,https://www.athens.maine.gov/contact/,,2026-11-25,NH,Contact page lists town office phone and email only
+me-city-auburn,website,pass,https://www.auburnmaine.gov/,,2026-11-25,NH,City of Auburn official site
+me-city-auburn,budget,pass,https://www.auburnmaine.gov/RESOLVE%2002%20-%20FY27%20Budget.pdf,,2026-11-25,NH,"FY27 Appropriation Resolve with amounts, passed second reading 5/18/26; linked from the Finance budget page"
+me-city-auburn,audit_online,fail,https://www.auburnmaine.gov/departments/finance/financial_reports.php,,2026-11-25,NH,Newest posted is the 2024 AFR; no FY2025 audit
+me-city-auburn,minutes,pass,https://www.auburnmaine.gov/government/city_council/agendas_minutes.php,,2026-11-25,NH,City Council minutes to 10/19/2026
+me-city-auburn,records_contact,pass,https://www.auburnmaine.gov/government/city_manager/foaa_requests.php,,2026-11-25,NH,FOAA page names the FOAA officer and email
+me-city-augusta,website,pass,http://www.augustamaine.gov,,2026-11-25,NH,City of Augusta official site
+me-city-augusta,budget,pass,https://www.augustamaine.gov/AgendaCenter/ViewFile/Minutes/_04302026-101,,2026-11-25,NH,"April 30, 2026 council minutes with the FY2027 Appropriations Resolve and amounts; budget page also links the FY2027 ClearGov book"
+me-city-augusta,audit_online,pass,https://www.augustamaine.gov/Archive.aspx?ADID=409,,2026-11-25,NH,"Audit for the year ended June 30, 2025; FY2024 and FY2023 also posted"
+me-city-augusta,minutes,pass,https://www.augustamaine.gov/agendacenter,,2026-11-25,NH,Council agendas and minutes in the Agenda Center
+me-city-augusta,records_contact,pass,https://www.augustamaine.gov/201/Communications-Marketing,,2026-11-25,NH,Public Records Requests (FOAA) section with a request form
+me-town-baileyville,website,pass,https://www.baileyville.org/,,2026-11-25,NH,Town of Baileyville official site
+me-town-baileyville,budget,fail,https://www.baileyville.org/AgendaCenter,,2026-11-25,NH,No budget on the site; 2026 agendas list only warrants and a town meeting warrant discussion
+me-town-baileyville,audit_online,fail,https://www.baileyville.org/DocumentCenter/View/237/Annual-Report-PDF,,2026-11-25,NH,Only report posted is FY2022-23; no FY2025 audit
+me-town-baileyville,minutes,pass,https://www.baileyville.org/AgendaCenter,,2026-11-25,NH,Town Council agendas to 11/23/2026
+me-town-baileyville,records_contact,fail,https://www.baileyville.org/27/Government,,2026-11-25,NH,"No records or FOAA contact on Government, Administration or Documents pages"
