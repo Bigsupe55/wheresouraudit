@@ -2096,21 +2096,66 @@
       "pts": [
         40,
         7,
-        null,
-        null,
-        null,
-        null,
-        null
+        10,
+        0,
+        5,
+        5,
+        0
       ],
-      "graded": false,
-      "score": null,
-      "grade": null,
+      "graded": true,
+      "score": 67,
+      "grade": "D",
       "evidence": {
-        "website": null,
-        "budget": null,
-        "audit_online": null,
-        "minutes": null,
-        "records_contact": null
+        "website": {
+          "entity_id": "me-town-anson",
+          "item": "website",
+          "result": "pass",
+          "url": "https://www.townofansonme.net/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": ""
+        },
+        "budget": {
+          "entity_id": "me-town-anson",
+          "item": "budget",
+          "result": "fail",
+          "url": "",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Only the budget summary sheet prepared for the 2026 town meeting (proposed); no 2026 results"
+        },
+        "audit_online": {
+          "entity_id": "me-town-anson",
+          "item": "audit_online",
+          "result": "partial",
+          "url": "https://www.townofansonme.net/_files/ugd/f93579_1c5becadb8f8421b898cd13ef2e7fcd1.pdf",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Audit for the year ended December 31, 2022 is not on Anson's site"
+        },
+        "minutes": {
+          "entity_id": "me-town-anson",
+          "item": "minutes",
+          "result": "pass",
+          "url": "https://www.townofansonme.net/2025-selectboard-minutes-1",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "2026 select board minutes to 2026-11-17"
+        },
+        "records_contact": {
+          "entity_id": "me-town-anson",
+          "item": "records_contact",
+          "result": "fail",
+          "url": "",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Town clerk page lists contacts; no records or FOAA contact stated"
+        }
       },
       "letter": {
         "fy": "2025",
@@ -2226,21 +2271,66 @@
       "pts": [
         0,
         0,
-        null,
-        null,
-        null,
-        null,
-        null
+        10,
+        0,
+        0,
+        5,
+        0
       ],
-      "graded": false,
-      "score": null,
-      "grade": null,
+      "graded": true,
+      "score": 15,
+      "grade": "F",
       "evidence": {
-        "website": null,
-        "budget": null,
-        "audit_online": null,
-        "minutes": null,
-        "records_contact": null
+        "website": {
+          "entity_id": "me-town-appleton",
+          "item": "website",
+          "result": "pass",
+          "url": "https://appleton.maine.gov/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": ""
+        },
+        "budget": {
+          "entity_id": "me-town-appleton",
+          "item": "budget",
+          "result": "fail",
+          "url": "",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Nothing for FY2026-27"
+        },
+        "audit_online": {
+          "entity_id": "me-town-appleton",
+          "item": "audit_online",
+          "result": "fail",
+          "url": "",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Newest town report is 2023-2024; FY2025 audit not posted"
+        },
+        "minutes": {
+          "entity_id": "me-town-appleton",
+          "item": "minutes",
+          "result": "pass",
+          "url": "https://appleton.maine.gov/index.asp?SEC=6A36A81F-364E-4070-AC2F-8A863A32A8AF&DE=8672334A-D862-4F2D-A08A-61533C6E03FB&Type=B_BASIC",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "2026 select board agendas to 2026-11-17"
+        },
+        "records_contact": {
+          "entity_id": "me-town-appleton",
+          "item": "records_contact",
+          "result": "fail",
+          "url": "",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "No records or FOAA contact stated"
+        }
       },
       "letter": {
         "fy": "2025",
@@ -2344,21 +2434,66 @@
       "pts": [
         20,
         0,
-        null,
-        null,
-        null,
-        null,
-        null
+        10,
+        10,
+        10,
+        5,
+        5
       ],
-      "graded": false,
-      "score": null,
-      "grade": null,
+      "graded": true,
+      "score": 60,
+      "grade": "D",
       "evidence": {
-        "website": null,
-        "budget": null,
-        "audit_online": null,
-        "minutes": null,
-        "records_contact": null
+        "website": {
+          "entity_id": "me-county-aroostook",
+          "item": "website",
+          "result": "pass",
+          "url": "https://aroostook.me.us/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": ""
+        },
+        "budget": {
+          "entity_id": "me-county-aroostook",
+          "item": "budget",
+          "result": "pass",
+          "url": "https://aroostook.me.us/pdfs/2026-2027-general-fund-budget/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Approved General Fund budget 2026-2027"
+        },
+        "audit_online": {
+          "entity_id": "me-county-aroostook",
+          "item": "audit_online",
+          "result": "pass",
+          "url": "https://aroostook.me.us/pdfs/year-ending-06-30-2024-gf-audit/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "General fund audits for Dec 2022, Dec 2023 and June 2024 all on the site"
+        },
+        "minutes": {
+          "entity_id": "me-county-aroostook",
+          "item": "minutes",
+          "result": "pass",
+          "url": "https://aroostook.me.us/information/agendas-minutes/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Agendas to 2026-11-18"
+        },
+        "records_contact": {
+          "entity_id": "me-county-aroostook",
+          "item": "records_contact",
+          "result": "pass",
+          "url": "https://aroostook.me.us/information/public-records/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Public Records page with the office address and phone"
+        }
       },
       "letter": {
         "fy": "2024",
@@ -2462,21 +2597,66 @@
       "pts": [
         40,
         20,
-        null,
-        null,
-        null,
-        null,
-        null
+        10,
+        10,
+        5,
+        5,
+        0
       ],
-      "graded": false,
-      "score": null,
-      "grade": null,
+      "graded": true,
+      "score": 90,
+      "grade": "A",
       "evidence": {
-        "website": null,
-        "budget": null,
-        "audit_online": null,
-        "minutes": null,
-        "records_contact": null
+        "website": {
+          "entity_id": "me-town-arrowsic",
+          "item": "website",
+          "result": "pass",
+          "url": "https://arrowsic.org/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": ""
+        },
+        "budget": {
+          "entity_id": "me-town-arrowsic",
+          "item": "budget",
+          "result": "pass",
+          "url": "https://arrowsic.org/wp-content/uploads/2026/08/June-2026-Town-Meeting-Minutes.pdf",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "June 2026 town meeting minutes with FY26-27 amounts voted"
+        },
+        "audit_online": {
+          "entity_id": "me-town-arrowsic",
+          "item": "audit_online",
+          "result": "partial",
+          "url": "https://arrowsic.org/wp-content/uploads/2026/06/Arrowsicreport5.5x8.5-2026.pdf",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Audit for the year ended June 30, 2023 is not on Arrowsic's site"
+        },
+        "minutes": {
+          "entity_id": "me-town-arrowsic",
+          "item": "minutes",
+          "result": "pass",
+          "url": "https://arrowsic.org/wp-content/uploads/2026/08/June-2026-Town-Meeting-Minutes.pdf",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "June 2026 town meeting minutes"
+        },
+        "records_contact": {
+          "entity_id": "me-town-arrowsic",
+          "item": "records_contact",
+          "result": "fail",
+          "url": "",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Freedom of Access policy names no officer, email or form"
+        }
       },
       "letter": {
         "fy": "2025",
@@ -2592,21 +2772,66 @@
       "pts": [
         0,
         7,
-        null,
-        null,
-        null,
-        null,
-        null
+        10,
+        0,
+        0,
+        5,
+        0
       ],
-      "graded": false,
-      "score": null,
-      "grade": null,
+      "graded": true,
+      "score": 22,
+      "grade": "F",
       "evidence": {
-        "website": null,
-        "budget": null,
-        "audit_online": null,
-        "minutes": null,
-        "records_contact": null
+        "website": {
+          "entity_id": "me-town-arundel",
+          "item": "website",
+          "result": "pass",
+          "url": "https://arundelmaine.org/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": ""
+        },
+        "budget": {
+          "entity_id": "me-town-arundel",
+          "item": "budget",
+          "result": "fail",
+          "url": "",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Budget summaries stop at 2024"
+        },
+        "audit_online": {
+          "entity_id": "me-town-arundel",
+          "item": "audit_online",
+          "result": "fail",
+          "url": "",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "FY2024-25 report says the FY2023-24 audit was not returned by publish date; no FY2025 audit"
+        },
+        "minutes": {
+          "entity_id": "me-town-arundel",
+          "item": "minutes",
+          "result": "pass",
+          "url": "https://arundelmaine.org/index.asp?SEC=51D92B84-710F-4290-868E-2015F224312E",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Select board minutes to 2026-10-26"
+        },
+        "records_contact": {
+          "entity_id": "me-town-arundel",
+          "item": "records_contact",
+          "result": "fail",
+          "url": "",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "No records or FOAA contact stated"
+        }
       },
       "letter": {
         "fy": "2025",

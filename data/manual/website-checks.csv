@@ -45,3 +45,28 @@ me-county-androscoggin,budget,fail,,,2026-11-25,NH,Budget archive stops at the 2
 me-county-androscoggin,audit_online,pass,https://www.androscoggincountymaine.gov/Archive.aspx?ADID=86,,2026-11-25,NH,2024 audited statements; 2022 to 2024 all on the site
 me-county-androscoggin,minutes,pass,https://www.androscoggincountymaine.gov/AgendaCenter,,2026-11-25,NH,Agendas to 2026-10-28
 me-county-androscoggin,records_contact,pass,https://www.androscoggincountymaine.gov/217/Records-Requests,,2026-11-25,NH,"Named records contact, phone and email"
+me-town-anson,website,pass,https://www.townofansonme.net/,,2026-11-25,NH,
+me-town-anson,budget,fail,,,2026-11-25,NH,Only the budget summary sheet prepared for the 2026 town meeting (proposed); no 2026 results
+me-town-anson,audit_online,partial,https://www.townofansonme.net/_files/ugd/f93579_1c5becadb8f8421b898cd13ef2e7fcd1.pdf,,2026-11-25,NH,"Audit for the year ended December 31, 2022 is not on Anson's site"
+me-town-anson,minutes,pass,https://www.townofansonme.net/2025-selectboard-minutes-1,,2026-11-25,NH,2026 select board minutes to 2026-11-17
+me-town-anson,records_contact,fail,,,2026-11-25,NH,Town clerk page lists contacts; no records or FOAA contact stated
+me-town-appleton,website,pass,https://appleton.maine.gov/,,2026-11-25,NH,
+me-town-appleton,budget,fail,,,2026-11-25,NH,Nothing for FY2026-27
+me-town-appleton,audit_online,fail,,,2026-11-25,NH,Newest town report is 2023-2024; FY2025 audit not posted
+me-town-appleton,minutes,pass,https://appleton.maine.gov/index.asp?SEC=6A36A81F-364E-4070-AC2F-8A863A32A8AF&DE=8672334A-D862-4F2D-A08A-61533C6E03FB&Type=B_BASIC,,2026-11-25,NH,2026 select board agendas to 2026-11-17
+me-town-appleton,records_contact,fail,,,2026-11-25,NH,No records or FOAA contact stated
+me-county-aroostook,website,pass,https://aroostook.me.us/,,2026-11-25,NH,
+me-county-aroostook,budget,pass,https://aroostook.me.us/pdfs/2026-2027-general-fund-budget/,,2026-11-25,NH,Approved General Fund budget 2026-2027
+me-county-aroostook,audit_online,pass,https://aroostook.me.us/pdfs/year-ending-06-30-2024-gf-audit/,,2026-11-25,NH,"General fund audits for Dec 2022, Dec 2023 and June 2024 all on the site"
+me-county-aroostook,minutes,pass,https://aroostook.me.us/information/agendas-minutes/,,2026-11-25,NH,Agendas to 2026-11-18
+me-county-aroostook,records_contact,pass,https://aroostook.me.us/information/public-records/,,2026-11-25,NH,Public Records page with the office address and phone
+me-town-arrowsic,website,pass,https://arrowsic.org/,,2026-11-25,NH,
+me-town-arrowsic,budget,pass,https://arrowsic.org/wp-content/uploads/2026/08/June-2026-Town-Meeting-Minutes.pdf,,2026-11-25,NH,June 2026 town meeting minutes with FY26-27 amounts voted
+me-town-arrowsic,audit_online,partial,https://arrowsic.org/wp-content/uploads/2026/06/Arrowsicreport5.5x8.5-2026.pdf,,2026-11-25,NH,"Audit for the year ended June 30, 2023 is not on Arrowsic's site"
+me-town-arrowsic,minutes,pass,https://arrowsic.org/wp-content/uploads/2026/08/June-2026-Town-Meeting-Minutes.pdf,,2026-11-25,NH,June 2026 town meeting minutes
+me-town-arrowsic,records_contact,fail,,,2026-11-25,NH,"Freedom of Access policy names no officer, email or form"
+me-town-arundel,website,pass,https://arundelmaine.org/,,2026-11-25,NH,
+me-town-arundel,budget,fail,,,2026-11-25,NH,Budget summaries stop at 2024
+me-town-arundel,audit_online,fail,,,2026-11-25,NH,FY2024-25 report says the FY2023-24 audit was not returned by publish date; no FY2025 audit
+me-town-arundel,minutes,pass,https://arundelmaine.org/index.asp?SEC=51D92B84-710F-4290-868E-2015F224312E,,2026-11-25,NH,Select board minutes to 2026-10-26
+me-town-arundel,records_contact,fail,,,2026-11-25,NH,No records or FOAA contact stated
