@@ -186,7 +186,7 @@ function checklistHTML(e, S) {
 ${ITEMS.map((it, i) => {
     const v = e.pts[i];
     const ev = e.evidence[it.key];
-    return `<tr><td>${it.n}</td><td>${esc(it.label)}${ev?.url ? ` <a class="small" href="${esc(ev.url)}" aria-label="Evidence for: ${esc(it.label)}">evidence</a>` : ""}</td><td>${v === null ? '<span class="muted">Not checked yet</span>' : `${v} / ${it.max}`}</td><td class="small muted">${esc(S.basis(e, it.n))}</td></tr>`;
+    return `<tr><td>${it.n}</td><td>${esc(it.label)}${ev?.url ? ` <a class="small" href="${esc(ev.url)}" aria-label="Evidence for: ${esc(it.label)}">evidence</a>` : ""}</td><td>${v === null ? '<span class="muted">Not checked yet</span>' : `${v} / ${it.max}`}${ev?.result === "partial" && ev.note ? `<div class="small muted">${esc(ev.note)}</div>` : ""}</td><td class="small muted">${esc(S.basis(e, it.n))}</td></tr>`;
   }).join("\n")}
 <tr><th></th><th>Total</th><th>${e.graded ? `${e.score} / 100` : "Not graded yet"}</th><th class="small muted">Rubric v${RUBRIC_VERSION}</th></tr>
 </table>
@@ -480,6 +480,13 @@ ${ITEMS.map(it => `<tr><td>${it.n}</td><td>${esc(it.label)}</td><td>${it.max}</t
 </table>
 <p>Item 1: on time 40, late 20, overdue or not filed 0. Item 2: 20 times the share of the 3 years before the latest that were on time; late and missing years both count 0. When the source shows fewer than 3 earlier years, we use the years it shows. A is 90 or more, B 80, C 70, D 60, F below 60. Each item is labelled "required by law here" or "best practice here" for that government's state and type.</p>
 <p>A person checks items 3 to 7 on each government's live website and saves a dated archive copy. Until all 7 items are checked, the page shows "Not graded yet" and only the filing status. Entities that aren't counties, cities, towns or districts (such as planning organizations) get a status but no grade.</p>
+<ul>
+<li>Item 3: the government's own site. Placeholder pages don't count, and a Facebook page counts only for item 6.</li>
+<li>Item 4: the adopted budget for the year in progress. Town meeting results or minutes count when they show the amounts voted; a warrant, which only proposes, does not.</li>
+<li>Item 5: the latest audit that is due, or a newer one, on the government's own site or linked from it. People should be able to read every year's audit, so if one of the last 3 due years is missing from the site, item 5 earns 5 of its 10 points and the page names the missing year.</li>
+<li>Item 6: agendas or minutes dated within the 12 months before the check.</li>
+<li>Item 7: the site says who handles public records requests (in Maine, freedom of access requests): an officer, an email address or a form. A contact page that only names the clerk is not enough.</li>
+</ul>
 <h2>2. Our sources</h2>
 <ul>
 <li>Maine State Auditor, municipal audit reports: <a href="${ME.sources.municipal}">${ME.sources.municipal}</a>, and county audit reports: <a href="${ME.sources.county}">${ME.sources.county}</a>. Last copied ${esc(ME.snapshot)}.</li>

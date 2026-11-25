@@ -15,10 +15,10 @@ const ARCHIVE_Q = p("data", "review", "archive-queue.json");
 const HEAD = ["entity_id", "item", "result", "url", "archive_url", "checked_on", "checked_by", "note"];
 const ITEMS = [
   { key: "website", n: 3, label: "Official website", hint: "The government's own site. Not a placeholder or a parked domain. A Facebook page does not count here." },
-  { key: "budget", n: 4, label: "Current budget online", hint: "The adopted budget for the year in progress. Last year's still counts until this year's legal posting window closes (Florida: 30 days after adoption). A draft in a meeting packet counts only inside that window." },
-  { key: "audit_online", n: 5, label: "Latest due audit on its own website", hint: "The most recent audit or annual financial report that is due (not just any old one), on its own site or linked from it." },
-  { key: "minutes", n: 6, label: "Agendas or minutes online", hint: "Recent agendas or minutes. A Facebook page counts for this item." },
-  { key: "records_contact", n: 7, label: "Records-request contact online", hint: "Who to ask for public records: an office, email or form. Maine: public access officer. Florida: records custodian." },
+  { key: "budget", n: 4, label: "Current budget online", hint: "The adopted budget for the year in progress. Last year's still counts until this year's legal posting window closes (Florida: 30 days after adoption). A draft in a meeting packet counts only inside that window. Town meeting results or minutes count when they show the amounts voted; a warrant alone does not." },
+  { key: "audit_online", n: 5, label: "Latest due audit on its own website", hint: "The most recent audit or annual financial report that is due (not just any old one), on its own site or linked from it. A newer one counts too. Partial (half points) if one of the last 3 due years is missing from the site: say which in the note." },
+  { key: "minutes", n: 6, label: "Agendas or minutes online", hint: "Agendas or minutes dated within the last 12 months. A Facebook page counts for this item." },
+  { key: "records_contact", n: 7, label: "Records-request contact online", hint: "The site must say who handles public records or FOAA requests: an officer, email or form. A contact page that only names the clerk does not count. Maine: public access officer. Florida: records custodian." },
 ];
 
 const OFFICIALS = p("data", "manual", "officials-confirmed.csv");
@@ -131,12 +131,13 @@ http.createServer(async (req, res) => {
   }
   if (u.pathname === "/api/check" && req.method === "POST") {
     const b = await body(req);
-    if (!b.entity_id || !ITEMS.some(i => i.key === b.item) || !["pass", "fail"].includes(b.result)) return send(res, 400, { error: "entity_id, item and result (pass or fail) are required" });
-    if (b.result === "pass" && !/^https?:\/\//.test(b.url || "")) return send(res, 400, { error: "a pass needs the link that shows it" });
+    if (!b.entity_id || !ITEMS.some(i => i.key === b.item) || !["pass", "fail", "partial"].includes(b.result)) return send(res, 400, { error: "entity_id, item and result (pass, fail or partial) are required" });
+    if (b.result === "partial" && (b.item !== "audit_online" || !String(b.note || "").trim())) return send(res, 400, { error: "partial is only for item 5, with a note naming the missing year" });
+    if (b.result !== "fail" && !/^https?:\/\//.test(b.url || "")) return send(res, 400, { error: "a pass needs the link that shows it" });
     const rows = readChecks();
     rows.push({ entity_id: b.entity_id, item: b.item, result: b.result, url: b.url || "", archive_url: "", checked_on: localDate(), checked_by: (b.checked_by || "NH").slice(0, 20), note: (b.note || "").slice(0, 300) });
     writeChecks(rows);
-    if (b.result === "pass") enqueueArchive(b.url);
+    if (b.result !== "fail") enqueueArchive(b.url);
     return send(res, 200, { ok: true });
   }
   if (u.pathname === "/api/website" && req.method === "POST") {

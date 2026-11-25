@@ -21,3 +21,27 @@ me-town-alfred,website,pass,https://www.alfredme.gov/,,2026-11-25,NH,
 me-town-alfred,audit_online,pass,https://www.alfredme.gov/Audited%20Financial%20Statements%206%2030%202025.pdf,,2026-11-25,NH,"FY2025 audited statements, linked from the Treasurer page"
 me-town-alfred,minutes,pass,https://www.alfredme.gov/board_and_committees/selectmen_s_office/minutes.php,,2026-11-25,NH,Selectmen minutes to 2026-11-10
 me-town-alfred,records_contact,pass,https://www.alfredme.gov/forms_and_documents/freedom_of_access.php,,2026-11-25,NH,Names the FOAA agent and email
+me-town-addison,audit_online,partial,https://img1.wsimg.com/blobby/go/c37fbb81-4fa6-4a11-81ae-0e342f96f7c9/downloads/058bb775-ef67-469e-8393-02a294ce0ca8/Binder1.pdf?ver=1795204358223,,2026-11-25,NH,"Audit for the year ended January 31, 2023 is not on Addison's site"
+me-town-alna,website,pass,http://alna.maine.gov/,,2026-11-25,NH,
+me-town-alna,audit_online,partial,http://alna.maine.gov/vertical/sites/%7BBDB98820-241D-4E93-ADE8-FCEDF75584C6%7D/uploads/Town_of_Alna_fy_2025_Financial_Statements.pdf,,2026-11-25,NH,"Audit for the year ended January 31, 2025 is not on Alna's site; a newer one (January 31, 2026) is"
+me-town-alna,minutes,pass,http://alna.maine.gov/index.asp?SEC=E851497B-FA53-4114-B79A-465ACB8542DF&DE=7F3A9BB0-0C19-4F70-8EA4-E9E97F0AC22E,,2026-11-25,NH,Selectboard minutes to 2026-10-22
+me-town-alna,records_contact,pass,http://alna.maine.gov/index.asp?SEC=DE27F4AA-3A7E-47FE-8C73-BCACC1312EC6,,2026-11-25,NH,Names the FOAA officer and email
+me-town-alton,website,pass,https://www.altonmaine.org/,,2026-11-25,NH,
+me-town-alton,budget,fail,,,2026-11-25,NH,Newest document is the Annual Report 2024; nothing for 2026
+me-town-alton,audit_online,fail,,,2026-11-25,NH,FY2024 audit not on the site; the 2024 report was compiled in January 2025
+me-town-alton,minutes,fail,,,2026-11-25,NH,Meetings page says to contact the town office for minutes; none posted
+me-town-alton,records_contact,pass,https://www.altonmaine.org/contact/,,2026-11-25,NH,Contact page names the clerk as FOI Officer
+me-town-amity,website,pass,https://www.townofamity.org/,,2026-11-25,NH,
+me-town-amity,budget,fail,,,2026-11-25,NH,"No budget, warrant or town meeting results online"
+me-town-amity,audit_online,fail,,,2026-11-25,NH,No audit or town report online
+me-town-amity,records_contact,fail,,,2026-11-25,NH,No records or FOAA contact stated
+me-town-andover,website,pass,https://www.andovermaine.gov/,,2026-11-25,NH,
+me-town-andover,budget,fail,,,2026-11-25,NH,"Only the FY26 workbook, the FY27 warrant (proposed) and a school-budget meeting; no FY27 town meeting results"
+me-town-andover,audit_online,fail,,,2026-11-25,NH,2026 town report says the 2025 audit has not been completed
+me-town-andover,minutes,pass,https://www.andovermaine.gov/andover-selectmen-meeting-agenda/,,2026-11-25,NH,2026 weekly select board minutes
+me-town-andover,records_contact,pass,https://www.andovermaine.gov/ordiances-forms-permits/,,2026-11-25,NH,Freedom of Access request form
+me-county-androscoggin,website,pass,https://www.androscoggincountymaine.gov/,,2026-11-25,NH,
+me-county-androscoggin,budget,fail,,,2026-11-25,NH,Budget archive stops at the 2025 final budget; 2026 is in progress
+me-county-androscoggin,audit_online,pass,https://www.androscoggincountymaine.gov/Archive.aspx?ADID=86,,2026-11-25,NH,2024 audited statements; 2022 to 2024 all on the site
+me-county-androscoggin,minutes,pass,https://www.androscoggincountymaine.gov/AgendaCenter,,2026-11-25,NH,Agendas to 2026-10-28
+me-county-androscoggin,records_contact,pass,https://www.androscoggincountymaine.gov/217/Records-Requests,,2026-11-25,NH,"Named records contact, phone and email"

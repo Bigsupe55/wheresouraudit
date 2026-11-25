@@ -5,7 +5,7 @@
 // Usage: node scripts/build-florida-data.mjs [--snapshot=YYYY-MM-DD] [--approve]
 import fs from "node:fs";
 import { p, readText, writeJSON, csvObjects, slug, lastDayOfMonth, addMonthsEnd, daysBetween, latestDir, yearRange, fmtDate, stripTags, decodeEntities } from "./lib/util.mjs";
-import { ITEMS, item1Points, item2Points, letterGrade, STATUS_CLASS, RUBRIC_VERSION } from "./lib/rubric.mjs";
+import { ITEMS, item1Points, item2Points, checkPoints, letterGrade, STATUS_CLASS, RUBRIC_VERSION } from "./lib/rubric.mjs";
 import { brakeAndLog } from "./lib/brake.mjs";
 
 const args = Object.fromEntries(process.argv.slice(2).map(a => a.replace(/^--/, "").split("=")).map(([k, v]) => [k, v ?? true]));
@@ -187,7 +187,7 @@ for (const raw of byId.values()) {
   const mine = checks.filter(c => c.entity_id === id);
   for (const it of ITEMS.slice(2)) {
     const c = mine.filter(c => c.item === it.key).sort((a, b) => a.checked_on.localeCompare(b.checked_on)).pop();
-    if (c) pts[it.n - 1] = c.result === "pass" ? it.max : 0;
+    if (c) pts[it.n - 1] = checkPoints(it, c);
   }
   const graded = gradable && pts.every(v => v !== null);
   const score = graded ? pts.reduce((a, b) => a + b, 0) : null;

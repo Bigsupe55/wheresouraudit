@@ -22,7 +22,7 @@
   .hint { color: var(--muted); font-size: 13px; margin: 2px 0 8px; }
   .sugg label { display: block; padding: 3px 0; font-size: 14px; word-break: break-all; }
   .saved { font-size: 13px; margin-top: 6px; }
-  .saved.pass { color: var(--good); } .saved.fail { color: var(--bad); }
+  .saved.pass { color: var(--good); } .saved.fail { color: var(--bad); } .saved.partial { color: var(--warn, #9a6700); }
   button { font: 600 14px system-ui, sans-serif; border: 2px solid var(--ink); background: var(--ink); color: #fff; padding: 6px 12px; border-radius: 6px; cursor: pointer; }
   button.ghost { background: #fff; color: var(--ink); }
   button.bad { background: #fff; color: var(--bad); border-color: var(--bad); }
@@ -90,7 +90,7 @@ async function showEntity(id) {
       <div class="hint">${esc(it.hint)}</div>
       <div class="sugg">${sg.map((x, i) => `<label><input type="radio" name="r-${it.key}" value="${esc(x.href)}" ${i === 0 ? "checked" : ""}> <a href="${esc(x.href)}" target="_blank" rel="noopener">${esc(x.text || x.href)}</a> <span class="muted">${esc(x.href.replace(/^https?:\/\//, "").slice(0, 90))}${x.years?.length ? " · years " + x.years.join(", ") : ""}</span></label>`).join("") || '<span class="muted">No suggestions. Look on the site and paste the link.</span>'}</div>
       <div class="flexrow"><input type="url" class="paste" placeholder="Or paste the link that shows it"><input type="text" class="note" placeholder="Note (optional)" style="max-width:240px"></div>
-      <div class="flexrow"><button class="pass">Pass</button><button class="bad fail">Fail</button></div>
+      <div class="flexrow"><button class="pass">Pass</button>${it.key === "audit_online" ? '<button class="partial">Partial: a year is missing</button>' : ""}<button class="bad fail">Fail</button></div>
       ${s ? `<div class="saved ${s.result}">Saved: ${s.result} ${s.url ? `· <a href="${esc(s.url)}" target="_blank">${esc(s.url.slice(0, 80))}</a>` : ""} · ${s.checked_on} by ${esc(s.checked_by)}${s.archive_url ? ` · <a href="${esc(s.archive_url)}" target="_blank">archived</a>` : s.result === "pass" ? " · archive pending" : ""}${s.note ? ` · ${esc(s.note)}` : ""}</div>` : ""}
     </div>`;
   }).join("")}
@@ -105,12 +105,13 @@ async function showEntity(id) {
     const item = card.dataset.item;
     const link = () => card.querySelector(".paste").value.trim() || card.querySelector(`input[name="r-${item}"]:checked`)?.value || "";
     const save = async result => {
-      const r = await fetch("/api/check", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ entity_id: id, item, result, url: result === "pass" ? link() : link() || "", note: card.querySelector(".note").value, checked_by: $("#who").value }) });
+      const r = await fetch("/api/check", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ entity_id: id, item, result, url: link(), note: card.querySelector(".note").value, checked_by: $("#who").value }) });
       const j = await r.json(); if (!r.ok) { alert(j.error); return; }
       await loadQueue(); showEntity(id);
     };
     card.querySelector(".pass").onclick = () => save("pass");
     card.querySelector(".fail").onclick = () => save("fail");
+    card.querySelector(".partial")?.addEventListener("click", () => save("partial"));
   }
   $("#rescan").onclick = async () => { const w = $("#newsite").value.trim(); if (!/^https?:\/\//.test(w)) { alert("Paste a full web address starting with http"); return; } $("#rescan").textContent = "Scanning..."; await fetch("/api/website", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ entity_id: id, website: w }) }); await loadQueue(); showEntity(id); };
   $("#nosite").onclick = async () => {

@@ -1,5 +1,7 @@
-// Rubric v1.1 (see the methodology page). One checklist for everyone.
-export const RUBRIC_VERSION = "1.1";
+// Rubric v1.2 (see the methodology page). One checklist for everyone.
+// v1.2 (2026-11-25): item 5 earns half when the latest due audit (or a newer one) is on the site but one of the
+// last 3 due years is missing from it.
+export const RUBRIC_VERSION = "1.2";
 export const ITEMS = [
   { n: 1, key: "latest_audit", label: "Latest due audit on time", max: 40 },
   { n: 2, key: "prior_audits", label: "The 3 years before it on time", max: 20 },
@@ -9,7 +11,9 @@ export const ITEMS = [
   { n: 6, key: "minutes", label: "Agendas or minutes online", max: 5 },
   { n: 7, key: "records_contact", label: "Records-request contact online", max: 5 },
 ];
-export const letterGrade = s => s >= 90 ? "A" : s >= 80 ? "B" : s >= 70 ? "C" : s >= 60 ? "D" : "F";
+// Points for a person's check of items 3 to 7. "partial" exists only for item 5 (a due year missing from the site).
+export const checkPoints = (it, c) => c.result === "pass" ? it.max : c.result === "partial" && it.key === "audit_online" ? it.max / 2 : 0;
+export const letterGrade =s => s >= 90 ? "A" : s >= 80 ? "B" : s >= 70 ? "C" : s >= 60 ? "D" : "F";
 
 // Item 1 from the latest due year's status.
 export const item1Points = st => st === "on_time" ? 40 : st === "late" ? 20 : 0;

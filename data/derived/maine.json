@@ -2,7 +2,7 @@
   "state": "ME",
   "snapshot": "2026-11-24",
   "asOf": "2026-11-24",
-  "rubric": "1.1",
+  "rubric": "1.2",
   "sources": {
     "municipal": "https://www.maine.gov/audit/municipal/annual-audit-reports.html",
     "county": "https://www.maine.gov/audit/county/annual-audit-reports.html"
@@ -215,21 +215,66 @@
       "pts": [
         20,
         20,
-        null,
-        null,
-        null,
-        null,
-        null
+        10,
+        0,
+        10,
+        5,
+        5
       ],
-      "graded": false,
-      "score": null,
-      "grade": null,
+      "graded": true,
+      "score": 70,
+      "grade": "C",
       "evidence": {
-        "website": null,
-        "budget": null,
-        "audit_online": null,
-        "minutes": null,
-        "records_contact": null
+        "website": {
+          "entity_id": "me-town-acton",
+          "item": "website",
+          "result": "pass",
+          "url": "https://www.actonmaine.org/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": ""
+        },
+        "budget": {
+          "entity_id": "me-town-acton",
+          "item": "budget",
+          "result": "fail",
+          "url": "",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Treasurer page lists only the FY25-26 proposed budget; FY2026-27 is in progress"
+        },
+        "audit_online": {
+          "entity_id": "me-town-acton",
+          "item": "audit_online",
+          "result": "pass",
+          "url": "https://www.actonmaine.org/wp-content/uploads/2026/08/Town-of-Acton-2025-Financial-Statements-Final.pdf",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "FY2025 audited statements"
+        },
+        "minutes": {
+          "entity_id": "me-town-acton",
+          "item": "minutes",
+          "result": "pass",
+          "url": "https://www.actonmaine.org/board-of-selectman/select-board-recordings/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Select board minutes to 2026-11-04"
+        },
+        "records_contact": {
+          "entity_id": "me-town-acton",
+          "item": "records_contact",
+          "result": "pass",
+          "url": "https://www.actonmaine.org/freedom-of-information-requests/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Names the FOAA officer and email"
+        }
       },
       "letter": {
         "fy": "2025",
@@ -333,21 +378,57 @@
       "pts": [
         40,
         20,
+        10,
         null,
-        null,
-        null,
-        null,
-        null
+        5,
+        5,
+        0
       ],
       "graded": false,
       "score": null,
       "grade": null,
       "evidence": {
-        "website": null,
+        "website": {
+          "entity_id": "me-town-addison",
+          "item": "website",
+          "result": "pass",
+          "url": "https://addisonmaine.org/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": ""
+        },
         "budget": null,
-        "audit_online": null,
-        "minutes": null,
-        "records_contact": null
+        "audit_online": {
+          "entity_id": "me-town-addison",
+          "item": "audit_online",
+          "result": "partial",
+          "url": "https://img1.wsimg.com/blobby/go/c37fbb81-4fa6-4a11-81ae-0e342f96f7c9/downloads/058bb775-ef67-469e-8393-02a294ce0ca8/Binder1.pdf?ver=1795204358223",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Audit for the year ended January 31, 2023 is not on Addison's site"
+        },
+        "minutes": {
+          "entity_id": "me-town-addison",
+          "item": "minutes",
+          "result": "pass",
+          "url": "https://img1.wsimg.com/blobby/go/c37fbb81-4fa6-4a11-81ae-0e342f96f7c9/downloads/8cda1eae-6165-4986-9c52-1178d6bd69a9/Up%20to%20Date%20Selectmen%20Minutes%202026.pdf?ver=1795204358191",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Selectmen minutes 2026"
+        },
+        "records_contact": {
+          "entity_id": "me-town-addison",
+          "item": "records_contact",
+          "result": "fail",
+          "url": "",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Contact page names the clerk; no records or FOAA contact stated"
+        }
       },
       "letter": {
         "fy": "2026",
@@ -463,21 +544,66 @@
       "pts": [
         40,
         13,
-        null,
-        null,
-        null,
-        null,
-        null
+        10,
+        0,
+        10,
+        5,
+        0
       ],
-      "graded": false,
-      "score": null,
-      "grade": null,
+      "graded": true,
+      "score": 78,
+      "grade": "C",
       "evidence": {
-        "website": null,
-        "budget": null,
-        "audit_online": null,
-        "minutes": null,
-        "records_contact": null
+        "website": {
+          "entity_id": "me-town-albion",
+          "item": "website",
+          "result": "pass",
+          "url": "https://townofalbionmaine.com/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Listed albionme.com redirects here"
+        },
+        "budget": {
+          "entity_id": "me-town-albion",
+          "item": "budget",
+          "result": "fail",
+          "url": "",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Newest posted is the 2025-26 town report; nothing for FY2026-27"
+        },
+        "audit_online": {
+          "entity_id": "me-town-albion",
+          "item": "audit_online",
+          "result": "pass",
+          "url": "https://townofalbionmaine.com/images/AlbionAudit.24-25.pdf",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Audit for the year ended Jan 31, 2025"
+        },
+        "minutes": {
+          "entity_id": "me-town-albion",
+          "item": "minutes",
+          "result": "pass",
+          "url": "https://townofalbionmaine.com/boards-committees/board-of-selectpersons/selectman-s-meeting-minutes/162-2025-selectboards-meeting-minutes",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Newest minutes 2025-12-22 (within 12 months)"
+        },
+        "records_contact": {
+          "entity_id": "me-town-albion",
+          "item": "records_contact",
+          "result": "fail",
+          "url": "",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Town clerk page only; no records or FOAA contact stated"
+        }
       },
       "letter": {
         "fy": "2025",
@@ -593,21 +719,57 @@
       "pts": [
         40,
         13,
+        10,
+        10,
         null,
-        null,
-        null,
-        null,
-        null
+        5,
+        0
       ],
       "graded": false,
       "score": null,
       "grade": null,
       "evidence": {
-        "website": null,
-        "budget": null,
+        "website": {
+          "entity_id": "me-town-alexander",
+          "item": "website",
+          "result": "pass",
+          "url": "https://www.alexandermaine.com/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": ""
+        },
+        "budget": {
+          "entity_id": "me-town-alexander",
+          "item": "budget",
+          "result": "pass",
+          "url": "https://www.alexandermaine.com/uploads/7/8/5/4/78548468/june_2026_town_meeting_minutes.pdf",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "June 29, 2026 town meeting minutes with amounts voted for FY2026-27"
+        },
         "audit_online": null,
-        "minutes": null,
-        "records_contact": null
+        "minutes": {
+          "entity_id": "me-town-alexander",
+          "item": "minutes",
+          "result": "pass",
+          "url": "https://www.alexandermaine.com/minutes.html",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Selectmen minutes to 2026-10-07"
+        },
+        "records_contact": {
+          "entity_id": "me-town-alexander",
+          "item": "records_contact",
+          "result": "fail",
+          "url": "",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Appointed officials page lists the clerk; no records or FOAA contact stated"
+        }
       },
       "letter": {
         "fy": "2025",
@@ -711,21 +873,57 @@
       "pts": [
         40,
         20,
+        10,
         null,
-        null,
-        null,
-        null,
-        null
+        10,
+        5,
+        5
       ],
       "graded": false,
       "score": null,
       "grade": null,
       "evidence": {
-        "website": null,
+        "website": {
+          "entity_id": "me-town-alfred",
+          "item": "website",
+          "result": "pass",
+          "url": "https://www.alfredme.gov/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": ""
+        },
         "budget": null,
-        "audit_online": null,
-        "minutes": null,
-        "records_contact": null
+        "audit_online": {
+          "entity_id": "me-town-alfred",
+          "item": "audit_online",
+          "result": "pass",
+          "url": "https://www.alfredme.gov/Audited%20Financial%20Statements%206%2030%202025.pdf",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "FY2025 audited statements, linked from the Treasurer page"
+        },
+        "minutes": {
+          "entity_id": "me-town-alfred",
+          "item": "minutes",
+          "result": "pass",
+          "url": "https://www.alfredme.gov/board_and_committees/selectmen_s_office/minutes.php",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Selectmen minutes to 2026-11-10"
+        },
+        "records_contact": {
+          "entity_id": "me-town-alfred",
+          "item": "records_contact",
+          "result": "pass",
+          "url": "https://www.alfredme.gov/forms_and_documents/freedom_of_access.php",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Names the FOAA agent and email"
+        }
       },
       "letter": {
         "fy": "2025",
@@ -947,21 +1145,57 @@
       "pts": [
         40,
         20,
+        10,
         null,
-        null,
-        null,
-        null,
-        null
+        5,
+        5,
+        5
       ],
       "graded": false,
       "score": null,
       "grade": null,
       "evidence": {
-        "website": null,
+        "website": {
+          "entity_id": "me-town-alna",
+          "item": "website",
+          "result": "pass",
+          "url": "http://alna.maine.gov/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": ""
+        },
         "budget": null,
-        "audit_online": null,
-        "minutes": null,
-        "records_contact": null
+        "audit_online": {
+          "entity_id": "me-town-alna",
+          "item": "audit_online",
+          "result": "partial",
+          "url": "http://alna.maine.gov/vertical/sites/%7BBDB98820-241D-4E93-ADE8-FCEDF75584C6%7D/uploads/Town_of_Alna_fy_2025_Financial_Statements.pdf",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Audit for the year ended January 31, 2025 is not on Alna's site; a newer one (January 31, 2026) is"
+        },
+        "minutes": {
+          "entity_id": "me-town-alna",
+          "item": "minutes",
+          "result": "pass",
+          "url": "http://alna.maine.gov/index.asp?SEC=E851497B-FA53-4114-B79A-465ACB8542DF&DE=7F3A9BB0-0C19-4F70-8EA4-E9E97F0AC22E",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Selectboard minutes to 2026-10-22"
+        },
+        "records_contact": {
+          "entity_id": "me-town-alna",
+          "item": "records_contact",
+          "result": "pass",
+          "url": "http://alna.maine.gov/index.asp?SEC=DE27F4AA-3A7E-47FE-8C73-BCACC1312EC6",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Names the FOAA officer and email"
+        }
       },
       "letter": {
         "fy": "2026",
@@ -1065,21 +1299,66 @@
       "pts": [
         40,
         20,
-        null,
-        null,
-        null,
-        null,
-        null
+        10,
+        0,
+        0,
+        0,
+        5
       ],
-      "graded": false,
-      "score": null,
-      "grade": null,
+      "graded": true,
+      "score": 75,
+      "grade": "C",
       "evidence": {
-        "website": null,
-        "budget": null,
-        "audit_online": null,
-        "minutes": null,
-        "records_contact": null
+        "website": {
+          "entity_id": "me-town-alton",
+          "item": "website",
+          "result": "pass",
+          "url": "https://www.altonmaine.org/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": ""
+        },
+        "budget": {
+          "entity_id": "me-town-alton",
+          "item": "budget",
+          "result": "fail",
+          "url": "",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Newest document is the Annual Report 2024; nothing for 2026"
+        },
+        "audit_online": {
+          "entity_id": "me-town-alton",
+          "item": "audit_online",
+          "result": "fail",
+          "url": "",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "FY2024 audit not on the site; the 2024 report was compiled in January 2025"
+        },
+        "minutes": {
+          "entity_id": "me-town-alton",
+          "item": "minutes",
+          "result": "fail",
+          "url": "",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Meetings page says to contact the town office for minutes; none posted"
+        },
+        "records_contact": {
+          "entity_id": "me-town-alton",
+          "item": "records_contact",
+          "result": "pass",
+          "url": "https://www.altonmaine.org/contact/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Contact page names the clerk as FOI Officer"
+        }
       },
       "letter": {
         "fy": "2025",
@@ -1301,21 +1580,57 @@
       "pts": [
         40,
         20,
+        10,
+        0,
+        0,
         null,
-        null,
-        null,
-        null,
-        null
+        0
       ],
       "graded": false,
       "score": null,
       "grade": null,
       "evidence": {
-        "website": null,
-        "budget": null,
-        "audit_online": null,
+        "website": {
+          "entity_id": "me-town-amity",
+          "item": "website",
+          "result": "pass",
+          "url": "https://www.townofamity.org/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": ""
+        },
+        "budget": {
+          "entity_id": "me-town-amity",
+          "item": "budget",
+          "result": "fail",
+          "url": "",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "No budget, warrant or town meeting results online"
+        },
+        "audit_online": {
+          "entity_id": "me-town-amity",
+          "item": "audit_online",
+          "result": "fail",
+          "url": "",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "No audit or town report online"
+        },
         "minutes": null,
-        "records_contact": null
+        "records_contact": {
+          "entity_id": "me-town-amity",
+          "item": "records_contact",
+          "result": "fail",
+          "url": "",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "No records or FOAA contact stated"
+        }
       },
       "letter": {
         "fy": "2026",
@@ -1431,21 +1746,66 @@
       "pts": [
         0,
         7,
-        null,
-        null,
-        null,
-        null,
-        null
+        10,
+        0,
+        0,
+        5,
+        5
       ],
-      "graded": false,
-      "score": null,
-      "grade": null,
+      "graded": true,
+      "score": 27,
+      "grade": "F",
       "evidence": {
-        "website": null,
-        "budget": null,
-        "audit_online": null,
-        "minutes": null,
-        "records_contact": null
+        "website": {
+          "entity_id": "me-town-andover",
+          "item": "website",
+          "result": "pass",
+          "url": "https://www.andovermaine.gov/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": ""
+        },
+        "budget": {
+          "entity_id": "me-town-andover",
+          "item": "budget",
+          "result": "fail",
+          "url": "",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Only the FY26 workbook, the FY27 warrant (proposed) and a school-budget meeting; no FY27 town meeting results"
+        },
+        "audit_online": {
+          "entity_id": "me-town-andover",
+          "item": "audit_online",
+          "result": "fail",
+          "url": "",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "2026 town report says the 2025 audit has not been completed"
+        },
+        "minutes": {
+          "entity_id": "me-town-andover",
+          "item": "minutes",
+          "result": "pass",
+          "url": "https://www.andovermaine.gov/andover-selectmen-meeting-agenda/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "2026 weekly select board minutes"
+        },
+        "records_contact": {
+          "entity_id": "me-town-andover",
+          "item": "records_contact",
+          "result": "pass",
+          "url": "https://www.andovermaine.gov/ordiances-forms-permits/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Freedom of Access request form"
+        }
       },
       "letter": {
         "fy": "2025",
@@ -1561,21 +1921,66 @@
       "pts": [
         40,
         13,
-        null,
-        null,
-        null,
-        null,
-        null
+        10,
+        0,
+        10,
+        5,
+        5
       ],
-      "graded": false,
-      "score": null,
-      "grade": null,
+      "graded": true,
+      "score": 83,
+      "grade": "B",
       "evidence": {
-        "website": null,
-        "budget": null,
-        "audit_online": null,
-        "minutes": null,
-        "records_contact": null
+        "website": {
+          "entity_id": "me-county-androscoggin",
+          "item": "website",
+          "result": "pass",
+          "url": "https://www.androscoggincountymaine.gov/",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": ""
+        },
+        "budget": {
+          "entity_id": "me-county-androscoggin",
+          "item": "budget",
+          "result": "fail",
+          "url": "",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Budget archive stops at the 2025 final budget; 2026 is in progress"
+        },
+        "audit_online": {
+          "entity_id": "me-county-androscoggin",
+          "item": "audit_online",
+          "result": "pass",
+          "url": "https://www.androscoggincountymaine.gov/Archive.aspx?ADID=86",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "2024 audited statements; 2022 to 2024 all on the site"
+        },
+        "minutes": {
+          "entity_id": "me-county-androscoggin",
+          "item": "minutes",
+          "result": "pass",
+          "url": "https://www.androscoggincountymaine.gov/AgendaCenter",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Agendas to 2026-10-28"
+        },
+        "records_contact": {
+          "entity_id": "me-county-androscoggin",
+          "item": "records_contact",
+          "result": "pass",
+          "url": "https://www.androscoggincountymaine.gov/217/Records-Requests",
+          "archive_url": "",
+          "checked_on": "2026-11-25",
+          "checked_by": "NH",
+          "note": "Named records contact, phone and email"
+        }
       },
       "letter": {
         "fy": "2025",

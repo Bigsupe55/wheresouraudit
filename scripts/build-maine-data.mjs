@@ -6,7 +6,7 @@ import fs from "node:fs";
 import { p, readText, readJSON, writeJSON, writeFile, csvObjects, toCSV, slug, lastDayOfMonth, addMonthsEnd, mdyToISO, daysBetween, latestDir, yearRange, fmtDate } from "./lib/util.mjs";
 import { parseFirstTable } from "./lib/html-table.mjs";
 import { brakeAndLog } from "./lib/brake.mjs";
-import { ITEMS, item1Points, item2Points, letterGrade, MAINE_LABELS, STATUS_CLASS, RUBRIC_VERSION } from "./lib/rubric.mjs";
+import { ITEMS, item1Points, item2Points, checkPoints, letterGrade, MAINE_LABELS, STATUS_CLASS, RUBRIC_VERSION } from "./lib/rubric.mjs";
 
 const args = Object.fromEntries(process.argv.slice(2).map(a => a.replace(/^--/, "").split("=")).map(([k, v]) => [k, v ?? true]));
 const RAW = p("data", "raw", "maine");
@@ -162,7 +162,7 @@ for (const row of rows) {
   const myChecks = checks.filter(c => c.entity_id === id);
   for (const it of ITEMS.slice(2)) {
     const c = myChecks.filter(c => c.item === it.key).sort((a, b) => a.checked_on.localeCompare(b.checked_on)).pop();
-    if (c) pts[it.n - 1] = c.result === "pass" ? it.max : 0;
+    if (c) pts[it.n - 1] = checkPoints(it, c);
   }
   const graded = pts.every(v => v !== null);
   const score = graded ? pts.reduce((a, b) => a + b, 0) : null;
