@@ -1,1 +1,23 @@
 entity_id,item,result,url,archive_url,checked_on,checked_by,note
+me-town-acton,website,pass,https://www.actonmaine.org/,,2026-11-25,NH,
+me-town-acton,budget,fail,,,2026-11-25,NH,Treasurer page lists only the FY25-26 proposed budget; FY2026-27 is in progress
+me-town-acton,audit_online,pass,https://www.actonmaine.org/wp-content/uploads/2026/08/Town-of-Acton-2025-Financial-Statements-Final.pdf,,2026-11-25,NH,FY2025 audited statements
+me-town-acton,minutes,pass,https://www.actonmaine.org/board-of-selectman/select-board-recordings/,,2026-11-25,NH,Select board minutes to 2026-11-04
+me-town-acton,records_contact,pass,https://www.actonmaine.org/freedom-of-information-requests/,,2026-11-25,NH,Names the FOAA officer and email
+me-town-addison,website,pass,https://addisonmaine.org/,,2026-11-25,NH,
+me-town-addison,audit_online,pass,https://img1.wsimg.com/blobby/go/c37fbb81-4fa6-4a11-81ae-0e342f96f7c9/downloads/058bb775-ef67-469e-8393-02a294ce0ca8/Binder1.pdf?ver=1795204358223,,2026-11-25,NH,"2025-26 town report includes audited statements for the year ended Jan 31, 2025 (scanned)"
+me-town-addison,minutes,pass,https://img1.wsimg.com/blobby/go/c37fbb81-4fa6-4a11-81ae-0e342f96f7c9/downloads/8cda1eae-6165-4986-9c52-1178d6bd69a9/Up%20to%20Date%20Selectmen%20Minutes%202026.pdf?ver=1795204358191,,2026-11-25,NH,Selectmen minutes 2026
+me-town-addison,records_contact,fail,,,2026-11-25,NH,Contact page names the clerk; no records or FOAA contact stated
+me-town-albion,website,pass,https://townofalbionmaine.com/,,2026-11-25,NH,Listed albionme.com redirects here
+me-town-albion,budget,fail,,,2026-11-25,NH,Newest posted is the 2025-26 town report; nothing for FY2026-27
+me-town-albion,audit_online,pass,https://townofalbionmaine.com/images/AlbionAudit.24-25.pdf,,2026-11-25,NH,"Audit for the year ended Jan 31, 2025"
+me-town-albion,minutes,pass,https://townofalbionmaine.com/boards-committees/board-of-selectpersons/selectman-s-meeting-minutes/162-2025-selectboards-meeting-minutes,,2026-11-25,NH,Newest minutes 2025-12-22 (within 12 months)
+me-town-albion,records_contact,fail,,,2026-11-25,NH,Town clerk page only; no records or FOAA contact stated
+me-town-alexander,website,pass,https://www.alexandermaine.com/,,2026-11-25,NH,
+me-town-alexander,budget,pass,https://www.alexandermaine.com/uploads/7/8/5/4/78548468/june_2026_town_meeting_minutes.pdf,,2026-11-25,NH,"June 29, 2026 town meeting minutes with amounts voted for FY2026-27"
+me-town-alexander,minutes,pass,https://www.alexandermaine.com/minutes.html,,2026-11-25,NH,Selectmen minutes to 2026-10-07
+me-town-alexander,records_contact,fail,,,2026-11-25,NH,Appointed officials page lists the clerk; no records or FOAA contact stated
+me-town-alfred,website,pass,https://www.alfredme.gov/,,2026-11-25,NH,
+me-town-alfred,audit_online,pass,https://www.alfredme.gov/Audited%20Financial%20Statements%206%2030%202025.pdf,,2026-11-25,NH,"FY2025 audited statements, linked from the Treasurer page"
+me-town-alfred,minutes,pass,https://www.alfredme.gov/board_and_committees/selectmen_s_office/minutes.php,,2026-11-25,NH,Selectmen minutes to 2026-11-10
+me-town-alfred,records_contact,pass,https://www.alfredme.gov/forms_and_documents/freedom_of_access.php,,2026-11-25,NH,Names the FOAA agent and email
